@@ -28,9 +28,7 @@ struct H2CO3LauncherInternal {
     FILE *logFile;
     JavaVM *android_jvm;
     jclass class_H2CO3LauncherBridge;
-    jclass class_H2CO3LauncherActivity;
     jobject object_H2CO3LauncherBridge;
-    jmethodID setCursorMode;
     ANativeWindow *window;
     char *clipboard_string;
     EventQueue event_queue;
@@ -62,11 +60,11 @@ extern struct H2CO3LauncherInternal *h2co3Launcher;
     do {} while(0)
 
 #define CallH2CO3LauncherBridgeJNIFunc(return_exp, func_type, func_name, signature, args...) \
-    jmethodID H2CO3LauncherBridge_##func_name = (*env)->GetStaticMethodID(env, h2co3Launcher->class_H2CO3LauncherBridge, #func_name, signature); \
+    jmethodID H2CO3LauncherBridge_##func_name = (*env)->GetMethodID(env, h2co3Launcher->class_H2CO3LauncherBridge, #func_name, signature); \
     if (H2CO3LauncherBridge_##func_name == NULL) { \
-        H2CO3_INTERNAL_LOG("Failed to find static method H2CO3LauncherBridge"#func_name ); \
+        H2CO3_INTERNAL_LOG("Failed to find method H2CO3LauncherBridge."#func_name ); \
     } \
-    return_exp (*env)->CallStatic##func_type##Method(env, h2co3Launcher->class_H2CO3LauncherBridge, H2CO3LauncherBridge_##func_name, ##args); \
+    return_exp (*env)->Call##func_type##Method(env, h2co3Launcher->object_H2CO3LauncherBridge, H2CO3LauncherBridge_##func_name, ##args); \
     do {} while(0)
 
 #endif // h2co3Launcher_INTERNAL_H

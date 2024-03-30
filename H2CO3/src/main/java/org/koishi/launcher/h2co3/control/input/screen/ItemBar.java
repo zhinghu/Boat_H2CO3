@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.input.screen;
 
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.KEYBOARD_BUTTON;
@@ -26,6 +32,7 @@ import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.OnscreenInput;
 import org.koishi.launcher.h2co3.control.input.screen.button.BaseButton;
 import org.koishi.launcher.h2co3.control.input.screen.button.ItemButton;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 
@@ -62,7 +69,7 @@ public class ItemBar implements OnscreenInput, View.OnTouchListener {
 
     @SuppressLint("InflateParams")
     @Override
-    public boolean load(Context context, Controller controller) {
+    public boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge) {
         this.mController = controller;
         int screenWidth = mController.getConfig().getScreenWidth();
         int screenHeight = mController.getConfig().getScreenHeight();

@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.launcher;
 
 import android.content.Context;
@@ -16,24 +22,16 @@ import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridgeCallBack;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public abstract class H2CO3LauncherActivity extends H2CO3Activity implements TextureView.SurfaceTextureListener {
 
-    private static final String TAG = "H2CO3LauncherActivity";
-    private static final int SYSTEM_UI_HIDE_DELAY_MS = 3000;
-    private static final int THREAD_POOL_SIZE = 1;
-
-    private final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-
+    protected static final String TAG = "H2CO3LauncherActivity";
     public TextureView mainTextureView;
     public RelativeLayout baseLayout;
     public H2CO3LauncherBridgeCallBack h2co3LauncherCallback;
-    private Timer timer;
     private int output = 0;
+    public H2CO3LauncherBridge launcherLib;
     private TimerTask systemUiTimerTask;
     public static IH2CO3Launcher h2co3LauncherInterface;
 
@@ -50,7 +48,6 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
                         runOnUiThread(() -> hideSystemUI(getWindow().getDecorView()));
                     }
                 };
-                timer.schedule(systemUiTimerTask, SYSTEM_UI_HIDE_DELAY_MS);
             }
         }
     };
@@ -59,11 +56,9 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
         System.loadLibrary("h2co3Launcher");
     }
 
-    public void init() {
-        timer = new Timer();
-        mainTextureView.setSurfaceTextureListener(this);
-    }
+    public native void nOnCreate();
 
+    @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
         Log.d(TAG, "SurfaceTexture is available!");
         h2co3LauncherCallback.onSurfaceTextureAvailable(surface, width, height);
@@ -179,10 +174,6 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
-
-    public void setCursorMode(int mode) {
-        h2co3LauncherCallback.onCursorModeChange(mode);
     }
 
     public void exit(Context context, int code) {

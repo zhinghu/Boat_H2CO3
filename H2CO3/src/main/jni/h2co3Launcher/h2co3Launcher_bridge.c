@@ -7,26 +7,15 @@
 
 struct H2CO3LauncherInternal *h2co3Launcher;
 
-void initialize_h2co3Launcher() {
-    h2co3Launcher = malloc(sizeof(struct H2CO3LauncherInternal));
-    if (!h2co3Launcher) {
-        __android_log_print(ANDROID_LOG_ERROR, "Environ",
-                            "Failed to allocate memory for h2co3Launcher.");
-        abort();
-    }
-    memset(h2co3Launcher, 0, sizeof(struct H2CO3LauncherInternal));
-}
-
-void env_init() {
+__attribute__((constructor)) void env_init() {
     char *strptr_env = getenv("H2CO3LAUNCHER_ENVIRON");
     if (strptr_env == NULL) {
         __android_log_print(ANDROID_LOG_INFO, "Environ", "No environ found, creating...");
-        initialize_h2co3Launcher();
-        if (asprintf(&strptr_env, "%p", h2co3Launcher) == -1) {
-            free(h2co3Launcher);
-            __android_log_print(ANDROID_LOG_ERROR, "Environ", "Failed to create environ string.");
+        h2co3Launcher = malloc(sizeof(struct H2CO3LauncherInternal));
+        assert(h2co3Launcher);
+        memset(h2co3Launcher, 0, sizeof(struct H2CO3LauncherInternal));
+        if (asprintf(&strptr_env, "%p", h2co3Launcher) == -1)
             abort();
-        }
         setenv("H2CO3LAUNCHER_ENVIRON", strptr_env, 1);
         free(strptr_env);
     } else {
@@ -35,6 +24,7 @@ void env_init() {
     }
     __android_log_print(ANDROID_LOG_INFO, "Environ", "%p", h2co3Launcher);
 }
+
 
 ANativeWindow *h2co3LauncherGetNativeWindow() {
     return h2co3Launcher->window;
@@ -86,7 +76,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setH2CO3Launch
 }
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-    initialize_h2co3Launcher();
+    env_init();
     h2co3Launcher->android_jvm = vm;
     JNIEnv *env = NULL;
     jint result = (*vm)->AttachCurrentThread(vm, &env, NULL);

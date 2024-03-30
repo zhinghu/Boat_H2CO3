@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -156,10 +162,10 @@
 
         </org.koishi.launcher.h2co3.resources.component.H2CO3CardView>
 
-        <org.koishi.launcher.h2co3.resources.component.H2CO3MarkdownView
+        <org.koishi.launcher.h2co3.resources.component.LogcatView
             android:id="@+id/h2co3_test"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"></org.koishi.launcher.h2co3.resources.component.LogcatView>
     </LinearLayout>
 
 

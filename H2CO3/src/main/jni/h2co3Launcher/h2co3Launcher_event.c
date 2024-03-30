@@ -60,35 +60,11 @@ void EventQueue_clear(EventQueue *queue) {
 }
 
 void h2co3LauncherSetCursorMode(int mode) {
-    if (h2co3Launcher == NULL || h2co3Launcher->android_jvm == 0) {
-        H2CO3_INTERNAL_LOG("h2co3LauncherSetCursorMode:h2co3Launcher or android_jvm is null");
+    if (!h2co3Launcher->has_event_pipe) {
         return;
     }
-    JNIEnv *env = 0;
-    jint result = (*h2co3Launcher->android_jvm)->AttachCurrentThread(h2co3Launcher->android_jvm,
-                                                                     &env, 0);
-    if (result != JNI_OK || env == 0) {
-        H2CO3_INTERNAL_LOG("h2co3LauncherSetCursorMode:Failed to attach thread");
-        (*h2co3Launcher->android_jvm)->DetachCurrentThread(h2co3Launcher->android_jvm);
-        abort();
-    }
-
-    jclass class_H2CO3LauncherActivity = h2co3Launcher->class_H2CO3LauncherActivity;
-
-    if (class_H2CO3LauncherActivity == 0) {
-        H2CO3_INTERNAL_LOG("h2co3LauncherSetCursorMode:class_H2CO3LauncherActivity is null");
-        abort();
-    }
-
-    jmethodID H2CO3LauncherActivity_setCursorMode = h2co3Launcher->setCursorMode;
-
-    if (H2CO3LauncherActivity_setCursorMode == 0) {
-        H2CO3_INTERNAL_LOG("h2co3SetCursorMode:H2CO3LauncherActivity_setCursorMode is null");
-        abort();
-    }
-    (*env)->CallVoidMethod(env, h2co3Launcher->class_H2CO3LauncherActivity,
-                           H2CO3LauncherActivity_setCursorMode, mode);
-    (*h2co3Launcher->android_jvm)->DetachCurrentThread(h2co3Launcher->android_jvm);
+    PrepareH2CO3LauncherBridgeJNI();
+    CallH2CO3LauncherBridgeJNIFunc(, Void, setCursorMode, "(I)V", mode);
 }
 
 int h2co3LauncherGetEventFd() {

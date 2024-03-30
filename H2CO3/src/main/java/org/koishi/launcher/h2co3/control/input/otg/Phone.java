@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.input.otg;
 
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.ANDROID_TO_KEYMAP;
@@ -15,6 +21,7 @@ import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.definitions.map.KeyMap;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.HwInput;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 public class Phone implements HwInput {
 
@@ -24,7 +31,7 @@ public class Phone implements HwInput {
     private boolean isEnabled = false;
 
     @Override
-    public boolean load(Context context, Controller controller) {
+    public boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge) {
         Translation mTrans = new Translation(ANDROID_TO_KEYMAP);
         this.mContext = context;
         this.mController = controller;

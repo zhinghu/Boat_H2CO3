@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.launcher.utils;
 
 import android.app.Activity;
@@ -19,7 +25,12 @@ import androidx.core.content.FileProvider;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class H2CO3LauncherBridge implements Serializable {
 
@@ -62,8 +73,8 @@ public class H2CO3LauncherBridge implements Serializable {
     public static final int Button5 = 5;
     public static final int Button6 = 6;
     public static final int Button7 = 7;
-    public static final int CursorEnabled = 1;
-    public static final int CursorDisabled = 0;
+    public static final int CursorEnabled = 0;
+    public static final int CursorDisabled = 1;
 
     private boolean surfaceDestroyed;
     private String logPath;
@@ -71,6 +82,7 @@ public class H2CO3LauncherBridge implements Serializable {
     private Surface surface;
     private Handler handler;
     private Thread thread;
+    private ExecutorService mExecutor;
 
     public void setThread(Thread thread) {
         this.thread = thread;
@@ -97,13 +109,13 @@ public class H2CO3LauncherBridge implements Serializable {
         this.logPath = logPath;
     }
 
-    public void receiveLog(String log) {
+    public void receiveLog(String log) throws IOException {
         if (callback != null) {
             callback.onLog(log);
         }
     }
 
-    public void execute(Surface surface, H2CO3LauncherBridgeCallBack callback) {
+    public void execute(Surface surface, H2CO3LauncherBridgeCallBack callback) throws IOException {
         this.handler = new Handler();
         this.callback = callback;
         this.surface = surface;
@@ -117,6 +129,7 @@ public class H2CO3LauncherBridge implements Serializable {
         // set graphic output and event pipe
         if (surface != null) {
             handleWindow();
+            destroyWindowHandler();
         }
         receiveLog("invoke setEventPipe");
 
@@ -128,7 +141,7 @@ public class H2CO3LauncherBridge implements Serializable {
         }
     }
 
-    public void onExit(int code) {
+    public void onExit(int code) throws IOException {
         if (callback != null) {
             callback.onLog("OpenJDK exited with code : " + code);
             callback.onExit(code);
@@ -175,13 +188,14 @@ public class H2CO3LauncherBridge implements Serializable {
         pushEvent(System.nanoTime(), ConfigureNotify, width, height);
     }
 
-    public void handleWindow() {
+    public void handleWindow() throws IOException {
         if (H2CO3GameHelper.getGameDirectory() != null) {
             receiveLog("invoke setH2CO3LauncherNativeWindow\n");
             h2co3LauncherSetNativeWindow(this.surface);
         } else {
             receiveLog("start Android AWT Renderer thread\n");
-            Thread canvasThread = new Thread(() -> {
+            mExecutor = Executors.newSingleThreadExecutor();
+            mExecutor.execute(() -> {
                 Canvas canvas;
                 Bitmap rgbArrayBitmap = Bitmap.createBitmap(DEFAULT_WIDTH, DEFAULT_HEIGHT, Bitmap.Config.ARGB_8888);
                 Paint paint = new Paint();
@@ -200,12 +214,24 @@ public class H2CO3LauncherBridge implements Serializable {
                     }
                 } catch (Throwable throwable) {
                     Handler handler = new Handler();
-                    handler.post(() -> receiveLog(throwable.toString()));
+                    handler.post(() -> {
+                        try {
+                            receiveLog(throwable.toString());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
                 rgbArrayBitmap.recycle();
                 this.surface.release();
-            }, "AndroidAWTRenderer");
-            canvasThread.start();
+            });
+        }
+    }
+
+    private void destroyWindowHandler() {
+        if (mExecutor != null) {
+            mExecutor.shutdown();
+            mExecutor = null;
         }
     }
 
@@ -249,4 +275,27 @@ public class H2CO3LauncherBridge implements Serializable {
         ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
         return item.getText().toString();
     }
+
+    public interface LogReceiver {
+        void pushLog(String log) throws IOException;
+
+        String getLogs();
+    }
+
+    public static class DefaultLogReceiver implements LogReceiver {
+        private final List<String> logs = new ArrayList<>();
+
+        @Override
+        public void pushLog(String log) {
+            logs.add(log);
+        }
+
+        @Override
+        public String getLogs() {
+            List<String> logsCopy = new ArrayList<>(logs);
+            return String.join("\n", logsCopy);
+        }
+    }
+
+
 }

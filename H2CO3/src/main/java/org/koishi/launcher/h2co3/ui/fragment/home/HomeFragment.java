@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.ui.fragment.home;
 
 import static org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity.attachControllerInterface;
@@ -14,8 +20,9 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Button;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
-import org.koishi.launcher.h2co3.resources.component.H2CO3MarkdownView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
+import org.koishi.launcher.h2co3.resources.component.LogcatTextViewLogger;
+import org.koishi.launcher.h2co3.resources.component.LogcatView;
 import org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity;
 
 public class HomeFragment extends H2CO3Fragment implements View.OnClickListener {
@@ -23,10 +30,11 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     H2CO3CardView home_file_check;
     H2CO3TextView home_file_check_title, home_file_check_message;
     H2CO3Button home_game_play_button;
-    H2CO3MarkdownView markdownView;
+    LogcatView markdownView;
 
     View view;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         findView();
@@ -41,7 +49,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         home_game_play_button = findViewById(view, R.id.home_game_play_button);
         home_game_play_button.setOnClickListener(this);
         markdownView = findViewById(view, R.id.h2co3_test);
-        markdownView.setMarkdownFilePath("/sdcard/games/com.koishi.launcher/h2o2/markdown/info.md");
+        LogcatTextViewLogger logger = new LogcatTextViewLogger(markdownView);
+        LogcatTextViewLogger.setupLogger(logger);
     }
 
     @Override

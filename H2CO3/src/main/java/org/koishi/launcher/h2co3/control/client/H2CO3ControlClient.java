@@ -1,10 +1,16 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.client;
 
-import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent;
+import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 public interface H2CO3ControlClient extends KeyEvent {
     void setKey(int keyCode, boolean pressed);
@@ -15,7 +21,7 @@ public interface H2CO3ControlClient extends KeyEvent {
 
     void setPointerInc(int xInc, int yInc);
 
-    Activity getActivity();
+    H2CO3Activity getActivity();
 
     void addView(View v);
 
@@ -23,7 +29,6 @@ public interface H2CO3ControlClient extends KeyEvent {
 
     void typeWords(String str);
 
-    //void addControllerView(View v);
     int[] getGrabbedPointer();
 
     int[] getLoosenPointer();

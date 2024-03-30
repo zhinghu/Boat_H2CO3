@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.core.utils;
 
 import org.koishi.launcher.h2co3.core.utils.function.ExceptionalBiConsumer;
@@ -284,16 +290,13 @@ public final class Lang {
         };
     }
 
+    @SafeVarargs
     public static <T> Consumer<T> compose(Consumer<T>... consumers) {
         return t -> {
             for (Consumer<T> consumer : consumers) {
                 consumer.accept(t);
             }
         };
-    }
-
-    public static <T> Stream<T> toStream(Optional<T> optional) {
-        return optional.stream();
     }
 
     public static <T> Iterable<T> toIterable(Enumeration<T> enumeration) {

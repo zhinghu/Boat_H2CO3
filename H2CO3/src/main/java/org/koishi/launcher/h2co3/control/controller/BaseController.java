@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.controller;
 
 import android.content.Context;
@@ -7,15 +13,20 @@ import android.view.ViewGroup;
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.input.Input;
 import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * @author caini
+ */
 public abstract class BaseController implements Controller {
     private final static String TAG = "BaseController";
     private final static int DEFAULT_INTERVAL_TIME = 5000;
     public final H2CO3ControlClient h2CO3ControlClient;
+    private H2CO3LauncherBridge h2CO3LauncherBridge;
     public final Context context;
     private final int internalTime;
     private final Config mConfig;
@@ -39,6 +50,11 @@ public abstract class BaseController implements Controller {
         this(h2CO3ControlClient, BaseController.DEFAULT_INTERVAL_TIME, enableTimer);
     }
 
+    public BaseController(H2CO3ControlClient h2CO3ControlClient, H2CO3LauncherBridge bridge, boolean enableTimer) {
+        this(h2CO3ControlClient, BaseController.DEFAULT_INTERVAL_TIME, enableTimer);
+        this.h2CO3LauncherBridge = bridge;
+    }
+
 
     @Override
     public boolean containsInput(Input input) {
@@ -56,7 +72,7 @@ public abstract class BaseController implements Controller {
         if (containsInput(input) || input == null) {
             return false;
         } else {
-            if (input.load(context, this)) {
+            if (input.load(context, this, this.h2CO3LauncherBridge)) {
                 inputs.add(input);
                 return true;
             } else {

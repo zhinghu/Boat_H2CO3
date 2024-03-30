@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.input.screen;
 
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.MOUSE_BUTTON;
@@ -30,6 +36,7 @@ import org.koishi.launcher.h2co3.control.definitions.map.KeyMap;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.OnscreenInput;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 
@@ -63,7 +70,7 @@ public class OnscreenTouchpad implements OnscreenInput, KeyMap, MouseMap {
     private int initY = 0;
 
     @Override
-    public boolean load(Context context, Controller controller) {
+    public boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge) {
 
         this.mController = controller;
 
@@ -538,5 +545,6 @@ public class OnscreenTouchpad implements OnscreenInput, KeyMap, MouseMap {
             editor.apply();
         }
     }
+
 
 }

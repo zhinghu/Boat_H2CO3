@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.input.otg;
 
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.KEYBOARD_BUTTON;
@@ -11,6 +17,7 @@ import org.koishi.launcher.h2co3.control.codes.AndroidKeyMap;
 import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.HwInput;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 public class Keyboard implements HwInput {
 
@@ -31,7 +38,7 @@ public class Keyboard implements HwInput {
     }
 
     @Override
-    public boolean load(Context context, Controller controller) {
+    public boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge) {
 
         this.mController = controller;
         this.androidKeyMap = new AndroidKeyMap();

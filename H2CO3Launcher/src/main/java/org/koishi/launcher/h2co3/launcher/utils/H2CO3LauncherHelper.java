@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.launcher.utils;
 
 import android.content.Context;
@@ -32,11 +38,11 @@ public class H2CO3LauncherHelper {
 
     private static final String TAG = H2CO3LauncherHelper.class.getSimpleName();
 
-    public static void printTaskTitle(H2CO3LauncherBridge bridge, String task) {
+    public static void printTaskTitle(H2CO3LauncherBridge bridge, String task) throws IOException {
         bridge.getCallback().onLog("==================== " + task + " ====================");
     }
 
-    public static void logStartInfo(H2CO3LauncherBridge bridge, String task) {
+    public static void logStartInfo(H2CO3LauncherBridge bridge, String task) throws IOException {
         printTaskTitle(bridge, "Start " + task);
         bridge.getCallback().onLog("Architecture: " + Architecture.archAsString(Architecture.getDeviceArchitecture()));
         bridge.getCallback().onLog("CPU:" + Build.HARDWARE);
@@ -169,13 +175,17 @@ public class H2CO3LauncherHelper {
         envMap.put("LIBGL_NOERROR", libglNoerror);
     }
 
-    public static void setEnv(Context context, H2CO3LauncherBridge bridge, String render) {
+    public static void setEnv(Context context, H2CO3LauncherBridge bridge, String render) throws IOException {
         HashMap<String, String> envMap = new HashMap<>(8);
         addCommonEnv(context, envMap);
         addRendererEnv(context, envMap, H2CO3GameHelper.getRender());
         printTaskTitle(bridge, "Env Map");
         envMap.forEach((key, value) -> {
-            bridge.getCallback().onLog("Env: " + key + "=" + value);
+            try {
+                bridge.getCallback().onLog("Env: " + key + "=" + value);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             bridge.setenv(key, value);
         });
         printTaskTitle(bridge, "Env Map");
@@ -469,25 +479,6 @@ public class H2CO3LauncherHelper {
         args.add(cacioClasspath.toString());
     }
 
-    public interface LogReceiver {
-        void pushLog(String log);
 
-        String getLogs();
-    }
-
-    public static class DefaultLogReceiver implements LogReceiver {
-        private final List<String> logs = new ArrayList<>();
-
-        @Override
-        public void pushLog(String log) {
-            logs.add(log);
-        }
-
-        @Override
-        public String getLogs() {
-            List<String> logsCopy = new ArrayList<>(logs);
-            return String.join("\n", logsCopy);
-        }
-    }
 
 }

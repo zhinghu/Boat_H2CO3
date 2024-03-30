@@ -1,6 +1,11 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.ui;
 
-import android.app.Activity;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +26,7 @@ import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent;
 import org.koishi.launcher.h2co3.core.utils.PicUtils;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.util.Objects;
@@ -75,7 +81,9 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
     @Override
     public void onSystemUiVisibilityChange(int visibility) {
         if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-            if (systemUiTimerTask != null) systemUiTimerTask.cancel();
+            if (systemUiTimerTask != null) {
+                systemUiTimerTask.cancel();
+            }
             systemUiTimerTask = new TimerTask() {
                 @Override
                 public void run() {
@@ -109,7 +117,7 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
         mLayoutMain.setBackground(new BitmapDrawable(getResources(), PicUtils.blur(this, BLUR_RADIUS, ((BitmapDrawable) Objects.requireNonNull(ContextCompat.getDrawable(this, org.koishi.launcher.h2co3.resources.R.drawable.background))).getBitmap())));
 
         //初始化控制器
-        mController = new H2CO3VirtualController(this, KeyEvent.KEYMAP_TO_X) {
+        mController = new H2CO3VirtualController(this, new H2CO3LauncherBridge(), KeyEvent.KEYMAP_TO_X) {
             @Override
             public void init() {
                 super.init();
@@ -177,7 +185,7 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
     }
 
     @Override
-    public Activity getActivity() {
+    public H2CO3Activity getActivity() {
         return this;
     }
 

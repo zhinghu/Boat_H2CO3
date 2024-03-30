@@ -1,13 +1,17 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.ui;
 
 import static org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherHelper.launchMinecraft;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -17,57 +21,47 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.control.controller.HardwareController;
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.core.utils.Logging;
+import org.koishi.launcher.h2co3.launcher.H2CO3LauncherActivity;
+import org.koishi.launcher.h2co3.launcher.R;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridgeCallBack;
 import org.koishi.launcher.h2co3.launcher.utils.MCOptionUtils;
-import org.koishi.launcher.h2co3.launcher.utils.MinecraftVersion;
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
-import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
-import org.koishi.launcher.h2co3.core.utils.Logging;
-import org.koishi.launcher.h2co3.core.utils.file.FileTools;
-import org.koishi.launcher.h2co3.launcher.H2CO3LauncherActivity;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherHelper;
-import org.koishi.launcher.h2co3.launcher.R;
-import org.koishi.launcher.h2co3.resources.component.LogView;
+import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
+import java.lang.ref.WeakReference;
 import java.util.logging.Level;
 
+/**
+ * @author caini
+ */
 public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implements H2CO3ControlClient, TextureView.SurfaceTextureListener {
 
-    private static final int CURSOR_SIZE = 16; //dp
-    private static final int[] grabbedPointer = new int[]{999, 89999};
-    private MaterialAlertDialogBuilder dialog;
-    private H2CO3LauncherBridge launcherLib;
+    private static final int CURSOR_SIZE = 16;
+    private static final int[] GRABBED_POINTER = new int[]{999, 89999};
     private boolean grabbed = false;
     private ImageView cursorIcon;
-    private LogView mLogView;
     private int screenWidth;
     private int screenHeight;
     private int scaleFactor = 1;
-    public static H2CO3LauncherHelper.LogReceiver logReceiver;
+    public static WeakReference<H2CO3LauncherBridge.LogReceiver> logReceiver;
 
     public static void attachControllerInterface() {
         H2CO3LauncherClientActivity.h2co3LauncherInterface = new IH2CO3Launcher() {
             private H2CO3VirtualController virtualController;
             private HardwareController hardwareController;
-            private Timer timer;
 
             @Override
             public void onActivityCreate(H2CO3LauncherActivity H2CO3LauncherActivity) {
-                virtualController = new H2CO3VirtualController((H2CO3ControlClient) H2CO3LauncherActivity, KEYMAP_TO_X);
-                hardwareController = new HardwareController((H2CO3ControlClient) H2CO3LauncherActivity, KEYMAP_TO_X);
+                virtualController = new H2CO3VirtualController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
+                hardwareController = new HardwareController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
             }
 
             @Override
@@ -106,24 +100,48 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         };
     }
 
+    public static void receiveLog(String str) throws IOException {
+        if (logReceiver == null || logReceiver.get() == null) {
+            Log.e(TAG, "LogReceiver is null. So use default receiver.");
+            logReceiver = new WeakReference<>(new H2CO3LauncherBridge.LogReceiver() {
+                final StringBuilder builder = new StringBuilder();
+
+                @Override
+                public void pushLog(String log) {
+                    builder.append(log);
+                }
+
+                @Override
+                public String getLogs() {
+                    return builder.toString();
+                }
+            });
+        } else {
+            logReceiver.get().pushLog(str);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        nOnCreate();
         setContentView(R.layout.overlay);
         mainTextureView = findViewById(R.id.main_game_render_view);
+        mainTextureView.setSurfaceTextureListener(this);
         baseLayout = findViewById(R.id.main_base);
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         screenHeight = getResources().getDisplayMetrics().heightPixels;
         cursorIcon = new ImageView(this);
         cursorIcon.setLayoutParams(new ViewGroup.LayoutParams(DisplayUtils.getPxFromDp(this, CURSOR_SIZE), DisplayUtils.getPxFromDp(this, CURSOR_SIZE)));
         cursorIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.cursor5);
-        mLogView = new LogView(this);
-        mLogView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        baseLayout.addView(mLogView);
         this.addView(cursorIcon);
-        initUI();
         launcherLib = launchMinecraft(this, screenWidth, screenHeight);
         h2co3LauncherCallback = launcherLib.getCallback();
+        init();
+    }
+
+    private void init() {
+        h2co3LauncherInterface.onActivityCreate(this);
         h2co3LauncherCallback = new H2CO3LauncherBridgeCallBack() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -137,31 +155,17 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
             @Override
             public void onCursorModeChange(int mode) {
-
+                runOnUiThread(() -> {
+                    setGrabCursor(mode == H2CO3LauncherBridge.CursorEnabled);
+                });
             }
 
             @Override
-            public void onLog(String log) {
+            public void onLog(String log) throws IOException {
                 if (log.contains("OR:") || log.contains("ERROR:") || log.contains("INTERNAL ERROR:")) {
                     return;
                 }
-                if (logReceiver == null) {
-                    logReceiver = new H2CO3LauncherHelper.DefaultLogReceiver();
-                }
-                logReceiver.pushLog(log);
-
-                try {
-                    if (firstLog) {
-                        mLogView.setLog(log + "\n");
-                        FileTools.writeText(new File(launcherLib.getLogPath()), log + "\n");
-                        firstLog = false;
-                    } else {
-                        mLogView.appendLog(log + "\n");
-                        FileTools.writeTextWithAppendMode(new File(launcherLib.getLogPath()), log + "\n");
-                    }
-                } catch (IOException e) {
-                    Logging.LOG.log(Level.WARNING, "Can't log game log to target file", e.getMessage());
-                }
+                receiveLog(log);
             }
 
             @Override
@@ -189,25 +193,6 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
             }
         };
-    }
-
-    private void initUI() {
-        init();
-        h2co3LauncherInterface.onActivityCreate(this);
-        dialog = new MaterialAlertDialogBuilder(H2CO3LauncherClientActivity.this);
-    }
-
-
-    @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-        Logging.LOG.log(Level.INFO, "surface ready, start jvm now!");
-        launcherLib.setSurfaceDestroyed(false);
-        int width = screenWidth;
-        int height = screenHeight;
-        configureSurfaceTexture(surfaceTexture, width, height);
-        surfaceTexture.setDefaultBufferSize(width, height);
-        launcherLib.execute(new Surface(surfaceTexture), h2co3LauncherCallback);
-        launcherLib.pushEventWindow(width, height);
     }
 
     @Override
@@ -247,42 +232,8 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
     }
 
-    private void startGame(CommandBuilder args) {
-        String javaPath = H2CO3GameHelper.getJavaPath();
-        String h2co3LauncherRenderer = H2CO3Tools.GL_GL114;
-
-        MinecraftVersion mcVersion = MinecraftVersion.fromDirectory(new File(H2CO3GameHelper.getGameCurrentVersion()));
-        boolean isHighVersion = mcVersion.minimumLauncherVersion >= 21;
-    }
-
     @Override
     public void onClick(View p1) {
-        // TODO: Implement this method
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -297,17 +248,35 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     }
 
     @Override
+    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+        Logging.LOG.log(Level.INFO, "surface ready, start jvm now!");
+        launcherLib.setSurfaceDestroyed(false);
+        int width = screenWidth;
+        int height = screenHeight;
+        configureSurfaceTexture(surfaceTexture, width, height);
+        surfaceTexture.setDefaultBufferSize(width, height);
+        try {
+            launcherLib.execute(new Surface(surfaceTexture), h2co3LauncherCallback);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        launcherLib.pushEventWindow(width, height);
+    }
+
+    @Override
     public void setPointerInc(int xInc, int yInc) {
         if (!grabbed) {
-            int x = grabbedPointer[0] + xInc;
-            int y = grabbedPointer[1] + yInc;
-            if (x >= 0 && x <= screenWidth)
-                grabbedPointer[0] += xInc;
-            if (y >= 0 && y <= screenHeight)
-                grabbedPointer[1] += yInc;
-            setPointer(grabbedPointer[0], grabbedPointer[1]);
-            cursorIcon.setX(grabbedPointer[0]);
-            cursorIcon.setY(grabbedPointer[1]);
+            int x = GRABBED_POINTER[0] + xInc;
+            int y = GRABBED_POINTER[1] + yInc;
+            if (x >= 0 && x <= screenWidth) {
+                GRABBED_POINTER[0] += xInc;
+            }
+            if (y >= 0 && y <= screenHeight) {
+                GRABBED_POINTER[1] += yInc;
+            }
+            setPointer(GRABBED_POINTER[0], GRABBED_POINTER[1]);
+            cursorIcon.setX(GRABBED_POINTER[0]);
+            cursorIcon.setY(GRABBED_POINTER[1]);
         } else {
             setPointer(getPointer()[0] + xInc, getPointer()[1] + yInc);
         }
@@ -319,14 +288,9 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         if (!grabbed) {
             cursorIcon.setX(x);
             cursorIcon.setY(y);
-            grabbedPointer[0] = x;
-            grabbedPointer[1] = y;
+            GRABBED_POINTER[0] = x;
+            GRABBED_POINTER[1] = y;
         }
-    }
-
-    @Override
-    public Activity getActivity() {
-        return this;
     }
 
     @Override
@@ -335,17 +299,19 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     }
 
     @Override
+    public H2CO3Activity getActivity() {
+        return this;
+    }
+
+    @Override
     public void typeWords(String str) {
-        if (str == null) return;
+        if (str == null) {
+            return;
+        }
         for (int i = 0; i < str.length(); i++) {
             setKey(0, str.charAt(i), true);
             setKey(0, str.charAt(i), false);
         }
-    }
-
-    @Override
-    public int[] getGrabbedPointer() {
-        return grabbedPointer.clone();
     }
 
     @Override
@@ -369,11 +335,16 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     }
 
     @Override
+    public int[] getGrabbedPointer() {
+        return GRABBED_POINTER.clone();
+    }
+
+    @Override
     public void setGrabCursor(boolean isGrabbed) {
         super.setGrabCursor(isGrabbed);
         grabbed = isGrabbed;
         if (!isGrabbed) {
-            setPointer(grabbedPointer[0], grabbedPointer[1]);
+            setPointer(GRABBED_POINTER[0], GRABBED_POINTER[1]);
             cursorIcon.setVisibility(View.VISIBLE);
         } else if (cursorIcon.getVisibility() == View.VISIBLE) {
             cursorIcon.setVisibility(View.INVISIBLE);

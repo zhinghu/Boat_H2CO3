@@ -1,11 +1,18 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.input;
 
 import android.content.Context;
 
 import org.koishi.launcher.h2co3.control.controller.Controller;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 public interface Input {
-    boolean load(Context context, Controller controller);
+    boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge);
 
     boolean unload();
 

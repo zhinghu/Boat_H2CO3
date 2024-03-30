@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_undo"
+        android:icon="@drawable/ic_undo"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/terminal_undo" />
+    <item
+        android:id="@+id/action_redo"
+        android:icon="@drawable/ic_redo"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/terminal_redo" />
+    <item
+        android:id="@+id/action_del_all"
+        android:icon="@drawable/ic_del_all"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/terminal_clear_history" />
+</menu>

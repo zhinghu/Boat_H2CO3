@@ -1,11 +1,14 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.resources.component.dialog;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -17,20 +20,10 @@ public class H2CO3CustomViewDialog extends H2CO3MaterialDialog {
         super(context);
     }
 
-    /**
-     * 获取自定义视图
-     *
-     * @return 自定义视图
-     */
     public View getCustomView() {
         return customView;
     }
 
-    /**
-     * 设置自定义视图
-     *
-     * @param layoutResId 自定义视图的布局资源ID
-     */
     public void setCustomView(int layoutResId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         customView = inflater.inflate(layoutResId, null);

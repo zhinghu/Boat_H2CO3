@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -15,6 +21,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".application.H2CO3Application"
@@ -55,6 +64,10 @@
 
         <activity
             android:name=".ui.ExitActivity"
+            tools:ignore="LockedOrientationActivity" />
+
+        <activity
+            android:name=".ui.TerminalActivity"
             tools:ignore="LockedOrientationActivity" />
 
         <activity

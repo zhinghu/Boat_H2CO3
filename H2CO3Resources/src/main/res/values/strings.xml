@@ -1,3 +1,9 @@
+<!--
+  ~ //
+  ~ // Created by cainiaohh on 2024-03-31.
+  ~ //
+  -->
+
 <resources>
     <string name="app_name" translatable="false">Boat_H2CO3</string>
     <string name="app_restart">Restart</string>
@@ -180,5 +186,13 @@
     <string name="spinner_official">official</string>
     <string name="spinner_bmclapi">bmclapi</string>
     <string name="refresh">Refresh</string>
+
+    <string name="terminal_exec">Execute</string>
+    <string name="title_terminal">Terminal</string>
+    <string name="terminal_text">Input command</string>
+    <string name="terminal_clear">Clear</string>
+    <string name="terminal_undo">Undo</string>
+    <string name="terminal_redo">Redo</string>
+    <string name="terminal_clear_history">Delete history</string>
 
 </resources>

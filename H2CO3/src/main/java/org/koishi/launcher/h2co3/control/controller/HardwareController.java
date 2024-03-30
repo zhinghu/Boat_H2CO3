@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.control.controller;
 
 import static org.koishi.launcher.h2co3.control.definitions.id.key.KeyEvent.KEYBOARD_BUTTON;
@@ -19,7 +25,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
-import org.koishi.launcher.h2co3.control.codes.AndroidKeyMap;
 import org.koishi.launcher.h2co3.control.codes.Translation;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
 import org.koishi.launcher.h2co3.control.input.HwInput;
@@ -28,6 +33,7 @@ import org.koishi.launcher.h2co3.control.input.otg.GamePad;
 import org.koishi.launcher.h2co3.control.input.otg.Keyboard;
 import org.koishi.launcher.h2co3.control.input.otg.Mouse;
 import org.koishi.launcher.h2co3.control.input.otg.Phone;
+import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 import java.util.ArrayList;
 
@@ -42,13 +48,13 @@ public class HardwareController extends BaseController implements HwController {
     public final HwInput phone;
     public final HwInput mouse;
     public final HwInput gamepad;
-    private final AndroidKeyMap androidKeyMap = new AndroidKeyMap();
     private final Translation mTranslation;
     private USBDeviceReceiver mUsbReceiver;
+    private H2CO3LauncherBridge h2co3LauncherBridge;
 
-    public HardwareController(H2CO3ControlClient h2CO3ControlClient, int transType) {
-        super(h2CO3ControlClient, false);
-        //printInputDevices();
+    public HardwareController(H2CO3ControlClient h2CO3ControlClient, H2CO3LauncherBridge bridge, int transType) {
+        super(h2CO3ControlClient, bridge, false);
+        printInputDevices();
 
         //初始化键值翻译器
         this.mTranslation = new Translation(transType);
@@ -79,7 +85,9 @@ public class HardwareController extends BaseController implements HwController {
             return HardwareController.INPUT_DEVICE_KEYBOARD;
         } else if (((device.getSources() & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD) && ((device.getSources() & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK)) {
             return HardwareController.INPUT_DEVICE_GAMEPAD;
-        } else return HardwareController.INPUT_DEVICE_UNKNOWN;
+        } else {
+            return HardwareController.INPUT_DEVICE_UNKNOWN;
+        }
     }
 
     @Override
@@ -89,7 +97,9 @@ public class HardwareController extends BaseController implements HwController {
             case KEYBOARD_BUTTON:
             case MOUSE_BUTTON:
                 String KeyName = event.getKeyName();
-                if (KeyName == null) return;
+                if (KeyName == null) {
+                    return;
+                }
                 String[] strs = KeyName.split(MARK_KEYNAME_SPLIT);
                 for (String str : strs) {
                     sendKeyEvent(new BaseKeyEvent(event.getTag(), str, event.isPressed(), event.getType(), event.getPointer()));
@@ -133,7 +143,9 @@ public class HardwareController extends BaseController implements HwController {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event == null) return false;
+        if (event == null) {
+            return false;
+        }
         switch (distinguishInputDevices(event.getDevice())) {
             case HardwareController.INPUT_DEVICE_MOUSE:
                 for (HwInput hwi : new HwInput[]{mouse}) {
@@ -164,7 +176,9 @@ public class HardwareController extends BaseController implements HwController {
 
     @Override
     public boolean dispatchMotionKeyEvent(MotionEvent event) {
-        if (event == null) return false;
+        if (event == null) {
+            return false;
+        }
         switch (distinguishInputDevices(event.getDevice())) {
             case HardwareController.INPUT_DEVICE_MOUSE:
                 for (HwInput hwi : new HwInput[]{mouse}) {
@@ -262,7 +276,9 @@ public class HardwareController extends BaseController implements HwController {
     }
 
     private void registerReceiver() {
-        if (mUsbReceiver != null) return;
+        if (mUsbReceiver != null) {
+            return;
+        }
         IntentFilter filter = new IntentFilter();
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
