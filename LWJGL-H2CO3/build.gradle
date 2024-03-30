@@ -21,6 +21,7 @@ tasks.register('buildLwjgl') {
         }
     }
 }
+tasks.build.dependsOn('buildLwjgl')
 jar {
     doLast {
         archiveFileName = 'lwjgl.jar'

@@ -1,24 +1,32 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.APIUtil.apiLog;
+import static org.lwjgl.system.JNI.invokePP;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
 
-import javax.annotation.Nullable;
+import org.lwjgl.system.JNI;
+import org.lwjgl.system.NativeType;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
-import static org.lwjgl.system.APIUtil.apiLog;
+import javax.annotation.Nullable;
 
 /**
- * By Tungsten
- * This class is for Fold Craft Launcher.
+ * By ciniaohh
+ * This class is for BOAT_H2CO3.
  */
 public class H2CO3LauncherInjector {
 
-    public static final long GetInjectorMode = apiGetFunctionAddress(GLFW.GLFW, "glfwGetInjectorMode");
-    public static final long SetInjectorMode = apiGetFunctionAddress(GLFW.GLFW, "glfwSetInjectorMode");
+    public static final long SetInjectorCallBack = apiGetFunctionAddress(GLFW.GLFW, "glfwSetInjectorCallback");
     public static final long SetHitResultType = apiGetFunctionAddress(GLFW.GLFW, "glfwSetHitResultType");
 
     private static boolean get = false;
@@ -72,22 +80,23 @@ public class H2CO3LauncherInjector {
         H2CO3LauncherInjector.param2 = param2;
         H2CO3LauncherInjector.param3 = param3;
         get = true;
-        new Thread(() -> {
-            while (true) {
-                if (nglfwGetInjectorMode() == INJECTOR_MODE_ENABLE) {
-                    getHitResultType();
-                    nglfwSetInjectorMode(INJECTOR_MODE_DISABLE);
-                }
+        H2CO3LauncherInjectorCallback callback = new H2CO3LauncherInjectorCallback() {
+            @Override
+            public void invoke() {
+                getHitResultType();
             }
-        }).start();
+        };
+        glfwSetH2CO3LauncherInjectorCallback(callback);
     }
 
-    public static int nglfwGetInjectorMode() {
-        return JNI.invokeI(GetInjectorMode);
+    @Nullable
+    @NativeType("H2CO3injectorfun")
+    public static H2CO3LauncherInjectorCallback glfwSetH2CO3LauncherInjectorCallback(@Nullable @NativeType("H2CO3injectorfun") H2CO3LauncherInjectorCallbackI cbfun) {
+        return H2CO3LauncherInjectorCallback.createSafe(nglfwSetFCLInjectorCallback(memAddressSafe(cbfun)));
     }
 
-    public static void nglfwSetInjectorMode(int mode) {
-        JNI.invokeV(mode, SetInjectorMode);
+    public static long nglfwSetFCLInjectorCallback(long cbfun) {
+        return invokePP(cbfun, SetInjectorCallBack);
     }
 
     public static void nglfwSetHitResultType(String type) {

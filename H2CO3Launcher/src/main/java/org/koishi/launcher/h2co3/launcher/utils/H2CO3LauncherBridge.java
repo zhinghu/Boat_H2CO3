@@ -4,6 +4,12 @@
  * //
  */
 
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.launcher.utils;
 
 import android.app.Activity;
@@ -14,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.SurfaceTexture;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
@@ -83,6 +90,7 @@ public class H2CO3LauncherBridge implements Serializable {
     private Handler handler;
     private Thread thread;
     private ExecutorService mExecutor;
+    private SurfaceTexture surfaceTexture;
 
     public void setThread(Thread thread) {
         this.thread = thread;
@@ -186,6 +194,14 @@ public class H2CO3LauncherBridge implements Serializable {
 
     public void pushEventWindow(int width, int height) {
         pushEvent(System.nanoTime(), ConfigureNotify, width, height);
+    }
+
+    public SurfaceTexture getSurfaceTexture() {
+        return surfaceTexture;
+    }
+
+    public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
+        this.surfaceTexture = surfaceTexture;
     }
 
     public void handleWindow() throws IOException {

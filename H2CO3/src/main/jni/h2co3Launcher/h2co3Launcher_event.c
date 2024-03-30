@@ -218,14 +218,11 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setEventPipe(J
             "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_setEventPipe:Succeeded to set event pipe");
 }
 
-int injector_mode = 0;
+H2CO3injectorfun injectorCallback;
 
-void h2co3LauncherSetInjectorMode(int mode) {
-    injector_mode = mode;
-}
 
-int h2co3LauncherGetInjectorMode() {
-    return injector_mode;
+void h2co3LauncherSetInjectorCallback(H2CO3injectorfun callback) {
+    injectorCallback = callback;
 }
 
 void h2co3LauncherSetHitResultType(int type) {

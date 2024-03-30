@@ -589,9 +589,7 @@ void _glfwPlatformGetCursorPos(_GLFWwindow *window, double *xpos, double *ypos);
 
 void _glfwPlatformSetCursorPos(_GLFWwindow *window, double xpos, double ypos);
 
-void _glfwPlatformSetInjectorMode(int mode);
-
-int _glfwPlatformGetInjectorMode();
+void _glfwPlatformSetInjectorCallback(H2CO3injectorfun callback);
 
 void _glfwPlatformSetHitResultType(int type);
 

@@ -106,6 +106,7 @@ extern "C" {
  * Include it unconditionally to avoid surprising side-effects.
  */
 #include <stdint.h>
+#include "h2co3Launcher_bridge.h"
 
 #if defined(GLFW_INCLUDE_VULKAN)
 #include <vulkan/vulkan.h>
@@ -4352,15 +4353,10 @@ GLFWAPI int glfwGetInputMode(GLFWwindow *window, int mode);
 GLFWAPI void glfwSetInputMode(GLFWwindow *window, int mode, int value);
 
 /**
- * For H2CO3LAUNCHER, set injector mode
+ * For H2CO3LAUNCHER, set injector callback
  * @param mode 0 is disable, 1 is enable, when enabled, lwjgl will try to get hit result type
  */
-GLFWAPI void glfwSetInjectorMode(int mode);
-
-/**
- * For H2CO3LAUNCHER, get injector mode
- */
-GLFWAPI int glfwGetInjectorMode();
+GLFWAPI H2CO3injectorfun glfwSetInjectorCallback(H2CO3injectorfun callback);
 
 /**
  * For H2CO3LAUNCHER, set type of what player's cursor point to

@@ -307,11 +307,9 @@ int _glfwPlatformCreateWindow(_GLFWwindow *window,
                 return GLFW_FALSE;
         } else if (ctxconfig->source == GLFW_OSMESA_CONTEXT_API) {
             const char *renderer = getenv("LIBGL_STRING");
-            if (strcmp(renderer, "VirGLRenderer") == 0) {
-                if (!_glfwInitEGL())
-                    return GLFW_FALSE;
-            }
-            if (strcmp(renderer, "Zink") == 0) {
+            if (strcmp(renderer, "Zink") == 0 ||
+                strcmp(renderer, "Freedreno") == 0 ||
+                strcmp(renderer, "VirGLRenderer") == 0) {
                 if (!_glfwInitEGL())
                     return GLFW_FALSE;
             }
@@ -541,12 +539,8 @@ void _glfwPlatformSetCursorPos(_GLFWwindow *window, double x, double y) {
     // h2co3LauncherSetCursorPos(x, y);
 }
 
-void _glfwPlatformSetInjectorMode(int mode) {
-    h2co3LauncherSetInjectorMode(mode);
-}
-
-int _glfwPlatformGetInjectorMode() {
-    return h2co3LauncherGetInjectorMode();
+void _glfwPlatformSetInjectorCallback(H2CO3injectorfun callback) {
+    h2co3LauncherSetInjectorCallback(callback);
 }
 
 void _glfwPlatformSetHitResultType(int type) {
@@ -555,8 +549,7 @@ void _glfwPlatformSetHitResultType(int type) {
 
 void _glfwPlatformSetCursorMode(_GLFWwindow *window, int mode) {
     if (mode == GLFW_CURSOR_DISABLED) {
-        if (_glfwPlatformWindowFocused(window))
-            disableCursor(window);
+        disableCursor(window);
     } else if (_glfw.h2co3Launcher.disabledCursorWindow == window)
         enableCursor(window);
     // else
