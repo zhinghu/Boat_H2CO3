@@ -38,12 +38,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.H2CO3.DynamicColors"
         tools:targetApi="34">
+
         <activity
             android:name=".ui.MicrosoftLoginActivity"
-            android:exported="false" />
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:exported="false"
+            android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".ui.SplashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:exported="true"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,23 +58,29 @@
         </activity>
         <activity
             android:name=".ui.CrashActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.H2CO3MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.VanillaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.ExitActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.TerminalActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
+            android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.H2CO3LauncherClientActivity"
             android:alwaysRetainTaskState="true"

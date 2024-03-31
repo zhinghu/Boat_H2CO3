@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.adapter;
 
 import static org.koishi.launcher.h2co3.core.H2CO3Auth.setUserState;
@@ -25,7 +31,7 @@ import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MaterialDialog;
-import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
+import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,13 +43,13 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
     private final List<UserBean> list;
     private final boolean hasFooter;
     private final Map<String, Drawable> userIconCache = new HashMap<>();
-    private final H2CO3MainActivity activity;
+    private final HomeFragment fragment;
     private int selectedPosition;
     private boolean isRemoveUserDialogShowing = false;
 
-    public HomeAdapterListUser(H2CO3MainActivity activity, List<UserBean> list) {
-        this.context = activity;
-        this.activity = activity;
+    public HomeAdapterListUser(HomeFragment fragment, List<UserBean> list) {
+        this.context = fragment.requireActivity();
+        this.fragment = fragment;
         this.list = list;
         this.selectedPosition = -1;
         this.hasFooter = true;
@@ -62,9 +68,9 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
     @Override
     public int getItemViewType(int position) {
         if (position < list.size()) {
-            return 0; // 用户项
+            return 0;
         } else {
-            return 1; // Footer项
+            return 1;
         }
     }
 
@@ -85,26 +91,26 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         int viewType = holder.getItemViewType();
         if (viewType == 0) {
-            final UserBean user = list.get(position);
+            UserBean user = list.get(position);
             if (user.isSelected()) {
                 selectedPosition = position;
                 updateUserState(user);
                 holder.selectorCardView.setStrokeWidth(13);
-                holder.selectorCardView.setClickable(false); // 禁用点击
-                holder.selectorCardView.setOnClickListener(null); // 移除点击事件监听器
+                holder.selectorCardView.setClickable(false);
+                holder.selectorCardView.setOnClickListener(null);
             } else {
                 holder.selectorCardView.setStrokeWidth(0);
-                holder.selectorCardView.setClickable(true); // 启用点击
+                holder.selectorCardView.setClickable(true);
+                holder.selectorCardView.setOnClickListener(null);
                 holder.selectorCardView.setOnClickListener(v -> {
                     selectedPosition = holder.getBindingAdapterPosition();
                     try {
-                        updateSelectedUser();
+                        updateSelectedUser(selectedPosition);
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
-                    notifyItemChanged(holder.getBindingAdapterPosition());
-                    activity.popView.dismiss();
                     updateUserState(user);
+                    fragment.reLoadUser();
                 });
             }
             holder.nameTextView.setText(user.getUserName());
@@ -123,7 +129,7 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
                 }
             });
         } else {
-            holder.addCardView.setOnClickListener(v -> activity.showLoginDialog());
+            holder.addCardView.setOnClickListener(v -> fragment.showLoginDialog());
         }
     }
 
@@ -135,26 +141,24 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
             if (cachedIcon != null) {
                 return cachedIcon;
             } else {
-                Drawable userIcon = H2CO3Loader.getHeadDrawable(activity, user.getSkinTexture());
+                Drawable userIcon = H2CO3Loader.getHeadDrawable(fragment.requireActivity(), user.getSkinTexture());
                 userIconCache.put(user.getUserName(), userIcon);
                 return userIcon;
             }
         }
     }
 
-    private void updateSelectedUser() throws JSONException {
-        UserBean selectedUser = list.get(selectedPosition);
+    private void updateSelectedUser(int selectedPosition) throws JSONException {
         JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
-        try {
-            for (UserBean user : list) {
-                user.setIsSelected(user == selectedUser);
-                usersJson.getJSONObject(user.getUserName()).put(H2CO3Tools.LOGIN_IS_SELECTED, user == selectedUser);
-            }
-            usersJson.put(selectedUser.getUserName(), usersJson.getJSONObject(selectedUser.getUserName()));
-            H2CO3Auth.setUserJson(usersJson.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+        for (int i = 0; i < list.size(); i++) {
+            UserBean user = list.get(i);
+            boolean isSelected = (i == selectedPosition);
+            user.setIsSelected(isSelected);
+            usersJson.getJSONObject(user.getUserName()).put(H2CO3Tools.LOGIN_IS_SELECTED, isSelected);
         }
+
+        H2CO3Auth.setUserJson(usersJson.toString());
     }
 
     private void removeUser(int position) {
@@ -165,7 +169,6 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         } else if (position < selectedPosition) {
             selectedPosition--;
         }
-        notifyItemRemoved(position);
 
         list.removeIf(user -> user == removedUser);
 
@@ -176,21 +179,25 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        fragment.reLoadUser();
+
+
     }
 
     private void updateUserState(UserBean user) {
         setUserState(user);
-        activity.homeTopbarUserName.setText(user.getUserName());
-        activity.homeTopbarUserState.setText(getUserStateText(user));
-        activity.homeTopbarUserIcon.setImageDrawable(getUserIcon(user));
+        fragment.homeUserName.setText(user.getUserName());
+        fragment.homeUserState.setText(getUserStateText(user));
+        fragment.homeUserIcon.setImageDrawable(getUserIcon(user));
     }
 
     private void resetUserState() {
         UserBean emptyUser = new UserBean();
         setUserState(emptyUser);
-        activity.homeTopbarUserName.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        activity.homeTopbarUserState.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
-        activity.homeTopbarUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+        fragment.homeUserName.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
+        fragment.homeUserState.setText(context.getString(org.koishi.launcher.h2co3.resources.R.string.user_add));
+        fragment.homeUserIcon.setImageDrawable(ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.resources.R.drawable.xicon));
     }
 
     private String getUserStateText(UserBean user) {
@@ -211,7 +218,6 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         dialog.setPositiveButton("确定", (dialogInterface, which) -> {
             removeUser(position);
             isRemoveUserDialogShowing = false;
-            activity.popView.dismiss();
         });
         dialog.setNegativeButton("取消", (dialogInterface, which) -> {
             isRemoveUserDialogShowing = false;

@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.utils;
 
 import android.content.Intent;
@@ -16,7 +22,7 @@ import org.koishi.launcher.h2co3.core.login.Texture.Texture;
 import org.koishi.launcher.h2co3.core.login.Texture.TextureType;
 import org.koishi.launcher.h2co3.core.login.microsoft.MicrosoftLoginUtils;
 import org.koishi.launcher.h2co3.core.utils.Avatar;
-import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
+import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,10 +32,10 @@ import java.util.Map;
 import java.util.Objects;
 
 public class HomeLoginHandler extends Handler {
-    private final H2CO3MainActivity activity;
+    private final HomeFragment fragment;
 
-    public HomeLoginHandler(H2CO3MainActivity activity) {
-        this.activity = activity;
+    public HomeLoginHandler(HomeFragment fragment) {
+        this.fragment = fragment;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class HomeLoginHandler extends Handler {
             String errorDescription = data.getQueryParameter("error_description");
             if (error != null) {
                 if (errorDescription != null && !errorDescription.startsWith("The user has denied access to the scope requested by the h2CO3ControlClient application")) {
-                    Toast.makeText(activity, "Error: " + error + ": " + errorDescription, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(fragment.requireActivity(), "Error: " + error + ": " + errorDescription, Toast.LENGTH_SHORT).show();
                 }
             } else {
                 String code = data.getQueryParameter("code");
@@ -57,7 +63,7 @@ public class HomeLoginHandler extends Handler {
                             Texture texture = map.get(TextureType.SKIN);
                             Bitmap skin;
                             if (texture == null) {
-                                AssetManager manager = activity.getAssets();
+                                AssetManager manager = fragment.requireActivity().getAssets();
                                 InputStream inputStream = null;
                                 try {
                                     inputStream = manager.open("drawable/alex.png");
@@ -104,12 +110,11 @@ public class HomeLoginHandler extends Handler {
                                     }
                                 }
                             }
-                            activity.runOnUiThread(() -> {
+                            fragment.requireActivity().runOnUiThread(() -> {
                                 String skinTexture = Avatar.bitmapToString(skin);
                                 H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName, "", "", "1", "https://www.microsoft.com", "0", microsoftLoginUtils.mcUuid, skinTexture, microsoftLoginUtils.mcToken, microsoftLoginUtils.msRefreshToken, "00000000-0000-0000-0000-000000000000", false, false);
-                                activity.popView.dismiss();
-                                activity.loginDialogAlert.dismiss();
-                                activity.progressDialog.dismiss();
+                                fragment.loginDialogAlert.dismiss();
+                                fragment.progressDialog.dismiss();
                             });
                         }
                     } catch (Exception e) {

@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.ui;
 
 import android.os.AsyncTask;
@@ -38,9 +44,6 @@ public class VanillaActivity extends H2CO3Activity {
     private RecyclerView recyclerView;
     private VersionAdapter versionAdapter;
     private RadioGroup typeRadioGroup;
-    private RadioButton rbRelease;
-    private RadioButton rbSnapshot;
-    private RadioButton rbOldbeta;
 
     private List<Version> versionList;
     private List<Version> filteredList;
@@ -69,9 +72,9 @@ public class VanillaActivity extends H2CO3Activity {
     private void initView() {
         recyclerView = findViewById(R.id.loadingversionFileListView1);
         typeRadioGroup = findViewById(R.id.typeRadioGroup);
-        rbRelease = findViewById(R.id.rb_release);
-        rbSnapshot = findViewById(R.id.rb_snapshot);
-        rbOldbeta = findViewById(R.id.rb_old_beta);
+        RadioButton rbRelease = findViewById(R.id.rb_release);
+        RadioButton rbSnapshot = findViewById(R.id.rb_snapshot);
+        RadioButton rbOldbeta = findViewById(R.id.rb_old_beta);
 
         spDownloadSourceMode = findViewById(R.id.sp_download_source_mode);
         String[] mItems = getResources().getStringArray(R.array.download_source);
@@ -132,6 +135,8 @@ public class VanillaActivity extends H2CO3Activity {
 
     private class FetchVersionsTask extends AsyncTask<String, Void, List<Version>> {
 
+        private static final int CONNECTION_TIMEOUT = 10000;
+
         @Override
         protected List<Version> doInBackground(String... urls) {
             String apiUrl = urls[0];
@@ -141,6 +146,7 @@ public class VanillaActivity extends H2CO3Activity {
                 URL url = new URL(apiUrl);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
+                connection.setConnectTimeout(CONNECTION_TIMEOUT);
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {

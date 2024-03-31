@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.resources.component.activity;
 
 import android.content.Context;
@@ -32,7 +38,7 @@ public class H2CO3Activity extends MaterialActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         H2CO3Tools.loadPaths(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= 999) {
             //这里做你想做的事
             boolean spIsAuth = H2CO3Tools.getH2CO3Value("enable_monet", true, Boolean.class);
             if (spIsAuth) {

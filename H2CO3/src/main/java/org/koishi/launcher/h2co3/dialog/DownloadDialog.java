@@ -1,3 +1,9 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-03-31.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.dialog;
 
 import android.content.Context;
@@ -24,8 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.download.DownloadItem;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.utils.download.DownloadItem;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -294,7 +300,7 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
         @Override
         protected void onPostExecute(Void aVoid) {
             adapter.removeCompletedItems();
-            if (downloadItems.isEmpty()) {
+            if (downloadItems.isEmpty() || dialog != null) {
                 dialog.dismiss();
             }
             adapter.notifyDataSetChanged();
