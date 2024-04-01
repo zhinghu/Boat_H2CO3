@@ -51,11 +51,17 @@ public class DbDao {
      * 检查数据库中是否已经有该条记录
      */
     public boolean hasData(String tempName) {
-        //从Record这个表里找到name=tempName的id
+        // 检查tempName是否为null，如果为null，可以选择返回false或者其他逻辑
+        if (tempName == null) {
+            return false;
+        }
+        // 模糊搜索
         Cursor cursor = helper.getReadableDatabase().rawQuery(
-                "select id as _id,name from records where name =?", new String[]{tempName});
-        //判断是否有下一个
-        return cursor.moveToNext();
+                "select id as _id,name from records where name = ?", new String[]{tempName});
+        // 判断是否有下一个
+        boolean exists = cursor.moveToNext();
+        cursor.close();
+        return exists;
     }
 
     /**
