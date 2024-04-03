@@ -7,7 +7,7 @@ on:
       - '**' # 监听所有分支
   pull_request:
     branches:
-      - H2CO3_main
+      - '**'
 
 jobs:
   build:
