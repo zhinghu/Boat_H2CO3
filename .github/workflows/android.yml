@@ -3,11 +3,11 @@ name: Android CI
 on:
   workflow_dispatch:
   push:
-    tags:
-      - v*
+    branches:
+      - '**' # 监听所有分支
   pull_request:
     branches:
-      - H2CO3_main
+      - '**'
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
         run: gradle assembleDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: H2CO3-debug
           path: H2CO3/build/outputs/apk/debug/*.apk
