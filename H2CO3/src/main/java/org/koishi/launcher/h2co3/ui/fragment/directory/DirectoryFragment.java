@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,7 +34,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -66,39 +64,37 @@ import java.util.stream.Stream;
 
 public class DirectoryFragment extends H2CO3Fragment {
 
-    private final String h2co3Dir = MINECRAFT_DIR;
-    VersionRecyclerAdapter versionRecyclerAdapter;
-    private MaterialAlertDialogBuilder mDialog;
-    private LinearLayout page;
-    private FloatingActionButton dir, ver;
-    private SearchDirAdapter mAdapter;
+    private final String h2co3Directory = MINECRAFT_DIR;
+    private VersionRecyclerAdapter verAdapter;
+    private MaterialAlertDialogBuilder dialogBuilder;
+    private FloatingActionButton newDirButton, newVerButton;
+    private DirectoryAdapter dirAdapter;
     private String H2CO3Dir;
-    private JSONObject mJsonObj;
+    private JSONObject dirsJsonObj;
     @SuppressLint("HandlerLeak")
-    private final Handler han = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
-                case 0 -> mDialog.create().dismiss();
+                case 0 -> dialogBuilder.create().dismiss();
                 case 1 -> {
-                    mDialog.create().dismiss();
+                    dialogBuilder.create().dismiss();
                     try {
-                        mJsonObj.getJSONArray("dirs").put(H2CO3Dir);
-                        saveJsonObj(mJsonObj);
+                        dirsJsonObj.getJSONArray("dirs").put(H2CO3Dir);
+                        saveJsonObj(dirsJsonObj);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    mAdapter.updata(getDirList());
+                    dirAdapter.updata(getDirList());
                     H2CO3Tools.showError(requireActivity(), getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
                 }
                 case 2 ->
-                        Snackbar.make(page, getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_add_done));
             }
         }
     };
-    private RecyclerView mRecyclerView, mVerRecyclerView;
+    private RecyclerView dirRecyclerView, verRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,74 +104,79 @@ public class DirectoryFragment extends H2CO3Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_directory, container, false);
-        page = root.findViewById(android.R.id.content);
 
         H2CO3Tools.loadPaths(requireContext());
 
-        dir = root.findViewById(R.id.ver_new_dir);
-        dir.setOnClickListener(v -> showDirDialog());
-        ver = root.findViewById(R.id.ver_new_ver);
-        ver.setOnClickListener(v -> startActivity(new Intent(requireActivity(), VanillaActivity.class)));
-        mRecyclerView = root.findViewById(R.id.mRecyclerView);
-        mVerRecyclerView = root.findViewById(R.id.mVerRecyclerView);
+        newDirButton = root.findViewById(R.id.ver_new_dir);
+        newDirButton.setOnClickListener(v -> showDirDialog());
+        newVerButton = root.findViewById(R.id.ver_new_ver);
+        newVerButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), VanillaActivity.class)));
+        dirRecyclerView = root.findViewById(R.id.mRecyclerView);
+        verRecyclerView = root.findViewById(R.id.mVerRecyclerView);
         initViews();
         initVer();
         return root;
     }
 
     public void initViews() {
-        mJsonObj = getJsonObj();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        mAdapter = new SearchDirAdapter(getDirList(), requireActivity());
-        mAdapter.setRvItemOnclickListener(position -> {
+        dirsJsonObj = getJsonObj();
+        dirRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        dirAdapter = new DirectoryAdapter(getDirList(), requireActivity());
+        dirAdapter.setRvItemOnclickListener(position -> {
             try {
-                JSONArray dirs = mJsonObj.getJSONArray("dirs");
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
                 dirs.remove(position);
-                saveJsonObj(mJsonObj);
-                mAdapter.updata(getDirList());
+                saveJsonObj(dirsJsonObj);
+                dirAdapter.updata(getDirList());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         });
-        if (!hasData(h2co3Dir)) {
+        if (!hasData(h2co3Directory)) {
             try {
-                mJsonObj.getJSONArray("dirs").put(h2co3Dir);
-                saveJsonObj(mJsonObj);
-                mAdapter.updata(getDirList());
+                dirsJsonObj.getJSONArray("dirs").put(h2co3Directory);
+                saveJsonObj(dirsJsonObj);
+                dirAdapter.updata(getDirList());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        mRecyclerView.setAdapter(mAdapter);
+        dirRecyclerView.setAdapter(dirAdapter);
     }
 
     public void initVer() {
         File versionlist = new File(H2CO3GameHelper.getGameDirectory() + "/versions");
+
         if (versionlist.isDirectory() && versionlist.exists()) {
+
             try (Stream<Path> paths = Files.list(versionlist.toPath())) {
+
                 List<String> verList = paths
                         .map(Path::getFileName)
                         .map(Path::toString)
                         .sorted(Collator.getInstance(Locale.CHINA))
                         .collect(Collectors.toList());
-                mVerRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-                versionRecyclerAdapter = new VersionRecyclerAdapter(requireContext(), verList);
-                mVerRecyclerView.setAdapter(versionRecyclerAdapter);
+
+                verRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+                verAdapter = new VersionRecyclerAdapter(requireContext(), verList);
+
+                verRecyclerView.setAdapter(verAdapter);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            mVerRecyclerView.setAdapter(null);
+            verRecyclerView.setAdapter(null);
         }
     }
 
+
     public void showDirDialog() {
-        mDialog = new MaterialAlertDialogBuilder(requireActivity());
+        dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.custom_dialog_directory, null);
-        mDialog.setView(dialogView);
-        mDialog.setTitle(org.koishi.launcher.h2co3.resources.R.string.add_directory);
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setTitle(org.koishi.launcher.h2co3.resources.R.string.add_directory);
 
         MaterialButton cancel = dialogView.findViewById(R.id.custom_dir_cancel);
         MaterialButton add = dialogView.findViewById(R.id.custom_dir_ok);
@@ -205,7 +206,7 @@ public class DirectoryFragment extends H2CO3Fragment {
             }
         });
 
-        AlertDialog dialog = mDialog.create();
+        AlertDialog dialog = dialogBuilder.create();
 
         cancel.setOnClickListener(v -> dialog.dismiss());
         add.setOnClickListener(v -> {
@@ -227,7 +228,7 @@ public class DirectoryFragment extends H2CO3Fragment {
                 } else {
                     H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_already_exists));
                 }
-                mAdapter.updata(getDirList());
+                dirAdapter.updata(getDirList());
             } else {
                 H2CO3Tools.showError(requireActivity(), "Please input");
             }
@@ -241,10 +242,10 @@ public class DirectoryFragment extends H2CO3Fragment {
         new Thread(() -> {
             try {
                 AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
-                han.sendEmptyMessage(1);
+                handler.sendEmptyMessage(1);
             } catch (IOException e) {
                 H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_right_dir) + e);
-                han.sendEmptyMessage(0);
+                handler.sendEmptyMessage(0);
             }
         }).start();
     }
@@ -257,23 +258,22 @@ public class DirectoryFragment extends H2CO3Fragment {
         if (f.exists() && f.isDirectory()) {
             initVer();
         } else {
-            setDir(h2co3Dir);
+            setNewDirButton(h2co3Directory);
             H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
             removeDir(currentDir);
-            mAdapter.updata(getDirList());
+            dirAdapter.updata(getDirList());
             initVer();
         }
     }
 
-    public void setDir(String dir) {
-        H2CO3GameHelper.setGameDirectory(dir);
-        H2CO3GameHelper.setGameAssets(dir + "/assets/virtual/legacy");
-        H2CO3GameHelper.setGameAssetsRoot(dir + "/assets");
-        H2CO3GameHelper.setGameCurrentVersion(dir + "/versions");
+    public void setNewDirButton(String newDirButton) {
+        H2CO3GameHelper.setGameDirectory(newDirButton);
+        H2CO3GameHelper.setGameAssets(newDirButton + "/assets/virtual/legacy");
+        H2CO3GameHelper.setGameAssetsRoot(newDirButton + "/assets");
+        H2CO3GameHelper.setGameCurrentVersion(newDirButton + "/versions");
     }
 
     private JSONObject getJsonObj() {
-        // Load the JSON object from file or create a new one if it doesn't exist
         JSONObject jsonObj = null;
         try {
             File jsonFile = new File(requireActivity().getFilesDir(), "dirs.json");
@@ -295,7 +295,7 @@ public class DirectoryFragment extends H2CO3Fragment {
     private JSONObject createNewJsonObj() {
         JSONObject jsonObj = new JSONObject();
         JSONArray dirs = new JSONArray();
-        dirs.put(h2co3Dir);
+        dirs.put(h2co3Directory);
         try {
             jsonObj.put("dirs", dirs);
         } catch (JSONException e) {
@@ -305,17 +305,15 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     private void saveJsonObj(JSONObject jsonObj) {
-        // Save the JSON object to file
         File jsonFile = new File(requireActivity().getFilesDir(), "dirs.json");
         FileTools.writeFile(jsonFile, jsonObj.toString());
     }
 
     private List<String> getDirList() {
-        // Get the list of directories from the JSON object
         List<String> dirList = new ArrayList<>();
-        if (mJsonObj != null) {
+        if (dirsJsonObj != null) {
             try {
-                JSONArray dirs = mJsonObj.getJSONArray("dirs");
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
                 for (int i = 0; i < dirs.length(); i++) {
                     dirList.add(dirs.getString(i));
                 }
@@ -327,13 +325,13 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     public void removeDir(String dir) {
-        if (mJsonObj != null) {
+        if (dirsJsonObj != null) {
             try {
-                JSONArray dirs = mJsonObj.getJSONArray("dirs");
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
                 for (int i = 0; i < dirs.length(); i++) {
                     if (dirs.getString(i).equals(dir)) {
                         dirs.remove(i);
-                        saveJsonObj(mJsonObj);
+                        saveJsonObj(dirsJsonObj);
                         break;
                     }
                 }
@@ -344,10 +342,9 @@ public class DirectoryFragment extends H2CO3Fragment {
     }
 
     private boolean hasData(String dir) {
-        // Check if the directory exists in the JSON object
-        if (mJsonObj != null) {
+        if (dirsJsonObj != null) {
             try {
-                JSONArray dirs = mJsonObj.getJSONArray("dirs");
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
                 for (int i = 0; i < dirs.length(); i++) {
                     if (dirs.getString(i).equals(dir)) {
                         return true;
@@ -360,8 +357,8 @@ public class DirectoryFragment extends H2CO3Fragment {
         return false;
     }
 
-    class SearchDirAdapter extends BaseRecycleAdapter<String> {
-        public SearchDirAdapter(List<String> datas, Context mContext) {
+    class DirectoryAdapter extends BaseRecycleAdapter<String> {
+        public DirectoryAdapter(List<String> datas, Context mContext) {
             super(datas, mContext);
         }
 
@@ -382,7 +379,7 @@ public class DirectoryFragment extends H2CO3Fragment {
             } else {
                 lay.setStrokeWidth(0);
             }
-            if (datas.get(position).equals(h2co3Dir)) {
+            if (datas.get(position).equals(h2co3Directory)) {
                 del.setVisibility(View.GONE);
                 delDir.setVisibility(View.GONE);
             } else {
@@ -406,20 +403,19 @@ public class DirectoryFragment extends H2CO3Fragment {
             lay.setOnClickListener(v -> {
                 if (f.exists() && f.isDirectory()) {
                     setDir(textView.getText().toString());
-                    mAdapter.updata(getDirList());
-                    mVerRecyclerView.setAdapter(null);
+                    dirAdapter.updata(getDirList());
+                    verRecyclerView.setAdapter(null);
                     initVer();
                 } else {
                     if (null != mRvItemOnclickListener) {
                         mRvItemOnclickListener.RvItemOnclick(position);
-                        mAdapter.updata(getDirList());
+                        dirAdapter.updata(getDirList());
                         H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
-                        mVerRecyclerView.setAdapter(null);
+                        verRecyclerView.setAdapter(null);
                     }
                 }
 
             });
-            //
             del.setOnClickListener(view -> {
 
                 if (null != mRvItemOnclickListener) {
@@ -430,10 +426,8 @@ public class DirectoryFragment extends H2CO3Fragment {
             delDir.setOnClickListener(view -> {
                 if (null != mRvItemOnclickListener) {
                     if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
-                        setDir(h2co3Dir);
+                        setDir(h2co3Directory);
                     }
-                    //添加"Yes"按钮
-                    //添加"Yes"按钮
                     AlertDialog alertDialog1 = new MaterialAlertDialogBuilder(requireActivity())
                             .setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action))//标题
                             .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del)
@@ -441,10 +435,14 @@ public class DirectoryFragment extends H2CO3Fragment {
                                 File f1 = new File(datas.get(position));
                                 //TODO
                                 mRvItemOnclickListener.RvItemOnclick(position);
-                                mAdapter.updata(getDirList());
+                                dirAdapter.updata(getDirList());
                                 new Thread(() -> {
                                     //String file2= "/data/data/org.koishi.launcher.h2co3/app_runtime";
-                                    deleteDirWihtFile(f1);
+                                    try {
+                                        FileTools.deleteDirectory(f1);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }).start();
 
                             })
@@ -457,19 +455,6 @@ public class DirectoryFragment extends H2CO3Fragment {
                 }
             });
 
-        }
-
-
-        public void deleteDirWihtFile(File dir) {
-            if (dir == null || !dir.exists() || !dir.isDirectory())
-                return;
-            for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (file.isFile())
-                    file.delete(); // 删除所有文件
-                else if (file.isDirectory())
-                    deleteDirWihtFile(file); // 递规的方式删除文件夹
-            }
-            dir.delete();// 删除目录本身
         }
 
         @Override
@@ -494,7 +479,6 @@ public class DirectoryFragment extends H2CO3Fragment {
             this.datas = datas;
         }
 
-        //创建每一行的View 用RecyclerView.ViewHolder包装
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -502,7 +486,6 @@ public class DirectoryFragment extends H2CO3Fragment {
             return new MyViewHolder(itemView);
         }
 
-        //给每一行View填充数据
         @SuppressLint("UseCompatLoadingForDrawables")
         @Override
         public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
@@ -529,9 +512,9 @@ public class DirectoryFragment extends H2CO3Fragment {
                 holder.rl.setTag(true);
                 holder.rl.setOnClickListener(v -> {
                     if (f.exists() && f.isDirectory()) {
-                        versionRecyclerAdapter.notifyItemChanged(position);
+                        verAdapter.notifyItemChanged(position);
                         H2CO3GameHelper.setGameCurrentVersion(verF);
-                        mVerRecyclerView.setAdapter(versionRecyclerAdapter);
+                        verRecyclerView.setAdapter(verAdapter);
                         if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
                             holder.rl.setStrokeWidth(15);
                             holder.rl.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
@@ -544,8 +527,6 @@ public class DirectoryFragment extends H2CO3Fragment {
             }
 
             holder.btn.setOnClickListener(v -> {
-                //添加"Yes"按钮
-                //添加"Yes"按钮
                 MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
                 alertDialogBuilder.setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action));
                 alertDialogBuilder.setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del);
@@ -556,11 +537,15 @@ public class DirectoryFragment extends H2CO3Fragment {
                     File f1 = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
                     new Thread(() -> {
                         if (f1.isDirectory()) {
-                            deleteDirWihtFile(f1);
+                            try {
+                                FileTools.deleteDirectory(f1);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         } else {
                             deleteFile(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
                         }
-                        han.sendEmptyMessage(2);
+                        handler.sendEmptyMessage(2);
                     }).start();
                 });
                 alertDialogBuilder.setNegativeButton("No No No", (dialogInterface, i) -> {
@@ -573,22 +558,9 @@ public class DirectoryFragment extends H2CO3Fragment {
         public void showExecDialog(String dir) {
         }
 
-        //数据源的数量
         @Override
         public int getItemCount() {
             return datas.size();
-        }
-
-        public void deleteDirWihtFile(File dir) {
-            if (dir == null || !dir.exists() || !dir.isDirectory())
-                return;
-            for (File file : Objects.requireNonNull(dir.listFiles())) {
-                if (file.isFile())
-                    file.delete(); // 删除所有文件
-                else if (file.isDirectory())
-                    deleteDirWihtFile(file); // 递规的方式删除文件夹
-            }
-            dir.delete();// 删除目录本身
         }
 
         public void deleteFile(String filePath) {

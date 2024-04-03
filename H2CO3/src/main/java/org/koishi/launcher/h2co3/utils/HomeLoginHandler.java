@@ -1,9 +1,3 @@
-/*
- * //
- * // Created by cainiaohh on 2024-03-31.
- * //
- */
-
 package org.koishi.launcher.h2co3.utils;
 
 import android.content.Intent;
@@ -30,6 +24,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HomeLoginHandler extends Handler {
     private final HomeFragment fragment;
@@ -54,31 +50,22 @@ public class HomeLoginHandler extends Handler {
                 }
             } else {
                 String code = data.getQueryParameter("code");
-                new Thread(() -> {
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                executorService.execute(() -> {
                     try {
                         MicrosoftLoginUtils microsoftLoginUtils = new MicrosoftLoginUtils(false, code);
                         if (microsoftLoginUtils.doesOwnGame) {
                             MicrosoftLoginUtils.MinecraftProfileResponse minecraftProfile = MicrosoftLoginUtils.getMinecraftProfile(microsoftLoginUtils.tokenType, microsoftLoginUtils.mcToken);
                             Map<TextureType, Texture> map = MicrosoftLoginUtils.getTextures(minecraftProfile).get();
                             Texture texture = map.get(TextureType.SKIN);
-                            Bitmap skin;
+                            Bitmap skin = null;
                             if (texture == null) {
                                 AssetManager manager = fragment.requireActivity().getAssets();
-                                InputStream inputStream = null;
-                                try {
-                                    inputStream = manager.open("drawable/alex.png");
+                                try (InputStream inputStream = manager.open("drawable/alex.png")) {
                                     skin = BitmapFactory.decodeStream(inputStream);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     return;
-                                } finally {
-                                    if (inputStream != null) {
-                                        try {
-                                            inputStream.close();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
                                 }
                             } else {
                                 String u = texture.getUrl();
@@ -87,13 +74,11 @@ public class HomeLoginHandler extends Handler {
                                 }
                                 URL url = new URL(u);
                                 HttpURLConnection httpURLConnection = null;
-                                InputStream inputStream = null;
                                 try {
                                     httpURLConnection = (HttpURLConnection) url.openConnection();
                                     httpURLConnection.setDoInput(true);
                                     httpURLConnection.connect();
-                                    inputStream = httpURLConnection.getInputStream();
-                                    skin = BitmapFactory.decodeStream(inputStream);
+                                    skin = BitmapFactory.decodeStream(httpURLConnection.getInputStream());
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                     return;
@@ -101,17 +86,12 @@ public class HomeLoginHandler extends Handler {
                                     if (httpURLConnection != null) {
                                         httpURLConnection.disconnect();
                                     }
-                                    if (inputStream != null) {
-                                        try {
-                                            inputStream.close();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
                                 }
+
                             }
+                            Bitmap finalSkin = skin;
                             fragment.requireActivity().runOnUiThread(() -> {
-                                String skinTexture = Avatar.bitmapToString(skin);
+                                String skinTexture = Avatar.bitmapToString(finalSkin);
                                 H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName, "", "", "1", "https://www.microsoft.com", "0", microsoftLoginUtils.mcUuid, skinTexture, microsoftLoginUtils.mcToken, microsoftLoginUtils.msRefreshToken, "00000000-0000-0000-0000-000000000000", false, false);
                                 fragment.loginDialogAlert.dismiss();
                                 fragment.progressDialog.dismiss();
@@ -120,7 +100,8 @@ public class HomeLoginHandler extends Handler {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
+                executorService.shutdown();
             }
         }
     }
