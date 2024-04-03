@@ -1,5 +1,11 @@
 /*
  * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
  * // Created by cainiaohh on 2024-03-31.
  * //
  */
@@ -236,7 +242,7 @@ public class H2CO3LauncherHelper {
         printTaskTitle(bridge, task + " Arguments");
         String[] args = rebaseArgs(context, width, height);
         for (String arg : args) {
-            bridge.getCallback().onLog(task + " argument: " + arg);
+            bridge.getCallback().onLog(task + " argument: " + arg + "\n");
         }
         bridge.setupJLI();
         bridge.setLdLibraryPath(getLibraryPath(context, H2CO3GameHelper.getJavaPath()));

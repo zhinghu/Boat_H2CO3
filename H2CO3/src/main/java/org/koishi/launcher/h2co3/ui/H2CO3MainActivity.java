@@ -1,5 +1,17 @@
 /*
  * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
+ * // Created by cainiaohh on 2024-04-03.
+ * //
+ */
+
+/*
+ * //
  * // Created by cainiaohh on 2024-03-31.
  * //
  */
@@ -23,7 +35,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.navigationrail.NavigationRailView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
@@ -31,10 +43,15 @@ import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.util.Objects;
 
+/**
+ * @author caini
+ */
 public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener {
 
     private H2CO3ToolBar toolbar;
     private NavController navController;
+
+    private NavigationView navigationView;
 
 
     @Override
@@ -42,7 +59,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUI();
-        NavigationRailView navView = findViewById(R.id.nav);
+
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
@@ -54,11 +71,12 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
                 R.id.navigation_home, R.id.navigation_directory, R.id.navigation_manage)
                 .build();
         NavigationUI.setupActionBarWithNavController(this, this.navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, this.navController);
+        NavigationUI.setupWithNavController(navigationView, this.navController);
     }
 
     private void initUI() {
         toolbar = findViewById(R.id.toolbar);
+        navigationView = findViewById(R.id.nav);
     }
 
     @SuppressLint("SetTextI18n")
