@@ -46,12 +46,7 @@
         <item name="android:layout_marginTop">@dimen/app_10dp</item>
         <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
-        <item name="contentPaddingStart">@dimen/app_16dp</item>
-        <item name="contentPaddingEnd">@dimen/app_16dp</item>
-        <item name="contentPaddingLeft">@dimen/app_16dp</item>
-        <item name="contentPaddingRight">@dimen/app_16dp</item>
-        <item name="contentPaddingTop">@dimen/app_16dp</item>
-        <item name="contentPaddingBottom">@dimen/app_16dp</item>
+        <item name="contentPadding">@dimen/app_16dp</item>
         <item name="cardElevation">@dimen/elevation_2</item>
     </style>
 
@@ -78,12 +73,7 @@
         <item name="android:layout_marginTop">@dimen/app_10dp</item>
         <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
-        <item name="contentPaddingStart">@dimen/app_16dp</item>
-        <item name="contentPaddingEnd">@dimen/app_16dp</item>
-        <item name="contentPaddingLeft">@dimen/app_16dp</item>
-        <item name="contentPaddingRight">@dimen/app_16dp</item>
-        <item name="contentPaddingTop">@dimen/app_16dp</item>
-        <item name="contentPaddingBottom">@dimen/app_16dp</item>
+        <item name="contentPadding">@dimen/app_16dp</item>
         <item name="cardElevation">@dimen/elevation_0</item>
     </style>
 
@@ -96,12 +86,7 @@
         <item name="android:layout_marginTop">@dimen/app_10dp</item>
         <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
-        <item name="contentPaddingStart">@dimen/app_16dp</item>
-        <item name="contentPaddingEnd">@dimen/app_16dp</item>
-        <item name="contentPaddingLeft">@dimen/app_16dp</item>
-        <item name="contentPaddingRight">@dimen/app_16dp</item>
-        <item name="contentPaddingTop">@dimen/app_16dp</item>
-        <item name="contentPaddingBottom">@dimen/app_16dp</item>
+        <item name="contentPadding">@dimen/app_16dp</item>
     </style>
 
     <style name="Theme.H2CO3.IconMaterial">
