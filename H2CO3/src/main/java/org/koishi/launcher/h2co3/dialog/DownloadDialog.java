@@ -1,5 +1,11 @@
 /*
  * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
  * // Created by cainiaohh on 2024-03-31.
  * //
  */
@@ -47,10 +53,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class DownloadDialog extends MaterialAlertDialogBuilder {
     private static final int BUFFER_SIZE = 1024;
@@ -90,7 +96,7 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
 
         int threadCount = getThreadCount();
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
-        downloadTask = new DownloadTask(executorService, adapter);
+        downloadTask = new DownloadTask(adapter);
         downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         dialog = super.create();
@@ -216,28 +222,30 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
     }
 
     private class DownloadTask extends AsyncTask<Void, Integer, Void> {
-        private final ExecutorService executorService;
         private final DownloadAdapter adapter;
 
-        public DownloadTask(ExecutorService executorService, DownloadAdapter adapter) {
-            this.executorService = executorService;
+        public DownloadTask(DownloadAdapter adapter) {
             this.adapter = adapter;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            List<Future<Void>> futures = new ArrayList<>();
+            List<CompletableFuture<Void>> futures = new ArrayList<>();
             for (int i = 0; i < downloadItems.size(); i++) {
                 DownloadItem item = downloadItems.get(i);
 
-                if (isFileValid(item)) {
-                    item.setProgress(100);
-                    publishProgress(i);
-                    continue;
+                try {
+                    if (isFileValid(item)) {
+                        item.setProgress(100);
+                        publishProgress(i);
+                        continue;
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
 
                 int finalI = i;
-                Future<Void> future = executorService.submit(() -> {
+                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                     try {
                         URL url = new URL(item.getUrl());
                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -253,15 +261,19 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
                             int downloadedSizeForItem = 0;
                             while ((count = input.read(data)) != -1) {
                                 if (isCancelled()) {
-                                    return null;
+                                    File file = new File(DOWNLOAD_PATH + "/" + item.getPath());
+                                    if (file.exists()) {
+                                        file.delete();
+                                    }
+                                    return;
                                 }
 
                                 downloadedSizeForItem += count;
                                 output.write(data, 0, count);
-                                if (item.getSize() > 0) { // 避免除以零的错误
+                                if (item.getSize() > 0) {
                                     int progress = (downloadedSizeForItem * 100) / item.getSize();
                                     item.setProgress(progress);
-                                    publishProgress(finalI);
+                                    publishProgress(finalI, progress);
                                 }
                             }
                         }
@@ -273,27 +285,18 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
                         publishProgress(finalI);
                         throw new RuntimeException("Error downloading file: " + item.getUrl(), e);
                     }
-                    return null;
                 });
                 futures.add(future);
             }
 
-            for (Future<Void> future : futures) {
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    Log.e("DownloadTask", "Error executing download task: " + e.getMessage());
-                    cancel(true);
-                    break;
-                }
-            }
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
             return null;
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            adapter.notifyItemChanged(values[0]);
+            adapter.notifyItemRangeChanged(values[0], values.length);
             adapter.removeCompletedItems();
         }
 
@@ -312,9 +315,9 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
             showErrorDialogOnUIThread("下载失败");
         }
 
-        private boolean isFileValid(DownloadItem item) {
-            File file = new File(DOWNLOAD_PATH + "/" + item.getPath());
-            return file.exists() && file.length() == item.getSize();
+        private boolean isFileValid(DownloadItem item) throws IOException {
+            Path filePath = Paths.get(DOWNLOAD_PATH, item.getPath());
+            return Files.exists(filePath) && Files.size(filePath) == item.getSize();
         }
 
         private void createDirectoryForItem(DownloadItem item) throws IOException {
