@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -71,15 +72,23 @@ import org.koishi.launcher.h2co3.utils.HomeLoginHandler;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author caini
  */
 public class HomeFragment extends H2CO3Fragment implements View.OnClickListener {
+
+    private final Handler handler = new Handler();
 
     private static final int MICROSOFT_LOGIN_REQUEST_CODE = 1001;
     private final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -88,31 +97,6 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     public H2CO3ProgressDialog progressDialog;
     public H2CO3TextView homeUserName;
     public H2CO3TextView homeUserState;
-    public AppCompatImageView homeUserIcon;
-    public RecyclerView recyclerView;
-    H2CO3Button homeGamePlayButton;
-    private HomeAdapterListUser adapterUser;
-    private CircularRevealFrameLayout loginNameLayout;
-    private TextInputEditText loginName, loginPassword;
-    private ConstraintLayout loginApi;
-    private TextInputLayout loginPasswordLayout;
-    private H2CO3Button login, homeUserListButton;
-    private H2CO3CustomViewDialog loginDialog;
-    private List<UserBean> userList = new ArrayList<>();
-    private Spinner serverSpinner;
-    private H2CO3Button register;
-    private Servers servers;
-    private String currentBaseUrl;
-    private String currentRegisterUrl;
-    private H2CO3CardView homeUserListLayout;
-    private ArrayAdapter<String> serverSpinnerAdapter;
-    private MaterialAlertDialogBuilder alertDialogBuilder;
-    private boolean isLoginDialogShowing = false;
-    private String user;
-    private String pass;
-
-
-    View view;
     private final LoginUtils.Listener loginUtilsListener = new LoginUtils.Listener() {
 
         @SuppressLint("NotifyDataSetChanged")
@@ -155,6 +139,33 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             });
         }
     };
+    public AppCompatImageView homeUserIcon;
+    public RecyclerView recyclerView;
+    H2CO3Button homeGamePlayButton;
+    private HomeAdapterListUser adapterUser;
+    private CircularRevealFrameLayout loginNameLayout;
+    private TextInputEditText loginName, loginPassword;
+    private ConstraintLayout loginApi;
+    private TextInputLayout loginPasswordLayout;
+    private H2CO3Button login, homeUserListButton;
+    private H2CO3CustomViewDialog loginDialog;
+    private List<UserBean> userList = new ArrayList<>();
+    private Spinner serverSpinner;
+    private H2CO3Button register;
+    private Servers servers;
+    private String currentBaseUrl;
+    private String currentRegisterUrl;
+    private H2CO3CardView homeUserListLayout;
+    private ArrayAdapter<String> serverSpinnerAdapter;
+    private MaterialAlertDialogBuilder alertDialogBuilder;
+    private boolean isLoginDialogShowing = false;
+    private String user;
+    private String pass;
+    public String message;
+    View view;
+    private H2CO3TextView homeNoticeTextView;
+    private boolean run = false;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -163,6 +174,15 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         init();
         return view;
     }
+    private final Runnable task = new Runnable() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            if (run) {
+                handler.postDelayed(this, 1000);
+            }
+        }
+    };
 
     private void findView() {
         homeGamePlayButton = findViewById(view, R.id.home_game_play_button);
@@ -174,25 +194,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         homeUserListButton.setOnClickListener(this);
         homeUserListLayout = findViewById(view, R.id.home_user_list_layout);
         recyclerView = findViewById(view, R.id.recycler_view_user_list);
-    }
-
-    private void init() {
-        if (TextUtils.isEmpty(H2CO3Auth.getUserJson()) || "{}".equals(H2CO3Auth.getUserJson())) {
-            if ("{}".equals(H2CO3Auth.getUserJson())) {
-                setDefaultUserState();
-            } else {
-                FileTools.writeFile(usersFile, "{}");
-                setDefaultUserState();
-            }
-        } else {
-            setUserStateFromJson();
-        }
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        reLoadUser();
-
-        View contentView1 = LayoutInflater.from(requireActivity()).inflate(R.layout.item_user_add, null);
-        H2CO3CardView userAdd = contentView1.findViewById(R.id.login_user_add);
-        userAdd.setOnClickListener(v1 -> showLoginDialog());
+        homeNoticeTextView = findViewById(view, R.id.home_notice_text);
     }
 
     @Override
@@ -425,6 +427,52 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
             progressDialog.setCancelable(false);
             loginHandler.login(data);
         }
+    }
+
+    private void init() {
+        if (TextUtils.isEmpty(H2CO3Auth.getUserJson()) || "{}".equals(H2CO3Auth.getUserJson())) {
+            if ("{}".equals(H2CO3Auth.getUserJson())) {
+                setDefaultUserState();
+            } else {
+                FileTools.writeFile(usersFile, "{}");
+                setDefaultUserState();
+            }
+        } else {
+            setUserStateFromJson();
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        reLoadUser();
+
+        View contentView1 = LayoutInflater.from(requireActivity()).inflate(R.layout.item_user_add, null);
+        H2CO3CardView userAdd = contentView1.findViewById(R.id.login_user_add);
+        userAdd.setOnClickListener(v1 -> showLoginDialog());
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                HttpURLConnection con = (HttpURLConnection) new URL("https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/Notification.txt").openConnection();
+                con.setConnectTimeout(5000);
+                InputStream in = con.getInputStream();
+                BufferedReader bfr = new BufferedReader(new InputStreamReader(in));
+                StringBuilder str = new StringBuilder();
+                String temp;
+                while ((temp = bfr.readLine()) != null) {
+                    str.append(temp).append("\n");
+                }
+                bfr.close();
+                in.close();
+                con.disconnect();
+                message = str.toString();
+                handler.post(() -> homeNoticeTextView.setText(message));
+            } catch (IOException e) {
+                message = "拉取公告失败: " + e.getMessage();
+                handler.post(() -> homeNoticeTextView.setText(message));
+            }
+        });
+        executor.shutdown();
+        homeNoticeTextView.setText(message);
+        run = true;
+        handler.postDelayed(task, 1000);
     }
 
     private void setUserStateFromJson() {

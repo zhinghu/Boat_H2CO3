@@ -29,10 +29,9 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/open_1"
-                style="@style/Theme.H2CO3.CardViewElevated"
+                style="@style/Theme.H2CO3.CardViewNormal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/app_green_normal">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,22 +65,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/app_name"
-                                android:textColor="?colorSurface"
                                 android:textSize="16sp" />
-
-                            <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
-                                style="@style/Theme.H2CO3.CardContent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/app_name"
-                                android:textColor="?colorOnTertiary" />
                         </LinearLayout>
 
                     </LinearLayout>
 
 
-                    <org.koishi.launcher.h2co3.resources.component.H2CO3Button
-                        style="@style/Theme.H2CO3.CardButton"
+                    <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
+                        android:id="@+id/home_notice_text"
+                        style="@style/Theme.H2CO3.CardContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/app_name" />

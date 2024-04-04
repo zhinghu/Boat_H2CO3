@@ -4,18 +4,6 @@
   ~ //
   -->
 
-<!--
-  ~ //
-  ~ // Created by cainiaohh on 2024-04-03.
-  ~ //
-  -->
-
-<!--
-  ~ //
-  ~ // Created by cainiaohh on 2024-03-31.
-  ~ //
-  -->
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"

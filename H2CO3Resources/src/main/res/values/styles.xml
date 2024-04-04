@@ -225,7 +225,6 @@
 
     <style name="Widget.GoogleMaterial.NavigationView" parent="@style/Widget.Material3.NavigationView">
         <item name="enforceMaterialTheme">true</item>
-        <item name="itemBackground">@null</item>
         <item name="itemShapeAppearanceOverlay">@style/MaterialShape</item>
         <item name="itemShapeInsetBottom">@null</item>
         <item name="itemShapeInsetEnd">@dimen/app_10dp</item>
@@ -234,12 +233,25 @@
         <item name="itemPadding">30dp</item>
         <item name="background">?colorOnBackground</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">16.5sp</item>
-        <item name="android:lineSpacingExtra">1.5sp</item>
     </style>
 
     <style name="MaterialShape">
         <item name="cornerSize">@dimen/card_radius</item>
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="enforceMaterialTheme">true</item>
+        <item name="itemBackground">@null</item>
+        <item name="itemHorizontalPadding">@dimen/mtrl_navigation_item_horizontal_padding</item>
+        <item name="itemIconPadding">@dimen/mtrl_navigation_item_icon_padding</item>
+        <item name="itemIconSize">@dimen/mtrl_navigation_item_icon_size</item>
+        <item name="itemIconTint">@color/mtrl_navigation_item_icon_tint</item>
+        <item name="itemShapeAppearance">?attr/shapeAppearanceSmallComponent</item>
+        <item name="itemShapeFillColor">@color/mtrl_navigation_item_background_color</item>
+        <item name="itemShapeInsetBottom">@dimen/mtrl_navigation_item_shape_vertical_margin</item>
+        <item name="itemShapeInsetEnd">@dimen/mtrl_navigation_item_shape_horizontal_margin</item>
+        <item name="itemShapeInsetStart">@dimen/mtrl_navigation_item_shape_horizontal_margin</item>
+        <item name="itemShapeInsetTop">@dimen/mtrl_navigation_item_shape_vertical_margin</item>
+        <item name="itemTextAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="itemTextColor">@color/mtrl_navigation_item_text_color</item>
     </style>
 
 </resources>
