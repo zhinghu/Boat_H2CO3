@@ -124,7 +124,7 @@ public class H2CO3LauncherBridge implements Serializable {
 
     public void receiveLog(String log) throws IOException {
         if (callback != null) {
-            callback.onLog(log);
+            callback.onLog(log + "\n");
         }
     }
 

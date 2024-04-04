@@ -39,15 +39,12 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.utils.download.DownloadItem;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,6 +54,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class DownloadDialog extends MaterialAlertDialogBuilder {
     private static final int BUFFER_SIZE = 1024;
@@ -247,13 +248,13 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
                 int finalI = i;
                 CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                     try {
-                        URL url = new URL(item.getUrl());
-                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                        connection.connect();
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url(item.getUrl())
+                                .build();
 
-                        createDirectoryForItem(item);
-
-                        try (InputStream input = new BufferedInputStream(connection.getInputStream());
+                        try (Response response = client.newCall(request).execute();
+                             InputStream input = response.body().byteStream();
                              OutputStream output = new BufferedOutputStream(new FileOutputStream(DOWNLOAD_PATH + "/" + item.getPath()))) {
 
                             byte[] data = new byte[BUFFER_SIZE];

@@ -29,7 +29,7 @@ static volatile jmethodID exitTrap_method;
 static JavaVM *exitTrap_jvm;
 static volatile jmethodID log_method;
 static JavaVM *log_pipe_jvm;
-static int fclFd[2];
+static int h2co3LauncherFd[2];
 static pthread_t logger;
 
 void correctUtfBytes(char *bytes) {
@@ -94,11 +94,11 @@ static void *logger_thread() {
     jstring str;
     while (1) {
         memset(buffer, '\0', sizeof(buffer));
-        _s = read(fclFd[0], buffer, sizeof(buffer) - 1);
+        _s = read(h2co3LauncherFd[0], buffer, sizeof(buffer) - 1);
         if (_s < 0) {
             __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to read log!");
-            close(fclFd[0]);
-            close(fclFd[1]);
+            close(h2co3LauncherFd[0]);
+            close(h2co3LauncherFd[1]);
             (*vm)->DetachCurrentThread(vm);
             return NULL;
         } else {
@@ -122,12 +122,12 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_redirectStdio(
                                                                                 jstring path) {
     setvbuf(stdout, 0, _IOLBF, 0);
     setvbuf(stderr, 0, _IONBF, 0);
-    if (pipe(fclFd) < 0) {
+    if (pipe(h2co3LauncherFd) < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to create log pipe!");
         return 1;
     }
-    if (dup2(fclFd[1], STDOUT_FILENO) != STDOUT_FILENO &&
-        dup2(fclFd[1], STDERR_FILENO) != STDERR_FILENO) {
+    if (dup2(h2co3LauncherFd[1], STDOUT_FILENO) != STDOUT_FILENO &&
+        dup2(h2co3LauncherFd[1], STDERR_FILENO) != STDERR_FILENO) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "failed to redirect stdio!");
         return 2;
     }
@@ -138,7 +138,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_redirectStdio(
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to find receive method!");
         return 4;
     }
-    h2co3Launcher->logFile = fdopen(fclFd[1], "a");
+    h2co3Launcher->logFile = fdopen(h2co3LauncherFd[1], "a");
     H2CO3_INTERNAL_LOG("Log pipe ready.");
     (*env)->GetJavaVM(env, &log_pipe_jvm);
     int result = pthread_create(&logger, 0, logger_thread, 0);

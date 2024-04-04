@@ -11,7 +11,6 @@ import static org.koishi.launcher.h2co3.core.H2CO3Tools.MINECRAFT_DIR;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,16 +46,13 @@ import org.koishi.launcher.h2co3.core.utils.file.AssetsUtils;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
-import org.koishi.launcher.h2co3.ui.VanillaActivity;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -111,11 +107,12 @@ public class DirectoryFragment extends H2CO3Fragment {
         newDirButton = root.findViewById(R.id.ver_new_dir);
         newDirButton.setOnClickListener(v -> showDirDialog());
         newVerButton = root.findViewById(R.id.ver_new_ver);
-        newVerButton.setOnClickListener(v -> startActivity(new Intent(requireActivity(), VanillaActivity.class)));
         dirRecyclerView = root.findViewById(R.id.mRecyclerView);
         verRecyclerView = root.findViewById(R.id.mVerRecyclerView);
         initViews();
         initVer();
+        newDirButton.show();
+        newDirButton.show();
         return root;
     }
 
@@ -155,7 +152,6 @@ public class DirectoryFragment extends H2CO3Fragment {
                 List<String> verList = paths
                         .map(Path::getFileName)
                         .map(Path::toString)
-                        .sorted(Collator.getInstance(Locale.CHINA))
                         .collect(Collectors.toList());
 
                 verRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -171,7 +167,6 @@ public class DirectoryFragment extends H2CO3Fragment {
         }
     }
 
-
     public void showDirDialog() {
         dialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         View dialogView = requireActivity().getLayoutInflater().inflate(R.layout.custom_dialog_directory, null);
@@ -180,11 +175,13 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         MaterialButton cancel = dialogView.findViewById(R.id.custom_dir_cancel);
         MaterialButton add = dialogView.findViewById(R.id.custom_dir_ok);
-        TextInputLayout lay = dialogView.findViewById(R.id.dialog_dir_lay);
-        lay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
+        TextInputLayout nameLay = dialogView.findViewById(R.id.dialog_dir_name_lay);
+        TextInputEditText nameEditText = dialogView.findViewById(R.id.dialog_dir_name);
+        TextInputLayout pathLay = dialogView.findViewById(R.id.dialog_dir_path_lay);
+        pathLay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
         add.setEnabled(false);
-        TextInputEditText et = dialogView.findViewById(R.id.dialog_dir_name);
-        et.addTextChangedListener(new TextWatcher() {
+        TextInputEditText pathEditText = dialogView.findViewById(R.id.dialog_dir_path);
+        pathEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence p1, int p2, int p3, int p4) {
             }
@@ -195,12 +192,12 @@ public class DirectoryFragment extends H2CO3Fragment {
 
             @Override
             public void afterTextChanged(Editable p1) {
-                String value = Objects.requireNonNull(et.getText()).toString();
+                String value = Objects.requireNonNull(pathEditText.getText()).toString();
                 if (value.matches("(/storage/emulated/0|/sdcard|/mnt/sdcard).*")) {
-                    lay.setErrorEnabled(false);
+                    pathLay.setErrorEnabled(false);
                     add.setEnabled(true);
                 } else {
-                    lay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
+                    pathLay.setError(getString(org.koishi.launcher.h2co3.resources.R.string.ver_input_hint));
                     add.setEnabled(false);
                 }
             }
@@ -210,19 +207,19 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         cancel.setOnClickListener(v -> dialog.dismiss());
         add.setOnClickListener(v -> {
-            if (!Objects.requireNonNull(et.getText()).toString().trim().isEmpty()) {
-                boolean hasData = hasData(et.getText().toString().trim());
+            if (!Objects.requireNonNull(pathEditText.getText()).toString().trim().isEmpty()) {
+                boolean hasData = hasData(pathEditText.getText().toString().trim());
                 if (!hasData) {
-                    File f = new File(et.getText().toString().trim());
+                    File f = new File(pathEditText.getText().toString().trim());
                     if (f.exists()) {
                         if (f.isDirectory()) {
-                            H2CO3Dir = et.getText().toString();
+                            H2CO3Dir = pathEditText.getText().toString();
                             newDir();
                         } else {
                             H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_dir));
                         }
                     } else {
-                        H2CO3Dir = et.getText().toString();
+                        H2CO3Dir = pathEditText.getText().toString();
                         newDir();
                     }
                 } else {
@@ -236,238 +233,6 @@ public class DirectoryFragment extends H2CO3Fragment {
         });
 
         dialog.show();
-    }
-
-    public void newDir() {
-        new Thread(() -> {
-            try {
-                AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
-                handler.sendEmptyMessage(1);
-            } catch (IOException e) {
-                H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_right_dir) + e);
-                handler.sendEmptyMessage(0);
-            }
-        }).start();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        String currentDir = H2CO3GameHelper.getGameDirectory();
-        File f = new File(currentDir);
-        if (f.exists() && f.isDirectory()) {
-            initVer();
-        } else {
-            setNewDirButton(h2co3Directory);
-            H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
-            removeDir(currentDir);
-            dirAdapter.updata(getDirList());
-            initVer();
-        }
-    }
-
-    public void setNewDirButton(String newDirButton) {
-        H2CO3GameHelper.setGameDirectory(newDirButton);
-        H2CO3GameHelper.setGameAssets(newDirButton + "/assets/virtual/legacy");
-        H2CO3GameHelper.setGameAssetsRoot(newDirButton + "/assets");
-        H2CO3GameHelper.setGameCurrentVersion(newDirButton + "/versions");
-    }
-
-    private JSONObject getJsonObj() {
-        JSONObject jsonObj = null;
-        try {
-            File jsonFile = new File(requireActivity().getFilesDir(), "dirs.json");
-            if (jsonFile.exists()) {
-                String jsonStr = FileTools.readFile(requireActivity().getFilesDir() + "/dirs.json");
-                jsonObj = new JSONObject(jsonStr);
-            } else {
-                jsonObj = createNewJsonObj();
-                saveJsonObj(jsonObj);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return jsonObj;
-    }
-
-    private JSONObject createNewJsonObj() {
-        JSONObject jsonObj = new JSONObject();
-        JSONArray dirs = new JSONArray();
-        dirs.put(h2co3Directory);
-        try {
-            jsonObj.put("dirs", dirs);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObj;
-    }
-
-    private void saveJsonObj(JSONObject jsonObj) {
-        File jsonFile = new File(requireActivity().getFilesDir(), "dirs.json");
-        FileTools.writeFile(jsonFile, jsonObj.toString());
-    }
-
-    private List<String> getDirList() {
-        List<String> dirList = new ArrayList<>();
-        if (dirsJsonObj != null) {
-            try {
-                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
-                for (int i = 0; i < dirs.length(); i++) {
-                    dirList.add(dirs.getString(i));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return dirList;
-    }
-
-    public void removeDir(String dir) {
-        if (dirsJsonObj != null) {
-            try {
-                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
-                for (int i = 0; i < dirs.length(); i++) {
-                    if (dirs.getString(i).equals(dir)) {
-                        dirs.remove(i);
-                        saveJsonObj(dirsJsonObj);
-                        break;
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private boolean hasData(String dir) {
-        if (dirsJsonObj != null) {
-            try {
-                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
-                for (int i = 0; i < dirs.length(); i++) {
-                    if (dirs.getString(i).equals(dir)) {
-                        return true;
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    class DirectoryAdapter extends BaseRecycleAdapter<String> {
-        public DirectoryAdapter(List<String> datas, Context mContext) {
-            super(datas, mContext);
-        }
-
-        @SuppressLint({"ResourceAsColor", "UseCompatLoadingForDrawables"})
-        @Override
-        protected void bindData(BaseViewHolder holder, final int position) {
-
-            TextView textView = (TextView) holder.getView(R.id.tv_record);
-            TextView textView1 = (TextView) holder.getView(R.id.tv_name);
-            MaterialCardView lay = (MaterialCardView) holder.getView(R.id.ver_item);
-            ImageView check = (ImageView) holder.getView(R.id.ver_check_icon);
-            MaterialButton del = (MaterialButton) holder.getView(R.id.tv_remove_dir);
-            MaterialButton delDir = (MaterialButton) holder.getView(R.id.tv_del_dir);
-            textView.setText(datas.get(position));
-            if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
-                lay.setStrokeWidth(11);
-                lay.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
-            } else {
-                lay.setStrokeWidth(0);
-            }
-            if (datas.get(position).equals(h2co3Directory)) {
-                del.setVisibility(View.GONE);
-                delDir.setVisibility(View.GONE);
-            } else {
-                del.setVisibility(View.VISIBLE);
-                delDir.setVisibility(View.VISIBLE);
-            }
-
-            String str1 = textView.getText().toString();
-            str1 = str1.substring(0, str1.lastIndexOf("/"));
-            int idx = str1.lastIndexOf("/");
-            str1 = str1.substring(idx + 1).toUpperCase();
-            textView1.setText(str1);
-
-            File f = new File(textView.getText().toString());
-            if (f.isDirectory() && f.exists()) {
-
-            } else {
-                check.setImageDrawable(getResources().getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
-                delDir.setVisibility(View.VISIBLE);
-            }
-            lay.setOnClickListener(v -> {
-                if (f.exists() && f.isDirectory()) {
-                    setDir(textView.getText().toString());
-                    dirAdapter.updata(getDirList());
-                    verRecyclerView.setAdapter(null);
-                    initVer();
-                } else {
-                    if (null != mRvItemOnclickListener) {
-                        mRvItemOnclickListener.RvItemOnclick(position);
-                        dirAdapter.updata(getDirList());
-                        H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
-                        verRecyclerView.setAdapter(null);
-                    }
-                }
-
-            });
-            del.setOnClickListener(view -> {
-
-                if (null != mRvItemOnclickListener) {
-                    mRvItemOnclickListener.RvItemOnclick(position);
-                }
-            });
-
-            delDir.setOnClickListener(view -> {
-                if (null != mRvItemOnclickListener) {
-                    if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
-                        setDir(h2co3Directory);
-                    }
-                    AlertDialog alertDialog1 = new MaterialAlertDialogBuilder(requireActivity())
-                            .setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action))//标题
-                            .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del)
-                            .setPositiveButton("Yes Yes Yes", (dialogInterface, i) -> {
-                                File f1 = new File(datas.get(position));
-                                //TODO
-                                mRvItemOnclickListener.RvItemOnclick(position);
-                                dirAdapter.updata(getDirList());
-                                new Thread(() -> {
-                                    //String file2= "/data/data/org.koishi.launcher.h2co3/app_runtime";
-                                    try {
-                                        FileTools.deleteDirectory(f1);
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                }).start();
-
-                            })
-                            .setNegativeButton("No No No", (dialogInterface, i) -> {
-                                //TODO
-                            })
-                            .create();
-
-                    alertDialog1.show();
-                }
-            });
-
-        }
-
-        @Override
-        public int getLayoutId() {
-            return R.layout.item_dir;
-        }
-
-        public void setDir(String dir) {
-            H2CO3GameHelper.setGameDirectory(dir);
-            H2CO3GameHelper.setGameAssets(dir + "/assets/virtual/legacy");
-            H2CO3GameHelper.setGameAssetsRoot(dir + "/assets");
-            H2CO3GameHelper.setGameCurrentVersion(dir + "/versions");
-        }
     }
 
     class VersionRecyclerAdapter extends RecyclerView.Adapter<VersionRecyclerAdapter.MyViewHolder> {
@@ -584,6 +349,239 @@ public class DirectoryFragment extends H2CO3Fragment {
                 rl = itemView.findViewById(R.id.ver_item);
                 ic = itemView.findViewById(R.id.ver_icon);
             }
+        }
+    }
+
+    public void newDir() {
+        new Thread(() -> {
+            try {
+                AssetsUtils.extractZipFromAssets(requireActivity(), "pack.zip", H2CO3Dir);
+                handler.sendEmptyMessage(1);
+            } catch (IOException e) {
+                H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_not_right_dir) + e);
+                handler.sendEmptyMessage(0);
+            }
+        }).start();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String currentDir = H2CO3GameHelper.getGameDirectory();
+        File f = new File(currentDir);
+        if (f.exists() && f.isDirectory()) {
+            initVer();
+        } else {
+            setNewDirButton(h2co3Directory);
+            H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
+            removeDir(currentDir);
+            dirAdapter.updata(getDirList());
+            initVer();
+        }
+    }
+
+    public void setNewDirButton(String newDirButton) {
+        H2CO3GameHelper.setGameDirectory(newDirButton);
+        H2CO3GameHelper.setGameAssets(newDirButton + "/assets/virtual/legacy");
+        H2CO3GameHelper.setGameAssetsRoot(newDirButton + "/assets");
+        H2CO3GameHelper.setGameCurrentVersion(newDirButton + "/versions");
+    }
+
+    private JSONObject getJsonObj() {
+        JSONObject jsonObj = null;
+        try {
+            File jsonFile = H2CO3Tools.DIRS_CONFIG_FILE;
+            if (jsonFile.exists()) {
+                String jsonStr = FileTools.readFileToString(H2CO3Tools.DIRS_CONFIG_FILE);
+                jsonObj = new JSONObject(jsonStr);
+            } else {
+                jsonObj = createNewJsonObj();
+                saveJsonObj(jsonObj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return jsonObj;
+    }
+
+    private JSONObject createNewJsonObj() {
+        JSONObject jsonObj = new JSONObject();
+        JSONArray dirs = new JSONArray();
+        dirs.put(h2co3Directory);
+        try {
+            jsonObj.put("dirs", dirs);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObj;
+    }
+
+    private void saveJsonObj(JSONObject jsonObj) {
+        File jsonFile = H2CO3Tools.DIRS_CONFIG_FILE;
+        FileTools.writeFile(jsonFile, jsonObj.toString());
+    }
+
+    private List<String> getDirList() {
+        List<String> dirList = new ArrayList<>();
+        if (dirsJsonObj != null) {
+            try {
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
+                for (int i = 0; i < dirs.length(); i++) {
+                    dirList.add(dirs.getString(i));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return dirList;
+    }
+
+    public void removeDir(String dir) {
+        if (dirsJsonObj != null) {
+            try {
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
+                for (int i = 0; i < dirs.length(); i++) {
+                    if (dirs.getString(i).equals(dir)) {
+                        dirs.remove(i);
+                        saveJsonObj(dirsJsonObj);
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean hasData(String dir) {
+        if (dirsJsonObj != null) {
+            try {
+                JSONArray dirs = dirsJsonObj.getJSONArray("dirs");
+                for (int i = 0; i < dirs.length(); i++) {
+                    if (dirs.getString(i).equals(dir)) {
+                        return true;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    class DirectoryAdapter extends BaseRecycleAdapter<String> {
+        public DirectoryAdapter(List<String> datas, Context mContext) {
+            super(datas, mContext);
+        }
+
+        @SuppressLint({"ResourceAsColor", "UseCompatLoadingForDrawables"})
+        @Override
+        protected void bindData(BaseViewHolder holder, final int position) {
+
+            TextView textView = (TextView) holder.getView(R.id.tv_record);
+            TextView textView1 = (TextView) holder.getView(R.id.tv_name);
+            MaterialCardView lay = (MaterialCardView) holder.getView(R.id.ver_item);
+            ImageView check = (ImageView) holder.getView(R.id.ver_check_icon);
+            MaterialButton del = (MaterialButton) holder.getView(R.id.tv_remove_dir);
+            MaterialButton delDir = (MaterialButton) holder.getView(R.id.tv_del_dir);
+            textView.setText(datas.get(position));
+            File f = new File(textView.getText().toString());
+            if (f.isDirectory() && f.exists()) {
+            } else {
+                check.setImageDrawable(getResources().getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+                delDir.setVisibility(View.VISIBLE);
+            }
+            if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
+                lay.setStrokeWidth(11);
+                lay.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
+                lay.setOnClickListener(null);
+            } else {
+                lay.setStrokeWidth(0);
+                lay.setOnClickListener(new View.OnClickListener() {
+
+                    /**
+                     * @param v The view that was clicked.
+                     */
+                    @Override
+                    public void onClick(View v) {
+                        if (f.exists() && f.isDirectory()) {
+                            setDir(textView.getText().toString());
+                            dirAdapter.updata(getDirList());
+                            verRecyclerView.setAdapter(null);
+                            initVer();
+                        } else {
+                            if (null != mRvItemOnclickListener) {
+                                mRvItemOnclickListener.RvItemOnclick(position);
+                                dirAdapter.updata(getDirList());
+                                H2CO3Tools.showError(requireActivity(), getResources().getString(org.koishi.launcher.h2co3.resources.R.string.ver_null_dir));
+                                verRecyclerView.setAdapter(null);
+                            }
+                        }
+                    }
+                });
+            }
+            if (datas.get(position).equals(h2co3Directory)) {
+                del.setVisibility(View.GONE);
+                delDir.setVisibility(View.GONE);
+            } else {
+                del.setVisibility(View.VISIBLE);
+                delDir.setVisibility(View.VISIBLE);
+            }
+
+            String str1 = textView.getText().toString();
+            str1 = str1.substring(0, str1.lastIndexOf("/"));
+            int idx = str1.lastIndexOf("/");
+            str1 = str1.substring(idx + 1).toUpperCase();
+            textView1.setText(str1);
+            del.setOnClickListener(view -> {
+                if (null != mRvItemOnclickListener) {
+                    mRvItemOnclickListener.RvItemOnclick(position);
+                }
+            });
+
+            delDir.setOnClickListener(view -> {
+                if (null != mRvItemOnclickListener) {
+                    if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
+                        setDir(h2co3Directory);
+                    }
+                    AlertDialog alertDialog1 = new MaterialAlertDialogBuilder(requireActivity())
+                            .setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action))
+                            .setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del)
+                            .setPositiveButton("Yes Yes Yes", (dialogInterface, i) -> {
+                                File f1 = new File(datas.get(position));
+                                mRvItemOnclickListener.RvItemOnclick(position);
+                                dirAdapter.updata(getDirList());
+                                new Thread(() -> {
+                                    try {
+                                        FileTools.deleteDirectory(f1);
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }).start();
+
+                            })
+                            .setNegativeButton("No No No", (dialogInterface, i) -> {
+                            })
+                            .create();
+
+                    alertDialog1.show();
+                }
+            });
+
+        }
+
+        @Override
+        public int getLayoutId() {
+            return R.layout.item_dir;
+        }
+
+        public void setDir(String dir) {
+            H2CO3GameHelper.setGameDirectory(dir);
+            H2CO3GameHelper.setGameAssets(dir + "/assets/virtual/legacy");
+            H2CO3GameHelper.setGameAssetsRoot(dir + "/assets");
+            H2CO3GameHelper.setGameCurrentVersion(dir + "/versions");
         }
     }
 }

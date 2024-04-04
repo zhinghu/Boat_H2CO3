@@ -4,11 +4,13 @@
  * //
  */
 
-package org.koishi.launcher.h2co3.ui;
+package org.koishi.launcher.h2co3.ui.fragment.download;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
@@ -25,18 +27,17 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.VersionAdapter;
 import org.koishi.launcher.h2co3.core.utils.Version;
-import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
+import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VanillaActivity extends H2CO3Activity {
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class DownloadFragment extends H2CO3Fragment {
 
     private static final String API_URL_BMCLAPI = "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json";
     private static final String API_URL_MOJANG = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
@@ -51,34 +52,34 @@ public class VanillaActivity extends H2CO3Activity {
     private Spinner spDownloadSourceMode;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_download, container, false);
 
-        initView();
+        initView(view);
         initListeners();
 
         versionList = new ArrayList<>();
         filteredList = new ArrayList<>();
         versionAdapter = new VersionAdapter(filteredList);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
 
-        // 自动获取版本列表
         fetchVersionsFromApi(0);
+
+        return view;
     }
 
-    private void initView() {
-        recyclerView = findViewById(R.id.loadingversionFileListView1);
-        typeRadioGroup = findViewById(R.id.typeRadioGroup);
-        RadioButton rbRelease = findViewById(R.id.rb_release);
-        RadioButton rbSnapshot = findViewById(R.id.rb_snapshot);
-        RadioButton rbOldbeta = findViewById(R.id.rb_old_beta);
+    private void initView(View view) {
+        recyclerView = view.findViewById(R.id.loadingversionFileListView1);
+        typeRadioGroup = view.findViewById(R.id.typeRadioGroup);
+        RadioButton rbRelease = view.findViewById(R.id.rb_release);
+        RadioButton rbSnapshot = view.findViewById(R.id.rb_snapshot);
+        RadioButton rbOldbeta = view.findViewById(R.id.rb_old_beta);
 
-        spDownloadSourceMode = findViewById(R.id.sp_download_source_mode);
+        spDownloadSourceMode = view.findViewById(R.id.sp_download_source_mode);
         String[] mItems = getResources().getStringArray(R.array.download_source);
-        ArrayAdapter<String> adapter_source = new ArrayAdapter<>(VanillaActivity.this,
+        ArrayAdapter<String> adapter_source = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item, mItems);
         spDownloadSourceMode.setAdapter(adapter_source);
         spDownloadSourceMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -106,7 +107,7 @@ public class VanillaActivity extends H2CO3Activity {
         if (apiUrl != null) {
             new FetchVersionsTask().execute(apiUrl);
         } else {
-            Toast.makeText(this, "Invalid source", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Invalid source", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -136,42 +137,33 @@ public class VanillaActivity extends H2CO3Activity {
     private class FetchVersionsTask extends AsyncTask<String, Void, List<Version>> {
 
         private static final int CONNECTION_TIMEOUT = 10000;
+        private OkHttpClient client = new OkHttpClient();
 
         @Override
         protected List<Version> doInBackground(String... urls) {
             String apiUrl = urls[0];
             List<Version> versionList = new ArrayList<>();
 
-            try {
-                URL url = new URL(apiUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setConnectTimeout(CONNECTION_TIMEOUT);
+            Request request = new Request.Builder()
+                    .url(apiUrl)
+                    .build();
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    try (InputStream inputStream = connection.getInputStream();
-                         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                        StringBuilder response = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line).append("\n");
-                        }
-
-                        JSONObject jsonObject = new JSONObject(response.toString());
-                        JSONArray versionsArray = jsonObject.getJSONArray("versions");
-                        for (int i = 0; i < versionsArray.length(); i++) {
-                            JSONObject versionObject = versionsArray.getJSONObject(i);
-                            String versionName = versionObject.getString("id");
-                            String versionType = versionObject.getString("type");
-                            String versionUrl = versionObject.getString("url");
-                            String versionSha1 = versionObject.getString("sha1");
-                            Version version = new Version(versionName, versionType, versionUrl, versionSha1);
-                            versionList.add(version);
-                        }
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    JSONObject jsonObject = new JSONObject(responseData);
+                    JSONArray versionsArray = jsonObject.getJSONArray("versions");
+                    for (int i = 0; i < versionsArray.length(); i++) {
+                        JSONObject versionObject = versionsArray.getJSONObject(i);
+                        String versionName = versionObject.getString("id");
+                        String versionType = versionObject.getString("type");
+                        String versionUrl = versionObject.getString("url");
+                        String versionSha1 = versionObject.getString("sha1");
+                        Version version = new Version(versionName, versionType, versionUrl, versionSha1);
+                        versionList.add(version);
                     }
                 } else {
-                    Toast.makeText(VanillaActivity.this, "HTTP error: " + responseCode, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "HTTP error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             } catch (IOException | JSONException e) {
                 e.printStackTrace();

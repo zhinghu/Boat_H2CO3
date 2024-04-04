@@ -33,6 +33,7 @@ import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MaterialDialog;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,11 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
                         throw new RuntimeException(e);
                     }
                     updateUserState(user);
-                    fragment.reLoadUser();
+                    try {
+                        fragment.reLoadUser();
+                    } catch (JSONException | IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 });
             }
             holder.nameTextView.setText(user.getUserName());
@@ -133,6 +138,7 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         }
     }
 
+
     private Drawable getUserIcon(UserBean user) {
         if (user.getIsOffline()) {
             return ContextCompat.getDrawable(context, org.koishi.launcher.h2co3.resources.R.drawable.ic_home_user);
@@ -148,20 +154,19 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         }
     }
 
+
     private void updateSelectedUser(int selectedPosition) throws JSONException {
         JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
-
         for (int i = 0; i < list.size(); i++) {
             UserBean user = list.get(i);
             boolean isSelected = (i == selectedPosition);
             user.setIsSelected(isSelected);
             usersJson.getJSONObject(user.getUserName()).put(H2CO3Tools.LOGIN_IS_SELECTED, isSelected);
         }
-
         H2CO3Auth.setUserJson(usersJson.toString());
     }
 
-    private void removeUser(int position) {
+    private void removeUser(int position) throws JSONException, IOException {
         UserBean removedUser = list.remove(position);
         if (position == selectedPosition) {
             selectedPosition = -1;
@@ -170,20 +175,13 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
             selectedPosition--;
         }
 
-        list.removeIf(user -> user == removedUser);
-
-        try {
-            JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
-            usersJson.remove(removedUser.getUserName());
-            H2CO3Auth.setUserJson(usersJson.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject usersJson = new JSONObject(H2CO3Auth.getUserJson());
+        usersJson.remove(removedUser.getUserName());
+        H2CO3Auth.setUserJson(usersJson.toString());
 
         fragment.reLoadUser();
-
-
     }
+
 
     private void updateUserState(UserBean user) {
         setUserState(user);
@@ -201,7 +199,8 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
     }
 
     private String getUserStateText(UserBean user) {
-        return switch (user.getUserType()) {
+        String userType = user.getUserType();
+        return switch (userType) {
             case "1" ->
                     context.getString(org.koishi.launcher.h2co3.resources.R.string.user_state_microsoft);
             case "2" ->
@@ -216,7 +215,11 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
         dialog.setTitle("确认删除用户");
         dialog.setMessage("确定要删除该用户吗？");
         dialog.setPositiveButton("确定", (dialogInterface, which) -> {
-            removeUser(position);
+            try {
+                removeUser(position);
+            } catch (JSONException | IOException e) {
+                throw new RuntimeException(e);
+            }
             isRemoveUserDialogShowing = false;
         });
         dialog.setNegativeButton("取消", (dialogInterface, which) -> {

@@ -9,7 +9,7 @@
     android:paddingBottom="@dimen/app_10dp">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dialog_dir_lay"
+        android:id="@+id/dialog_dir_name_lay"
         style="@style/Widget.Material3.TextInputLayout.FilledBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +17,22 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialog_dir_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Name"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_dir_path_lay"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/app_10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dialog_dir_path"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/manager_set_directory"

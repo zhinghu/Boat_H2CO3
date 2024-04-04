@@ -94,7 +94,11 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         cursorIcon.setLayoutParams(new ViewGroup.LayoutParams(DisplayUtils.getPxFromDp(this, CURSOR_SIZE), DisplayUtils.getPxFromDp(this, CURSOR_SIZE)));
         cursorIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.cursor5);
         this.addView(cursorIcon);
-        launcherLib = launchMinecraft(this, screenWidth, screenHeight);
+        try {
+            launcherLib = launchMinecraft(this, screenWidth, screenHeight);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         h2co3LauncherCallback = launcherLib.getCallback();
         init();
     }

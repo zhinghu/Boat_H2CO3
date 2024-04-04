@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
 import org.koishi.launcher.h2co3.core.login.Texture.Texture;
 import org.koishi.launcher.h2co3.core.login.Texture.TextureType;
@@ -93,7 +94,11 @@ public class HomeLoginHandler extends Handler {
                             fragment.requireActivity().runOnUiThread(() -> {
                                 String skinTexture = Avatar.bitmapToString(finalSkin);
                                 H2CO3Auth.addUserToJson(microsoftLoginUtils.mcName, "", "", "1", "https://www.microsoft.com", "0", microsoftLoginUtils.mcUuid, skinTexture, microsoftLoginUtils.mcToken, microsoftLoginUtils.msRefreshToken, "00000000-0000-0000-0000-000000000000", false, false);
-                                fragment.reLoadUser();
+                                try {
+                                    fragment.reLoadUser();
+                                } catch (JSONException | IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 fragment.loginDialogAlert.dismiss();
                                 fragment.progressDialog.dismiss();
                             });

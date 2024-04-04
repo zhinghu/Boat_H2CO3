@@ -18,13 +18,16 @@ __attribute__((constructor)) void env_init() {
         h2co3Launcher = malloc(sizeof(struct H2CO3LauncherInternal));
         assert(h2co3Launcher);
         memset(h2co3Launcher, 0, sizeof(struct H2CO3LauncherInternal));
-        if (asprintf(&strptr_env, "%p", h2co3Launcher) == -1)
+        char *str_h2co3Launcher = NULL;
+        if (asprintf(&str_h2co3Launcher, "%p", h2co3Launcher) == -1) {
+            free(h2co3Launcher);
             abort();
-        setenv("H2CO3LAUNCHER_ENVIRON", strptr_env, 1);
-        free(strptr_env);
+        }
+        setenv("H2CO3LAUNCHER_ENVIRON", str_h2co3Launcher, 1);
+        free(str_h2co3Launcher);
     } else {
         __android_log_print(ANDROID_LOG_INFO, "Environ", "Found existing environ: %s", strptr_env);
-        h2co3Launcher = (void *) strtoul(strptr_env, NULL, 0x10);
+        h2co3Launcher = (struct H2CO3LauncherInternal *) strtoull(strptr_env, NULL, 16);
     }
     __android_log_print(ANDROID_LOG_INFO, "Environ", "%p", h2co3Launcher);
 }
@@ -73,25 +76,28 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setH2CO3Launch
 }
 
 JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
-    env_init();
-    if (h2co3Launcher->android_jvm == NULL) {
-        h2co3Launcher->android_jvm = vm;
-        JNIEnv *env = 0;
-        jint result = (*h2co3Launcher->android_jvm)->AttachCurrentThread(h2co3Launcher->android_jvm,
-                                                                         &env, 0);
-        if (result != JNI_OK || env == 0) {
-            H2CO3_INTERNAL_LOG("Failed to attach thread to JavaVM.");
-            abort();
-        }
-        jclass class_H2CO3LauncherBridge = (*env)->FindClass(env,
-                                                             "org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge");
-        if (class_H2CO3LauncherBridge == 0) {
-            H2CO3_INTERNAL_LOG(
-                    "Failed to find class: org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge.");
-            abort();
-        }
-        h2co3Launcher->class_H2CO3LauncherBridge = (jclass) (*env)->NewGlobalRef(env,
-                                                                                 class_H2CO3LauncherBridge);
+    if (vm == NULL) {
+        H2CO3_INTERNAL_LOG("JavaVM is NULL.");
+        return JNI_ERR;
     }
+
+    JNIEnv *env = NULL;
+    jint result = (*vm)->AttachCurrentThread(vm, &env, NULL);
+    if (result != JNI_OK || env == NULL) {
+        H2CO3_INTERNAL_LOG("Failed to attach thread to JavaVM.");
+        return JNI_ERR;
+    }
+
+    jclass class_H2CO3LauncherBridge = (*env)->FindClass(env,
+                                                         "org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge");
+    if (class_H2CO3LauncherBridge == NULL) {
+        H2CO3_INTERNAL_LOG(
+                "Failed to find class: org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge.");
+        return JNI_ERR;
+    }
+
+    h2co3Launcher->android_jvm = vm;
+    h2co3Launcher->class_H2CO3LauncherBridge = (*env)->NewGlobalRef(env, class_H2CO3LauncherBridge);
+
     return JNI_VERSION_1_2;
 }

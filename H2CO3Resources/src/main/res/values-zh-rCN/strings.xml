@@ -156,5 +156,6 @@
     <string name="spinner_mcbbs">mcbbs</string>
     <string name="spinner_bmclapi">bmclapi</string>
     <string name="refresh">Refresh</string>
+    <string name="title_download">Download</string>
 
 </resources>

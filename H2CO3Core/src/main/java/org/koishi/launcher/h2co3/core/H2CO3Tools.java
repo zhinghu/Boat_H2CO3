@@ -48,7 +48,7 @@ public class H2CO3Tools {
     public static String JAVA_11_PATH;
     public static String JAVA_17_PATH;
     public static String JAVA_21_PATH;
-    public static String DIRS_CONFIG_FILE;
+    public static File DIRS_CONFIG_FILE;
 
     public static String FILES_DIR;
     public static String PLUGIN_DIR;
@@ -120,7 +120,7 @@ public class H2CO3Tools {
         CACIOCAVALLO_17_DIR = PLUGIN_DIR + "/caciocavallo17";
         H2CO3_LIBRARY_DIR = APP_DATA_PATH + "/h2co3";
         H2CO3_SETTING_DIR = APP_DATA_PATH + "/h2co3_setting";
-        DIRS_CONFIG_FILE = H2CO3_SETTING_DIR + "/h2co3_dirs.json";
+        DIRS_CONFIG_FILE = new File(H2CO3_SETTING_DIR, "h2co3_dirs.json");
 
         H2CO3_CONTROL_DIR = APP_DATA_PATH + "/control";
 
@@ -164,7 +164,6 @@ public class H2CO3Tools {
         init(JAVA_17_PATH);
         init(JAVA_21_PATH);
         init(H2CO3LAUNCHER_LIBRARY_DIR);
-        init(DIRS_CONFIG_FILE);
         init(FILES_DIR);
         init(PLUGIN_DIR);
         init(H2CO3_LIBRARY_DIR);

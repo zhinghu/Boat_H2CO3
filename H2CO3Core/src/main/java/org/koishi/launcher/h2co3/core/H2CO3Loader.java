@@ -1,7 +1,5 @@
 package org.koishi.launcher.h2co3.core;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Tools.showError;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,62 +27,40 @@ public class H2CO3Loader {
 
     public static Drawable getHeadDrawable(Context context, String texture) {
         if (context == null || texture == null) {
-            showError(context,"Error");
-            return null;
+            throw new IllegalArgumentException("Context or texture is null");
         }
 
         try {
             Bitmap headBitmap = decodeAndCropHeadBitmap(texture);
-            if (headBitmap != null) {
-                return new BitmapDrawable(context.getResources(), headBitmap);
-            } else {
-                showError(context,"Error");
-                return null;
-            }
+            return new BitmapDrawable(context.getResources(), headBitmap);
         } catch (Exception | OutOfMemoryError e) {
-            showError(context,String.valueOf(e));
-            return null;
+            throw new RuntimeException("Failed to get head drawable", e);
         }
     }
 
     public static void getHead(Context context, String texture, ImageView imageView) {
         if (context == null || texture == null || imageView == null) {
-            showError(context,"Error");
-            return;
+            throw new IllegalArgumentException("Context, texture or imageView is null");
         }
 
         try {
             Bitmap headBitmap = decodeAndCropHeadBitmap(texture);
-            if (headBitmap != null) {
-                Glide.with(context)
-                        .load(headBitmap)
-                        .apply(requestOptions)
-                        .into(imageView);
-            } else {
-                showError(context,"Error");
-            }
+            Glide.with(context)
+                    .load(headBitmap)
+                    .apply(requestOptions)
+                    .into(imageView);
         } catch (Exception | OutOfMemoryError e) {
-            showError(context,String.valueOf(e));
-        }
-    }
-
-    public static Bitmap parseHeadTexture(String texture) {
-        try {
-            return decodeAndCropHeadBitmap(texture);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Failed to load head image", e);
         }
     }
 
     private static Bitmap decodeAndCropHeadBitmap(String texture) {
         byte[] decodedBytes = Base64.decode(texture, Base64.DEFAULT);
         Bitmap skinBitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-        if (skinBitmap != null) {
-            return cropHeadFromSkin(skinBitmap);
-        } else {
-            return null;
+        if (skinBitmap == null) {
+            throw new RuntimeException("Failed to decode skin bitmap");
         }
+        return cropHeadFromSkin(skinBitmap);
     }
 
     private static Bitmap cropHeadFromSkin(Bitmap skinBitmap) {

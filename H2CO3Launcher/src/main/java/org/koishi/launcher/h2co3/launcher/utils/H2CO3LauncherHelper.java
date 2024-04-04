@@ -16,6 +16,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
+import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.Architecture;
 import org.koishi.launcher.h2co3.core.utils.CommandBuilder;
@@ -45,7 +46,7 @@ public class H2CO3LauncherHelper {
     private static final String TAG = H2CO3LauncherHelper.class.getSimpleName();
 
     public static void printTaskTitle(H2CO3LauncherBridge bridge, String task) throws IOException {
-        bridge.getCallback().onLog("==================== " + task + " ====================");
+        bridge.getCallback().onLog("==================== " + task + " ====================\n");
     }
 
     public static void logStartInfo(H2CO3LauncherBridge bridge, String task) throws IOException {
@@ -256,10 +257,10 @@ public class H2CO3LauncherHelper {
         printTaskTitle(bridge, task + " Logs");
     }
 
-    public static H2CO3LauncherBridge launchMinecraft(Context context, int width, int height) {
+    public static H2CO3LauncherBridge launchMinecraft(Context context, int width, int height) throws IOException {
         H2CO3LauncherBridge bridge = new H2CO3LauncherBridge();
         bridge.setLogPath(H2CO3Tools.LOG_DIR + "/latest_game.txt");
-        Logging.LOG.log(Level.INFO, "surface ready, start jvm now!");
+        bridge.receiveLog("surface ready, start jvm now!");
         Thread gameThread = new Thread(() -> {
             try {
                 logStartInfo(bridge, "Minecraft");
@@ -472,6 +473,12 @@ public class H2CO3LauncherHelper {
             args.add("--add-opens=java.base/java.net=ALL-UNNAMED");
         }
 
+        StringBuilder cacioClasspath = getStringBuilder(isJava8, isJava11);
+        args.add(cacioClasspath.toString());
+    }
+
+    @NotNull
+    private static StringBuilder getStringBuilder(boolean isJava8, boolean isJava11) {
         StringBuilder cacioClasspath = new StringBuilder();
         cacioClasspath.append("-Xbootclasspath/").append(isJava8 ? "p" : "a");
         File cacioDir = new File(isJava8 ? H2CO3Tools.CACIOCAVALLO_8_DIR : isJava11 ? H2CO3Tools.CACIOCAVALLO_11_DIR : H2CO3Tools.CACIOCAVALLO_17_DIR);
@@ -482,9 +489,8 @@ public class H2CO3LauncherHelper {
                 }
             }
         }
-        args.add(cacioClasspath.toString());
+        return cacioClasspath;
     }
-
 
 
 }
