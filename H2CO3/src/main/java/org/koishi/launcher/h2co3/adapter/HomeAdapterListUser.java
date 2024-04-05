@@ -100,7 +100,7 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
                 holder.selectorCardView.setClickable(false);
                 holder.selectorCardView.setOnClickListener(null);
             } else {
-                holder.selectorCardView.setStrokeWidth(0);
+                holder.selectorCardView.setStrokeWidth(3);
                 holder.selectorCardView.setClickable(true);
                 holder.selectorCardView.setOnClickListener(null);
                 holder.selectorCardView.setOnClickListener(v -> {

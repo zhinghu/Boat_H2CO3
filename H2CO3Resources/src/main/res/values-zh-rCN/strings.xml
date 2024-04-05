@@ -159,5 +159,9 @@
     <string name="refresh">刷新</string>
     <string name="title_download">下载</string>
     <string name="title_runtime_install_tips">安装应用所需要的运行库</string>
+    <string name="title_minecraftVersion">Minecraft</string>
+    <string name="title_modList">Mod</string>
+    <string name="title_modPackList">ModPack</string>
+    <string name="title_resourcesPack">ResourcesPack</string>
 
 </resources>

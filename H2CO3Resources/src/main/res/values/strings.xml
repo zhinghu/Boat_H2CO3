@@ -198,5 +198,18 @@
     <string name="runtime_java17" translatable="false">JAVA 17</string>
     <string name="runtime_java21" translatable="false">JAVA 21</string>
     <string name="title_runtime_install_tips">Install runtime</string>
+    <string name="title_minecraftVersion">Minecraft</string>
+    <string name="title_modList">Mod</string>
+    <string name="title_modPackList">ModPack</string>
+    <string name="title_resourcesPack">ResourcesPack</string>
+    <string name="title_forge" translatable="false">Forge</string>
+    <string name="title_neo_forge" translatable="false">NeoForge</string>
+    <string name="title_optifine" translatable="false">Optifine</string>
+    <string name="title_fabric" translatable="false">Fabric</string>
+    <string name="title_fabric_api" translatable="false">FabricApi</string>
+    <string name="title_quilt" translatable="false">Quilt</string>
+    <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
+    <string name="title_liteloader" translatable="false">LiteLoader</string>
+
 
 </resources>

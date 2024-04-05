@@ -14,9 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,8 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.adapter.VersionAdapter;
 import org.koishi.launcher.h2co3.core.utils.Version;
+import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 
 import java.io.IOException;
@@ -36,7 +39,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DownloadFragment extends H2CO3Fragment {
+public class ChooseVersionFragment extends H2CO3Fragment {
 
     private static final String API_URL_BMCLAPI = "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json";
     private static final String API_URL_MOJANG = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
@@ -48,12 +51,12 @@ public class DownloadFragment extends H2CO3Fragment {
     private List<Version> versionList;
     private List<Version> filteredList;
 
-    private Spinner spDownloadSourceMode;
+    NavController navController;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_download, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_download_mc_choose_version, container, false);
+        navController = Navigation.findNavController(requireParentFragment().requireView());
         initView(view);
         initListeners();
 
@@ -84,7 +87,7 @@ public class DownloadFragment extends H2CO3Fragment {
         recyclerView.setAdapter(null);
         String apiUrl = getDownloadSource();
         if (apiUrl != null) {
-            new FetchVersionsTask().execute(apiUrl);
+            new FetchVersionsTask().execute(API_URL_BMCLAPI);
         } else {
             Toast.makeText(getContext(), "Invalid source", Toast.LENGTH_SHORT).show();
         }
@@ -93,11 +96,9 @@ public class DownloadFragment extends H2CO3Fragment {
     private void filterVersions(int checkedId) {
         filteredList.clear();
         for (Version version : versionList) {
-            if (checkedId == R.id.rb_release && version.getVersionType().equals("release")) {
-                filteredList.add(version);
-            } else if (checkedId == R.id.rb_snapshot && version.getVersionType().equals("snapshot")) {
-                filteredList.add(version);
-            } else if (checkedId == R.id.rb_old_beta && (version.getVersionType().equals("old_alpha") || version.getVersionType().equals("old_beta"))) {
+            if ((checkedId == R.id.rb_release && version.getVersionType().equals("release")) ||
+                    (checkedId == R.id.rb_snapshot && version.getVersionType().equals("snapshot")) ||
+                    (checkedId == R.id.rb_old_beta && (version.getVersionType().equals("old_alpha") || version.getVersionType().equals("old_beta")))) {
                 filteredList.add(version);
             }
         }
@@ -146,6 +147,99 @@ public class DownloadFragment extends H2CO3Fragment {
             versionList.clear();
             versionList.addAll(versionListFromApi);
             filterVersions(typeRadioGroup.getCheckedRadioButtonId());
+        }
+    }
+
+    class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
+
+        private List<Version> versionList;
+
+        public VersionAdapter(List<Version> versionList) {
+            this.versionList = versionList;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_version, parent, false);
+            return new VersionAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull VersionAdapter.ViewHolder holder, int position) {
+            Version version = versionList.get(position);
+            holder.versionNameTextView.setText(version.getVersionName());
+            holder.versionTypeTextView.setText(version.getVersionType());
+        }
+
+        @Override
+        public int getItemCount() {
+            return versionList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            private final String baseUrl = "https://piston-meta.mojang.com/v1/packages/";
+            public TextView versionNameTextView;
+            public TextView versionTypeTextView;
+            public H2CO3CardView versionCardView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+                versionNameTextView = itemView.findViewById(R.id.id);
+                versionTypeTextView = itemView.findViewById(R.id.type);
+                versionCardView = itemView.findViewById(R.id.download_ver_item);
+                versionCardView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION) {
+                    Version version = versionList.get(position);
+                    String url = baseUrl + version.getVersionSha1() + "/" + version.getVersionName() + ".json";
+                    new FetchVersionDetailsTask().execute(url);
+                }
+            }
+
+            private class FetchVersionDetailsTask extends AsyncTask<String, Void, String> {
+
+                @Override
+                protected String doInBackground(String... urls) {
+                    String url = urls[0];
+                    String details = "";
+
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .build();
+
+                    try (Response response = client.newCall(request).execute()) {
+                        if (response.isSuccessful()) {
+                            details = response.body().string();
+                        } else {
+                            details = "HTTP error: " + response.code();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        details = "Error: " + e.getMessage();
+                    }
+
+                    return details;
+                }
+
+                @Override
+                protected void onPostExecute(String details) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Version version = versionList.get(position);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString("versionName", version.getVersionName());
+
+                        navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
+                    }
+                }
+            }
         }
     }
 }

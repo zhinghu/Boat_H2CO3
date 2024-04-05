@@ -16,7 +16,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3ToolBar;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 import org.koishi.launcher.h2co3.ui.fragment.directory.DirectoryFragment;
-import org.koishi.launcher.h2co3.ui.fragment.download.DownloadFragment;
+import org.koishi.launcher.h2co3.ui.fragment.download.DownloadListFragment;
 import org.koishi.launcher.h2co3.ui.fragment.home.HomeFragment;
 import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
 
@@ -101,7 +101,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         } else if (itemId == R.id.navigation_manage) {
             switchFragment(new ManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
         } else if (itemId == R.id.navigation_download) {
-            switchFragment(new DownloadFragment(), org.koishi.launcher.h2co3.resources.R.string.title_download);
+            switchFragment(new DownloadListFragment(), org.koishi.launcher.h2co3.resources.R.string.title_download);
         }
         return true;
     }

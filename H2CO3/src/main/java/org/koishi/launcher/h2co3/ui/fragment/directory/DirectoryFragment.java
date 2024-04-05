@@ -258,10 +258,9 @@ public class DirectoryFragment extends H2CO3Fragment {
             File f = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
             String verF = H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position);
             if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
-                holder.rl.setStrokeWidth(11);
-                holder.rl.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
+                holder.rl.setStrokeWidth(13);
             } else {
-                holder.rl.setStrokeWidth(0);
+                holder.rl.setStrokeWidth(3);
             }
             if (f.isDirectory() && f.exists()) {
             } else {
@@ -281,11 +280,9 @@ public class DirectoryFragment extends H2CO3Fragment {
                         H2CO3GameHelper.setGameCurrentVersion(verF);
                         verRecyclerView.setAdapter(verAdapter);
                         if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
-                            holder.rl.setStrokeWidth(15);
-                            holder.rl.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
-                            holder.rl.setElevation(5);
+                            holder.rl.setStrokeWidth(13);
                         } else {
-                            holder.rl.setStrokeWidth(0);
+                            holder.rl.setStrokeWidth(3);
                         }
                     }
                 });
@@ -495,10 +492,9 @@ public class DirectoryFragment extends H2CO3Fragment {
             }
             if (datas.get(position).equals(H2CO3GameHelper.getGameDirectory())) {
                 lay.setStrokeWidth(11);
-                lay.setStrokeColor(getResources().getColor(android.R.color.darker_gray));
                 lay.setOnClickListener(null);
             } else {
-                lay.setStrokeWidth(0);
+                lay.setStrokeWidth(3);
                 lay.setOnClickListener(new View.OnClickListener() {
 
                     /**

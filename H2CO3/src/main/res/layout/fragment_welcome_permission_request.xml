@@ -95,7 +95,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/open_1"
             tools:itemCount="4"
-            tools:listitem="@layout/layout_permission_request_card" />
+            tools:listitem="@layout/item_permission_request" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

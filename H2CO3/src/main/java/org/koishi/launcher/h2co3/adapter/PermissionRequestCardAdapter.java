@@ -30,7 +30,7 @@ public class PermissionRequestCardAdapter extends RecyclerView.Adapter<Permissio
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_permission_request_card, parent, false);
+        View view = inflater.inflate(R.layout.item_permission_request, parent, false);
         return new ViewHolder(view);
     }
 

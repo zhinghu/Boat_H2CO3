@@ -13,7 +13,7 @@
 
     <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
         android:id="@+id/login_user_item"
-        style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+        style="@style/Theme.H2CO3.CardViewOutlined"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="0dp"
