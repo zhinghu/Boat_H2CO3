@@ -197,48 +197,13 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                 if (position != RecyclerView.NO_POSITION) {
                     Version version = versionList.get(position);
                     String url = baseUrl + version.getVersionSha1() + "/" + version.getVersionName() + ".json";
-                    new FetchVersionDetailsTask().execute(url);
-                }
-            }
 
-            private class FetchVersionDetailsTask extends AsyncTask<String, Void, String> {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("versionName", version.getVersionName());
 
-                @Override
-                protected String doInBackground(String... urls) {
-                    String url = urls[0];
-                    String details = "";
-
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-
-                    try (Response response = client.newCall(request).execute()) {
-                        if (response.isSuccessful()) {
-                            details = response.body().string();
-                        } else {
-                            details = "HTTP error: " + response.code();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        details = "Error: " + e.getMessage();
-                    }
-
-                    return details;
+                    navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
                 }
 
-                @Override
-                protected void onPostExecute(String details) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        Version version = versionList.get(position);
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("versionName", version.getVersionName());
-
-                        navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
-                    }
-                }
             }
         }
     }
