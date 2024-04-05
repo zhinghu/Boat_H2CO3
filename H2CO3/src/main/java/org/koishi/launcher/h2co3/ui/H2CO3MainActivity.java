@@ -75,7 +75,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
             setNavigationItemChecked(0);
             switchFragment(new HomeFragment(), org.koishi.launcher.h2co3.resources.R.string.title_home);
         } else if (item.getItemId() == R.id.action_item_setting) {
-            setNavigationItemChecked(2);
+            setNavigationItemChecked(3);
             switchFragment(new ManageFragment(), org.koishi.launcher.h2co3.resources.R.string.title_manage);
         }
         return super.onOptionsItemSelected(item);

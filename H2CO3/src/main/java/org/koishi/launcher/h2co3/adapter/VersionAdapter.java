@@ -19,6 +19,8 @@ import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import java.io.IOException;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -91,29 +93,35 @@ public class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHold
             @Override
             protected String doInBackground(String... urls) {
                 String url = urls[0];
-                String details = "";
+                final String[] details = {""};
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
                         .url(url)
                         .build();
 
-                try (Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful()) {
-                        details = response.body().string();
-                    } else {
-                        details = "HTTP error: " + response.code();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        details[0] = "Error: " + e.getMessage();
+                        handleResponse(details[0]);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    details = "Error: " + e.getMessage();
-                }
 
-                return details;
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            details[0] = response.body().string();
+                        } else {
+                            details[0] = "HTTP error: " + response.code();
+                        }
+                        handleResponse(details[0]);
+                    }
+                });
+
+                return details[0];
             }
 
-            @Override
-            protected void onPostExecute(String details) {
+            private void handleResponse(String details) {
                 int position = getAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Version version = versionList.get(position);

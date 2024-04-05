@@ -223,15 +223,14 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="Widget.GoogleMaterial.NavigationView" parent="@style/Widget.Material3.NavigationView">
-        <item name="enforceMaterialTheme">true</item>
+    <style name="Widget.GoogleMaterial.NavigationView" parent="@style/Widget.MaterialComponents.NavigationView">
         <item name="itemShapeAppearanceOverlay">@style/MaterialShape</item>
         <item name="itemShapeInsetBottom">@null</item>
         <item name="itemShapeInsetEnd">@dimen/app_10dp</item>
         <item name="itemShapeInsetStart">@dimen/app_10dp</item>
         <item name="itemShapeInsetTop">@null</item>
         <item name="itemPadding">30dp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="itemTextAppearanceActiveBoldEnabled">true</item>
     </style>
 
     <style name="MaterialShape">
