@@ -73,6 +73,7 @@ public class PermissionRequestFragment extends H2CO3Fragment {
     private void check() {
         if (h2co3Launcher && java8 && java11 && java17 && java21) {
             startActivity(new Intent(requireActivity(), H2CO3MainActivity.class));
+            requireActivity().finish();
         } else {
             navController.navigate(R.id.action_permissionRequestFragment_to_installFragment);
         }

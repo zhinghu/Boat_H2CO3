@@ -92,6 +92,7 @@ public class EulaFragment extends H2CO3Fragment implements View.OnClickListener 
             initRuntimeState();
             if (checkRuntime()) {
                 handler.postDelayed(() -> startActivity(new Intent(requireActivity(), H2CO3MainActivity.class)), 1000);
+                requireActivity().finish();
             } else {
                 navController.navigate(R.id.action_eulaFragment_to_installFragment);
             }

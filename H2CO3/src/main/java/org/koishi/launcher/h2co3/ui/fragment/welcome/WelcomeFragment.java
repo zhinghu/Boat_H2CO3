@@ -80,6 +80,7 @@ public class WelcomeFragment extends H2CO3Fragment {
             initRuntimeState();
             if (checkRuntime()) {
                 handler.postDelayed(() -> startActivity(new Intent(requireActivity(), H2CO3MainActivity.class)), 1000);
+                requireActivity().finish();
             } else {
                 navController.navigate(R.id.action_welcomeFragment_to_installFragment);
             }
