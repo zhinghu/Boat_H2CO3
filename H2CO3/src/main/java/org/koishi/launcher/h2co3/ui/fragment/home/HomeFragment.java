@@ -12,8 +12,8 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.home;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Auth.serversFile;
-import static org.koishi.launcher.h2co3.core.H2CO3Auth.usersFile;
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.serversFile;
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.usersFile;
 import static org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity.attachControllerInterface;
 
 import android.annotation.SuppressLint;

@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ //
-  ~ // Created by cainiaohh on 2024-03-31.
-  ~ //
-  -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -38,14 +32,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.H2CO3.DynamicColors"
         tools:targetApi="34">
-
         <activity
             android:name=".ui.MicrosoftLoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:exported="false"
             android:screenOrientation="sensorLandscape" />
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".ui.WelcomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:exported="true"
             android:screenOrientation="sensorLandscape"
@@ -63,11 +56,6 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.H2CO3MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
-            android:screenOrientation="sensorLandscape"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.VanillaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout|keyboard|navigation"
             android:screenOrientation="sensorLandscape"
             tools:ignore="LockedOrientationActivity" />

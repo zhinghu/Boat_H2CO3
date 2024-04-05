@@ -150,12 +150,14 @@
     <string name="download_snapshot">snapshot</string>
     <string name="download_old_beta">Old</string>
     <string name="download_tip">Tip</string>
-    <string name="download_page_title">Downloading</string>
-    <string name="total">Progress</string>
-    <string name="spinner_official">official</string>
-    <string name="spinner_mcbbs">mcbbs</string>
-    <string name="spinner_bmclapi">bmclapi</string>
-    <string name="refresh">Refresh</string>
-    <string name="title_download">Download</string>
+    <string name="download_page_title">下载中...</string>
+    <string name="total">进度</string>
+    <string name="spinner_official">官方源</string>
+    <string name="storage_permission">存储权限</string>
+    <string name="storage_permission_description">允许应用读写内部存储</string>
+    <string name="spinner_bmclapi">bmclapi源</string>
+    <string name="refresh">刷新</string>
+    <string name="title_download">下载</string>
+    <string name="title_runtime_install_tips">安装应用所需要的运行库</string>
 
 </resources>

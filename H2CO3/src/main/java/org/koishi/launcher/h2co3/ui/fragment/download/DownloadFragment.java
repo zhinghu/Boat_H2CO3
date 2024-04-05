@@ -6,14 +6,13 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.getDownloadSource;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -65,7 +64,7 @@ public class DownloadFragment extends H2CO3Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
 
-        fetchVersionsFromApi(0);
+        fetchVersionsFromApi();
 
         return view;
     }
@@ -73,26 +72,6 @@ public class DownloadFragment extends H2CO3Fragment {
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.loadingversionFileListView1);
         typeRadioGroup = view.findViewById(R.id.typeRadioGroup);
-        RadioButton rbRelease = view.findViewById(R.id.rb_release);
-        RadioButton rbSnapshot = view.findViewById(R.id.rb_snapshot);
-        RadioButton rbOldbeta = view.findViewById(R.id.rb_old_beta);
-
-        spDownloadSourceMode = view.findViewById(R.id.sp_download_source_mode);
-        String[] mItems = getResources().getStringArray(R.array.download_source);
-        ArrayAdapter<String> adapter_source = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, mItems);
-        spDownloadSourceMode.setAdapter(adapter_source);
-        spDownloadSourceMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                fetchVersionsFromApi(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void initListeners() {
@@ -101,22 +80,14 @@ public class DownloadFragment extends H2CO3Fragment {
         });
     }
 
-    private void fetchVersionsFromApi(int position) {
+    private void fetchVersionsFromApi() {
         recyclerView.setAdapter(null);
-        String apiUrl = getApiUrl(position);
+        String apiUrl = getDownloadSource();
         if (apiUrl != null) {
             new FetchVersionsTask().execute(apiUrl);
         } else {
             Toast.makeText(getContext(), "Invalid source", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private String getApiUrl(int position) {
-        return switch (position) {
-            case 0 -> API_URL_BMCLAPI;
-            case 1 -> API_URL_MOJANG;
-            default -> null;
-        };
     }
 
     private void filterVersions(int checkedId) {
@@ -135,8 +106,6 @@ public class DownloadFragment extends H2CO3Fragment {
     }
 
     private class FetchVersionsTask extends AsyncTask<String, Void, List<Version>> {
-
-        private static final int CONNECTION_TIMEOUT = 10000;
         private OkHttpClient client = new OkHttpClient();
 
         @Override

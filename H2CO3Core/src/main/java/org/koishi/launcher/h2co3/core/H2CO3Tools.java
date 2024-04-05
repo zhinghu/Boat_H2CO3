@@ -28,6 +28,7 @@ import rikka.material.app.MaterialActivity;
 public class H2CO3Tools {
 
 
+    public static final String DOWNLOAD_SOURCE_URL = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
     public static String H2CO3_CONTROL_DIR;
     public static String CACIOCAVALLO_8_DIR;
     public static String CACIOCAVALLO_11_DIR;

@@ -27,13 +27,6 @@
 
     <string name="welcome_permission_hint">Boat_H2CO3 needs some necessary permissions to ensure its normal operation.</string>
 
-    <string name="splash_runtime_h2co3Launcher" translatable="false">H2CO3Launcher Library</string>
-    <string name="splash_control_h2co3_app" translatable="false">H2CO3 Library</string>
-    <string name="splash_runtime_java8" translatable="false">JRE 8</string>
-    <string name="splash_runtime_java11" translatable="false">JRE 11</string>
-    <string name="splash_runtime_java17" translatable="false">JRE 17</string>
-    <string name="splash_runtime_java21" translatable="false">JRE 21</string>
-
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_password">Password</string>
     <string name="login_api" translatable="false">API</string>
@@ -195,5 +188,15 @@
     <string name="terminal_redo">Redo</string>
     <string name="terminal_clear_history">Delete history</string>
     <string name="title_download">Download</string>
+
+    <string name="storage_permission">Storage Permission</string>
+    <string name="storage_permission_description">Allows software to read and write to internal storage.</string>
+
+    <string name="runtime_h2co3launcher" translatable="false">H2CO3Launcher</string>
+    <string name="runtime_java8" translatable="false">JAVA 8</string>
+    <string name="runtime_java11" translatable="false">JAVA 11</string>
+    <string name="runtime_java17" translatable="false">JAVA 17</string>
+    <string name="runtime_java21" translatable="false">JAVA 21</string>
+    <string name="title_runtime_install_tips">Install runtime</string>
 
 </resources>

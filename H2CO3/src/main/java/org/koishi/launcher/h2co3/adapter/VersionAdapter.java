@@ -14,14 +14,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.utils.Version;
 import org.koishi.launcher.h2co3.dialog.DownloadDialog;
+import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
 
@@ -54,12 +54,14 @@ public class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHold
         private final String baseUrl = "https://piston-meta.mojang.com/v1/packages/";
         public TextView versionNameTextView;
         public TextView versionTypeTextView;
+        public H2CO3CardView versionCardView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             versionNameTextView = itemView.findViewById(R.id.id);
             versionTypeTextView = itemView.findViewById(R.id.type);
-            itemView.setOnClickListener(this);
+            versionCardView = itemView.findViewById(R.id.download_ver_item);
+            versionCardView.setOnClickListener(this);
         }
 
         @Override
@@ -91,24 +93,16 @@ public class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHold
                 String url = urls[0];
                 String details = "";
 
-                try {
-                    URL apiUrl = new URL(url);
-                    HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
-                    connection.setRequestMethod("GET");
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
 
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        try (InputStream inputStream = connection.getInputStream();
-                             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                            StringBuilder response = new StringBuilder();
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                response.append(line);
-                            }
-                            details = response.toString();
-                        }
+                try (Response response = client.newCall(request).execute()) {
+                    if (response.isSuccessful()) {
+                        details = response.body().string();
                     } else {
-                        details = "HTTP error: " + responseCode;
+                        details = "HTTP error: " + response.code();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -124,7 +118,6 @@ public class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHold
                 if (position != RecyclerView.NO_POSITION) {
                     Version version = versionList.get(position);
                     showDialog(version.getVersionName(), version.getVersionType(), details);
-
                 }
             }
         }

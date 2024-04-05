@@ -54,7 +54,7 @@
                             style="@style/Theme.H2CO3.CardTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/splash_runtime_java8"
+                            android:text="@string/runtime_java8"
                             android:textSize="16sp" />
                     </LinearLayout>
 
@@ -92,7 +92,7 @@
                             style="@style/Theme.H2CO3.CardTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/splash_runtime_java11"
+                            android:text="@string/runtime_java11"
                             android:textSize="16sp" />
                     </LinearLayout>
 
@@ -129,7 +129,7 @@
                             style="@style/Theme.H2CO3.CardTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/splash_runtime_java17"
+                            android:text="@string/runtime_java17"
                             android:textSize="16sp" />
                     </LinearLayout>
 
@@ -166,7 +166,7 @@
                             style="@style/Theme.H2CO3.CardTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/splash_runtime_java21"
+                            android:text="@string/runtime_java21"
                             android:textSize="16sp" />
                     </LinearLayout>
 

@@ -31,7 +31,9 @@
                 android:id="@+id/open_1"
                 style="@style/Theme.H2CO3.CardViewNormal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -110,7 +112,9 @@
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 style="@style/Theme.H2CO3.CardViewNormal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -176,6 +180,8 @@
                 style="@style/Theme.H2CO3.CardViewNormal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -197,7 +203,9 @@
                 android:id="@+id/open_0"
                 style="@style/Theme.H2CO3.CardViewNormal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"

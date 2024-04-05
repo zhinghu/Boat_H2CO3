@@ -1,5 +1,8 @@
 package org.koishi.launcher.h2co3.core;
 
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.userList;
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.usersFile;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,71 +12,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class H2CO3Auth {
-
-    private static final String USER_PROPERTIES = "user_properties";
-    private static final String LOGIN_USER_TYPE = "mojang";
-    private static final String LOGIN_UUID = "0000-0000-0000-0000";
-    private static final String LOGIN_TOKEN = "0";
-    private static final String LOGIN_INFO = "login_info";
-    private static final String LOGIN_IS_OFFLINE = "login_is_offline";
-    private static final String LOGIN_IS_SELECTED = "login_is_selected";
-    private static final List<UserBean> userList = new ArrayList<>();
-    public static File serversFile = new File(H2CO3Tools.H2CO3_SETTING_DIR + "/h2co3_servers.json");
-    public static File usersFile = new File(H2CO3Tools.H2CO3_SETTING_DIR, "h2co3_users.json");
-
-    public static String getPlayerName() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, null, String.class);
-    }
-
-    public static void setPlayerName(String properties) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, properties);
-    }
-
-    public static String getAuthSession() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, "0", String.class);
-    }
-
-    public static void setAuthSession(String session) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, session);
-    }
-
-    public static String getUserProperties() {
-        return H2CO3Tools.getH2CO3Value(USER_PROPERTIES, "{}", String.class);
-    }
-
-    public static void setUserProperties(String properties) {
-        H2CO3Tools.setH2CO3Value(USER_PROPERTIES, properties);
-    }
-
-    public static String getUserType() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, LOGIN_USER_TYPE, String.class);
-    }
-
-    public static void setUserType(String type) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, type);
-    }
-
-    public static String getAuthUUID() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_UUID, LOGIN_UUID, String.class);
-    }
-
-    public static void setAuthUUID(String uuid) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_UUID, uuid);
-    }
-
-    public static String getAuthAccessToken() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_TOKEN, LOGIN_TOKEN, String.class);
-    }
-
-    public static void setAuthAccessToken(String token) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_TOKEN, token);
-    }
-
 
     public static void addUserToJson(String name, String email, String password, String userType, String apiUrl, String authSession, String uuid, String skinTexture, String token, String refreshToken, String clientToken, Boolean isOffline, boolean isSelected) {
         try {

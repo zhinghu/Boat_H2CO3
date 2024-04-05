@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/nav"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            app:navGraph="@navigation/mobile_navigation" />
+            app:navGraph="@navigation/home_navigation" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide"
