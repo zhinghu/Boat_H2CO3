@@ -8,34 +8,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
-
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
-
 import java.io.IOException;
 
-public class WelcomeFragment extends H2CO3Fragment {
-
+public class WelcomeFragment extends Fragment {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    H2CO3TextView title, description;
-    LinearProgressIndicator progressIndicator;
-    Button nextButton;
-    NavController navController;
+    private H2CO3TextView title, description;
+    private LinearProgressIndicator progressIndicator;
+    private Button nextButton;
+    private NavController navController;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
     private boolean java11 = false;
@@ -50,27 +45,40 @@ public class WelcomeFragment extends H2CO3Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+        if (isAdded()) {
+            // Only proceed if the fragment is added to the activity
+            navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+            initViews(view);
+            checkFirstLaunch();
+        } else {
+            // Handle the case where the fragment is not added to the activity
+        }
+    }
 
-        title = findViewById(view, R.id.title);
-        description = findViewById(view, R.id.description);
-        progressIndicator = findViewById(view, R.id.linearProgressIndicator);
-        nextButton = findViewById(view, R.id.nextButton);
+    private void initViews(@NonNull View view) {
+        title = view.findViewById(R.id.title);
+        description = view.findViewById(R.id.description);
+        progressIndicator = view.findViewById(R.id.linearProgressIndicator);
+        nextButton = view.findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(v -> navController.navigate(R.id.action_welcomeFragment_to_eulaFragment));
+    }
 
+    private void checkFirstLaunch() {
         boolean isFirstLaunch = H2CO3Tools.getH2CO3Value("isFirstLaunch", true, Boolean.class);
-
         if (isFirstLaunch) {
             H2CO3Auth.resetUserState();
             H2CO3GameHelper.setDir(H2CO3Tools.MINECRAFT_DIR);
             H2CO3Tools.setH2CO3Value("isFirstLaunch", false);
-            title.setVisibility(View.VISIBLE);
-            description.setVisibility(View.VISIBLE);
-            progressIndicator.setVisibility(View.VISIBLE);
-            nextButton.setVisibility(View.VISIBLE);
+            showWelcomeUI();
         } else {
             checkPermission();
         }
-        view.findViewById(R.id.nextButton).setOnClickListener(v -> navController.navigate(R.id.action_welcomeFragment_to_eulaFragment));
+    }
+
+    private void showWelcomeUI() {
+        title.setVisibility(View.VISIBLE);
+        description.setVisibility(View.VISIBLE);
+        progressIndicator.setVisibility(View.VISIBLE);
     }
 
     private void checkPermission() {
@@ -79,12 +87,17 @@ public class WelcomeFragment extends H2CO3Fragment {
         } else {
             initRuntimeState();
             if (checkRuntime()) {
-                handler.postDelayed(() -> startActivity(new Intent(requireActivity(), H2CO3MainActivity.class)), 1000);
-                requireActivity().finish();
+                handler.postDelayed(this::proceedToMainActivity, 1000);
             } else {
                 navController.navigate(R.id.action_welcomeFragment_to_installFragment);
             }
         }
+    }
+
+    private void proceedToMainActivity() {
+        Intent intent = new Intent(requireActivity(), H2CO3MainActivity.class);
+        startActivity(intent);
+        requireActivity().finish();
     }
 
     private boolean checkRuntime() {
@@ -94,29 +107,12 @@ public class WelcomeFragment extends H2CO3Fragment {
     private void initRuntimeState() {
         try {
             h2co3Launcher = RuntimeUtils.isLatest(H2CO3Tools.H2CO3LAUNCHER_LIBRARY_DIR, "/assets/app_runtime/h2co3Launcher");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             java8 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_8_PATH, "/assets/app_runtime/java/jre8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             java11 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_11_PATH, "/assets/app_runtime/java/jre11");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             java17 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_17_PATH, "/assets/app_runtime/java/jre17");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             java21 = RuntimeUtils.isLatest(H2CO3Tools.JAVA_21_PATH, "/assets/app_runtime/java/jre21");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
