@@ -1,5 +1,11 @@
 /*
  * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
  * // Created by cainiaohh on 2024-03-31.
  * //
  */
@@ -53,53 +59,6 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private int scaleFactor = 1;
     public static WeakReference<H2CO3LauncherBridge.LogReceiver> logReceiver;
 
-    public static void attachControllerInterface() {
-        H2CO3LauncherClientActivity.h2co3LauncherInterface = new IH2CO3Launcher() {
-            private H2CO3VirtualController virtualController;
-            private HardwareController hardwareController;
-
-            @Override
-            public void onActivityCreate(H2CO3LauncherActivity H2CO3LauncherActivity) {
-                virtualController = new H2CO3VirtualController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
-                hardwareController = new HardwareController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
-            }
-
-            @Override
-            public void setGrabCursor(boolean isGrabbed) {
-                virtualController.setGrabCursor(isGrabbed);
-                hardwareController.setGrabCursor(isGrabbed);
-            }
-
-            @Override
-            public void onStop() {
-                virtualController.onStop();
-                hardwareController.onStop();
-            }
-
-            @Override
-            public void onResume() {
-                virtualController.onResumed();
-                hardwareController.onResumed();
-            }
-
-            @Override
-            public void onPause() {
-                virtualController.onPaused();
-                hardwareController.onPaused();
-            }
-
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent event) {
-                return hardwareController.dispatchKeyEvent(event);
-            }
-
-            @Override
-            public boolean dispatchGenericMotionEvent(MotionEvent event) {
-                return hardwareController.dispatchMotionKeyEvent(event);
-            }
-        };
-    }
-
     public static void receiveLog(String str) throws IOException {
         if (logReceiver == null || logReceiver.get() == null) {
             Log.e(TAG, "LogReceiver is null. So use default receiver.");
@@ -135,7 +94,11 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         cursorIcon.setLayoutParams(new ViewGroup.LayoutParams(DisplayUtils.getPxFromDp(this, CURSOR_SIZE), DisplayUtils.getPxFromDp(this, CURSOR_SIZE)));
         cursorIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.cursor5);
         this.addView(cursorIcon);
-        launcherLib = launchMinecraft(this, screenWidth, screenHeight);
+        try {
+            launcherLib = launchMinecraft(this, screenWidth, screenHeight);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         h2co3LauncherCallback = launcherLib.getCallback();
         init();
     }
@@ -349,5 +312,52 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
         } else if (cursorIcon.getVisibility() == View.VISIBLE) {
             cursorIcon.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public static void attachControllerInterface() {
+        H2CO3LauncherClientActivity.h2co3LauncherInterface = new IH2CO3Launcher() {
+            private H2CO3VirtualController virtualController;
+            private HardwareController hardwareController;
+
+            @Override
+            public void onActivityCreate(H2CO3LauncherActivity H2CO3LauncherActivity) {
+                virtualController = new H2CO3VirtualController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
+                hardwareController = new HardwareController((H2CO3ControlClient) H2CO3LauncherActivity, H2CO3LauncherActivity.launcherLib, KEYMAP_TO_X);
+            }
+
+            @Override
+            public void setGrabCursor(boolean isGrabbed) {
+                virtualController.setGrabCursor(isGrabbed);
+                hardwareController.setGrabCursor(isGrabbed);
+            }
+
+            @Override
+            public void onStop() {
+                virtualController.onStop();
+                hardwareController.onStop();
+            }
+
+            @Override
+            public void onResume() {
+                virtualController.onResumed();
+                hardwareController.onResumed();
+            }
+
+            @Override
+            public void onPause() {
+                virtualController.onPaused();
+                hardwareController.onPaused();
+            }
+
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent event) {
+                return hardwareController.dispatchKeyEvent(event);
+            }
+
+            @Override
+            public boolean dispatchGenericMotionEvent(MotionEvent event) {
+                return hardwareController.dispatchMotionKeyEvent(event);
+            }
+        };
     }
 }

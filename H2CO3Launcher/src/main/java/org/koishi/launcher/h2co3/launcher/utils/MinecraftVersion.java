@@ -2,7 +2,7 @@ package org.koishi.launcher.h2co3.launcher.utils;
 
 import com.google.gson.Gson;
 
-import org.koishi.launcher.h2co3.core.H2CO3Auth;
+import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;
@@ -149,12 +149,12 @@ public class MinecraftVersion {
                         case "assets_index_name" -> assetIndex != null ? assetIndex.id : assets;
                         case "game_directory" -> H2CO3GameHelper.getGameDirectory();
                         case "assets_root" -> H2CO3GameHelper.getGameAssetsRoot();
-                        case "user_properties" -> H2CO3Auth.getUserProperties();
-                        case "auth_player_name" -> H2CO3Auth.getPlayerName();
-                        case "auth_session" -> H2CO3Auth.getAuthSession();
-                        case "auth_uuid" -> H2CO3Auth.getAuthUUID();
-                        case "auth_access_token" -> H2CO3Auth.getAuthAccessToken();
-                        case "user_type" -> H2CO3Auth.getUserType();
+                        case "user_properties" -> H2CO3Settings.getUserProperties();
+                        case "auth_player_name" -> H2CO3Settings.getPlayerName();
+                        case "auth_session" -> H2CO3Settings.getAuthSession();
+                        case "auth_uuid" -> H2CO3Settings.getAuthUUID();
+                        case "auth_access_token" -> H2CO3Settings.getAuthAccessToken();
+                        case "user_type" -> H2CO3Settings.getUserType();
                         case "primary_jar_name" ->
                                 H2CO3GameHelper.getGameCurrentVersion() + "/" + id + ".jar";
                         case "library_directory" -> H2CO3GameHelper.getGameDirectory() + "/libraries";
@@ -209,12 +209,12 @@ public class MinecraftVersion {
                         case "assets_index_name" -> assetIndex != null ? assetIndex.id : assets;
                         case "game_directory" -> H2CO3GameHelper.getGameDirectory();
                         case "assets_root" -> H2CO3GameHelper.getGameAssetsRoot();
-                        case "user_properties" -> H2CO3Auth.getUserProperties();
-                        case "auth_player_name" -> H2CO3Auth.getPlayerName();
-                        case "auth_session" -> H2CO3Auth.getAuthSession();
-                        case "auth_uuid" -> H2CO3Auth.getAuthUUID();
-                        case "auth_access_token" -> H2CO3Auth.getAuthAccessToken();
-                        case "user_type" -> H2CO3Auth.getUserType();
+                        case "user_properties" -> H2CO3Settings.getUserProperties();
+                        case "auth_player_name" -> H2CO3Settings.getPlayerName();
+                        case "auth_session" -> H2CO3Settings.getAuthSession();
+                        case "auth_uuid" -> H2CO3Settings.getAuthUUID();
+                        case "auth_access_token" -> H2CO3Settings.getAuthAccessToken();
+                        case "user_type" -> H2CO3Settings.getUserType();
                         case "primary_jar_name" ->
                                 H2CO3GameHelper.getGameCurrentVersion() + "/" + id + ".jar";
                         case "library_directory" -> H2CO3GameHelper.getGameDirectory() + "/libraries";

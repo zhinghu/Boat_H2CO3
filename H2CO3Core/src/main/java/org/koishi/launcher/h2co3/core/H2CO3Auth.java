@@ -1,84 +1,21 @@
 package org.koishi.launcher.h2co3.core;
 
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.userList;
+import static org.koishi.launcher.h2co3.core.H2CO3Settings.usersFile;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.Iterator;
 import java.util.List;
 
 public class H2CO3Auth {
-
-    private static final String USER_PROPERTIES = "user_properties";
-    private static final String LOGIN_USER_TYPE = "mojang";
-    private static final String LOGIN_UUID = "0000-0000-0000-0000";
-    private static final String LOGIN_TOKEN = "0";
-    private static final String LOGIN_INFO = "login_info";
-    private static final String LOGIN_IS_OFFLINE = "login_is_offline";
-    private static final String LOGIN_IS_SELECTED = "login_is_selected";
-    private static final List<UserBean> userList = new ArrayList<>();
-    public static File serversFile = new File(H2CO3Tools.H2CO3_SETTING_DIR + "/h2co3_servers.json");
-    public static File usersFile = new File(H2CO3Tools.H2CO3_SETTING_DIR, "h2co3_users.json");
-
-    public static String getPlayerName() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, null, String.class);
-    }
-
-    public static void setPlayerName(String properties) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, properties);
-    }
-
-    public static String getAuthSession() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, "0", String.class);
-    }
-
-    public static void setAuthSession(String session) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_AUTH_SESSION, session);
-    }
-
-    public static String getUserProperties() {
-        return H2CO3Tools.getH2CO3Value(USER_PROPERTIES, "{}", String.class);
-    }
-
-    public static void setUserProperties(String properties) {
-        H2CO3Tools.setH2CO3Value(USER_PROPERTIES, properties);
-    }
-
-    public static String getUserType() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, LOGIN_USER_TYPE, String.class);
-    }
-
-    public static void setUserType(String type) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_USER_TYPE, type);
-    }
-
-    public static String getAuthUUID() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_UUID, LOGIN_UUID, String.class);
-    }
-
-    public static void setAuthUUID(String uuid) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_UUID, uuid);
-    }
-
-    public static String getAuthAccessToken() {
-        return H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_TOKEN, LOGIN_TOKEN, String.class);
-    }
-
-    public static void setAuthAccessToken(String token) {
-        H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_TOKEN, token);
-    }
 
     public static void addUserToJson(String name, String email, String password, String userType, String apiUrl, String authSession, String uuid, String skinTexture, String token, String refreshToken, String clientToken, Boolean isOffline, boolean isSelected) {
         try {
@@ -156,7 +93,9 @@ public class H2CO3Auth {
         setUserState(emptyUser);
     }
 
-    public static List<UserBean> getUserList() {
+    public static List<UserBean> getUserList(JSONObject obj) throws IOException {
+        userList.clear();
+        parseJsonToUser(obj);
         return userList;
     }
 
@@ -195,39 +134,11 @@ public class H2CO3Auth {
         }
     }
 
-    public static String readFileContent(File file) throws IOException {
-        if (!file.exists() || !file.isFile()) {
-            throw new FileNotFoundException("File not found: " + file.getPath());
-        }
-        if (!file.canRead()) {
-            throw new IOException("No permission to read file: " + file.getPath());
-        }
-        StringBuilder content = new StringBuilder((int) file.length());
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            char[] buffer = new char[8192];
-            int bytesRead;
-            while ((bytesRead = reader.read(buffer)) != -1) {
-                content.append(buffer, 0, bytesRead);
-            }
-        }
-        return content.toString();
+    private static void writeFileContent(File file, String content) throws IOException {
+        Files.write(file.toPath(), content.getBytes(StandardCharsets.UTF_8));
     }
 
-    private static void writeFileContent(File file, String content) throws IOException {
-        if (!file.exists()) {
-            if (!file.createNewFile()) {
-                throw new IOException("Failed to create file: " + file.getPath());
-            }
-        }
-        if (!file.isFile()) {
-            throw new IOException("Not a valid file: " + file.getPath());
-        }
-        if (!file.canWrite()) {
-            throw new IOException("No permission to write to file: " + file.getPath());
-        }
-        try (FileOutputStream fos = new FileOutputStream(file);
-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8))) {
-            writer.write(content);
-        }
+    public static String readFileContent(File file) throws IOException {
+        return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
     }
 }

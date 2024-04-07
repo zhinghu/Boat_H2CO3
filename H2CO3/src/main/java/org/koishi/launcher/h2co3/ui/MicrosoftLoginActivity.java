@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -60,7 +61,8 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
         private static final String CANCEL_URL = "res=cancel";
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            String url = request.getUrl().toString();
             if (url.startsWith(MICROSOFT_LOGIN_PREFIX)) {
                 Intent data = new Intent();
                 data.setData(Uri.parse(url));
@@ -81,7 +83,7 @@ public class MicrosoftLoginActivity extends H2CO3Activity {
                 return true;
             }
 
-            return false;
+            return super.shouldOverrideUrlLoading(view, request);
         }
 
         @Override

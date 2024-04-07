@@ -1,5 +1,11 @@
 /*
  * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
  * // Created by cainiaohh on 2024-03-31.
  * //
  */
@@ -34,8 +40,6 @@ import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,7 +62,8 @@ public class H2CO3LauncherBridge implements Serializable {
     public static native void pushEvent(long time, int type, int p1, int p2);
     public static native int[] getPointer();
     public native void setLdLibraryPath(String path);
-    public native void h2co3LauncherSetNativeWindow(Surface surface);
+
+    public native void setH2CO3LauncherNativeWindow(Surface surface);
     public native int setupExitTrap(H2CO3LauncherBridge bridge);
     public native void setupJLI();
     public native int jliLaunch(String[] args);
@@ -119,7 +124,7 @@ public class H2CO3LauncherBridge implements Serializable {
 
     public void receiveLog(String log) throws IOException {
         if (callback != null) {
-            callback.onLog(log);
+            callback.onLog(log + "\n");
         }
     }
 
@@ -207,7 +212,7 @@ public class H2CO3LauncherBridge implements Serializable {
     public void handleWindow() throws IOException {
         if (H2CO3GameHelper.getGameDirectory() != null) {
             receiveLog("invoke setH2CO3LauncherNativeWindow\n");
-            h2co3LauncherSetNativeWindow(this.surface);
+            setH2CO3LauncherNativeWindow(this.surface);
         } else {
             receiveLog("start Android AWT Renderer thread\n");
             mExecutor = Executors.newSingleThreadExecutor();
@@ -296,21 +301,6 @@ public class H2CO3LauncherBridge implements Serializable {
         void pushLog(String log) throws IOException;
 
         String getLogs();
-    }
-
-    public static class DefaultLogReceiver implements LogReceiver {
-        private final List<String> logs = new ArrayList<>();
-
-        @Override
-        public void pushLog(String log) {
-            logs.add(log);
-        }
-
-        @Override
-        public String getLogs() {
-            List<String> logsCopy = new ArrayList<>(logs);
-            return String.join("\n", logsCopy);
-        }
     }
 
 

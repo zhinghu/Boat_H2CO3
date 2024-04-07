@@ -1,3 +1,15 @@
+/*
+ * //
+ * // Created by cainiaohh on 2024-04-04.
+ * //
+ */
+
+/*
+ * //
+ * // Created by cainiaohh on 2024-04-03.
+ * //
+ */
+
 package org.koishi.launcher.h2co3.core.utils.file;
 
 import android.content.Context;
@@ -906,6 +918,15 @@ public final class FileTools {
             }
         }
         return null;
+    }
+
+    public static String readFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        byte[] data = new byte[(int) file.length()];
+        fileInputStream.read(data);
+        fileInputStream.close();
+        return new String(data, StandardCharsets.UTF_8);
     }
 
     public static String readFileToString(File file) {

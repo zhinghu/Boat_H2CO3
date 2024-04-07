@@ -11,8 +11,6 @@
         style="@style/Theme.H2CO3.CardViewOutlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp"
         android:elevation="@dimen/elevation_3"
         android:visibility="visible">
 

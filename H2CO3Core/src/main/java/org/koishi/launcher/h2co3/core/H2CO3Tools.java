@@ -28,7 +28,7 @@ import rikka.material.app.MaterialActivity;
 public class H2CO3Tools {
 
 
-    public static final int FILE_SELECTED_CODE_OK = 11450;
+    public static final String DOWNLOAD_SOURCE_URL = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
     public static String H2CO3_CONTROL_DIR;
     public static String CACIOCAVALLO_8_DIR;
     public static String CACIOCAVALLO_11_DIR;
@@ -49,7 +49,7 @@ public class H2CO3Tools {
     public static String JAVA_11_PATH;
     public static String JAVA_17_PATH;
     public static String JAVA_21_PATH;
-    private static final String ARGS_FILE_PATH = H2CO3Tools.LOG_DIR + "/h2co3Launcher_args.txt";
+    public static File DIRS_CONFIG_FILE;
 
     public static String FILES_DIR;
     public static String PLUGIN_DIR;
@@ -121,8 +121,9 @@ public class H2CO3Tools {
         CACIOCAVALLO_17_DIR = PLUGIN_DIR + "/caciocavallo17";
         H2CO3_LIBRARY_DIR = APP_DATA_PATH + "/h2co3";
         H2CO3_SETTING_DIR = APP_DATA_PATH + "/h2co3_setting";
+        DIRS_CONFIG_FILE = new File(H2CO3_SETTING_DIR, "h2co3_dirs.json");
 
-        H2CO3_CONTROL_DIR = APP_DATA_PATH + "/KEYBOARDS";
+        H2CO3_CONTROL_DIR = APP_DATA_PATH + "/control";
 
         FILES_DIR = context.getFilesDir().getAbsolutePath();
 

@@ -79,7 +79,7 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
     public Input debugInfo;
     public H2CO3LauncherBridge h2co3LauncherBridge;
     private VirtualControllerSetting settingDialog;
-    public AlertDialog settingDialog9Alert;
+    public AlertDialog settingDialogAlert;
     private ImageButton buttonCustomizeKeyboard;
     private MaterialSwitch switchCustomizeKeyboard;
     private ImageButton buttonPEItembar;
@@ -113,6 +113,7 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
 
     public void init() {
         settingDialog = new VirtualControllerSetting(context);
+        settingDialogAlert = settingDialog.create();
 
         onscreenTouchpad = new OnscreenTouchpad();
         itemBar = new ItemBar();
@@ -130,7 +131,7 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
 
         MenuView dButton = new MenuView(context);
         dButton.setLayoutParams(new ViewGroup.LayoutParams(DisplayUtils.getPxFromDp(context, 30), DisplayUtils.getPxFromDp(context, 30)));
-        dButton.setTodo(() -> settingDialog.show());
+        dButton.setTodo(() -> settingDialogAlert.show());
         dButton.setY((float) (screenHeight / 2));
         h2CO3ControlClient.addContentView(dButton, dButton.getLayoutParams());
 
@@ -147,8 +148,6 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
         buttonOK = settingDialog.findViewById(R.id.virtual_controller_dialog_button_ok);
         checkboxLock = settingDialog.findViewById(R.id.virtual_controller_dialog_checkbox_lock);
         buttonResetPos = settingDialog.findViewById(R.id.virtual_controller_dialog_button_reset_pos);
-
-        //给Dialog布局添加监听
 
         for (View v : new View[]{buttonCustomizeKeyboard, buttonOK, buttonResetPos, buttonPEItembar, buttonTouchpad}) {
             v.setOnClickListener(this);
@@ -251,7 +250,7 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
 
         if (v == buttonOK) {
             saveConfigToFile();
-            settingDialog.dismissDialog();
+            settingDialogAlert.dismiss();
             return;
         }
 
