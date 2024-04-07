@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -84,12 +85,25 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     }
 
     private void fetchVersionsFromApi() {
+        // 清除RecyclerView的适配器
         recyclerView.setAdapter(null);
+        // 获取下载源
         String apiUrl = getDownloadSource();
-        if (apiUrl != null) {
+        // 检查下载源是否有效
+        if (apiUrl != null && !apiUrl.isEmpty()) {
+            // 如果下载源有效，执行异步任务
             new FetchVersionsTask().execute(API_URL_BMCLAPI);
         } else {
-            Toast.makeText(getContext(), "Invalid source", Toast.LENGTH_SHORT).show();
+            // 如果下载源无效，获取当前的Context
+            Context context = getContext();
+            // 检查Context是否有效
+            if (context != null) {
+                // 如果Context有效，显示Toast提示
+                Toast.makeText(context, "Invalid source", Toast.LENGTH_SHORT).show();
+            } else {
+                // 如果Context无效，记录错误日志或进行其他错误处理
+                // Log.e(TAG, "Context is null when trying to show toast.");
+            }
         }
     }
 
