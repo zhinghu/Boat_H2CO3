@@ -45,14 +45,23 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     }
 
     private void initFragment(Fragment fragment) {
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
-        if (currentFragment != null) {
-            transaction.remove(currentFragment);
+        // 检查是否已经被添加过，避免重复添加
+        if (currentFragment != fragment) {
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
+            if (currentFragment != null) {
+                transaction.remove(currentFragment);
+            }
+            currentFragment = fragment;
+            transaction.replace(R.id.fragmentContainerView, fragment);
+            transaction.commit(); // commit 必须在onSaveInstanceState之前
         }
-        currentFragment = fragment;
-        transaction.replace(R.id.fragmentContainerView, fragment);
-        transaction.commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // 保存当前Fragment的状态，如果有必要
     }
 
     @Override
@@ -80,11 +89,9 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         return true;
     }
 
-
     private void switchFragment(Fragment fragment) {
-        new Handler().postDelayed(() -> {
-            initFragment(fragment);
-        }, 350);
+        // 直接在这里进行Fragment的切换，而不是延迟执行
+        initFragment(fragment);
     }
 
     private void setNavigationItemChecked(int index) {
