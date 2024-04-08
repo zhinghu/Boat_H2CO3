@@ -133,14 +133,20 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
                 downloadItems.add(item);
             }
         } catch (JSONException e) {
-            // Consider logging the error with more context or rethrowing a custom exception
-            e.printStackTrace();
+            // 更详细的错误处理，如记录日志、向用户显示错误信息或者抛出自定义异常
+            e.printStackTrace(); // 换成更详细的处理方法
         }
     }
 
-    private boolean shouldFilterLibrary(JSONObject library) throws JSONException {
-        String name = library.getString("name");
-        return name.contains("windows") || name.contains("macos");
+    private boolean shouldFilterLibrary(JSONObject library) {
+        try {
+            String name = library.getString("name");
+            return name.contains("windows") || name.contains("macos");
+        } catch (JSONException e) {
+            // 根据具体情况处理异常，如记录日志、向用户显示错误信息或者抛出自定义异常
+            e.printStackTrace(); // 换成更详细的处理方法
+            return false;  // 或者做其他适当处理
+        }
     }
 
     private int getThreadCount() {
@@ -336,8 +342,8 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
                             .setMessage(message)
                             .setPositiveButton("确定", null)
                             .create();
+                    dialog.show();
                 }
-                dialog.show();
             });
         }
     }
