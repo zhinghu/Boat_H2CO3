@@ -92,7 +92,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         // 检查下载源是否有效
         if (apiUrl != null && !apiUrl.isEmpty()) {
             // 如果下载源有效，执行异步任务
-            new FetchVersionsTask().execute(API_URL_BMCLAPI);
+            new FetchVersionsTask().execute(apiUrl);
         } else {
             // 如果下载源无效，获取当前的Context
             Context context = getContext();
