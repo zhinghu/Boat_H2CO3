@@ -41,7 +41,7 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     }
 
     private void initUI() {
-        navigationView = findViewById(view, R.id.nav);
+        navigationView = view.findViewById(R.id.nav);
     }
 
     private void initFragment(Fragment fragment) {
