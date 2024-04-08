@@ -33,9 +33,14 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_download_list, container, false);
         initUI();
+        if (savedInstanceState != null) {
+            currentFragment = getChildFragmentManager().getFragment(savedInstanceState, "currentFragment");
+        }
+        if (currentFragment == null) {
+            initFragment(new MinecraftVersionListFragment());
+        }
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_download);
-        initFragment(new MinecraftVersionListFragment());
         setNavigationItemChecked(0);
         return view;
     }
@@ -46,7 +51,7 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
 
     private void initFragment(Fragment fragment) {
         // 检查是否已经被添加过，避免重复添加
-        if (currentFragment != fragment) {
+        if (currentFragment == null || currentFragment != fragment) {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
             if (currentFragment != null) {
@@ -59,9 +64,11 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        // 保存当前Fragment的状态，如果有必要
+        if (currentFragment != null) {
+            getChildFragmentManager().putFragment(outState, "currentFragment", currentFragment);
+        }
     }
 
     @Override
