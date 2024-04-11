@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.core.login.utils;
+package org.koishi.launcher.h2co3.core.utils;
 
 import java.io.IOException;
 import java.net.URL;

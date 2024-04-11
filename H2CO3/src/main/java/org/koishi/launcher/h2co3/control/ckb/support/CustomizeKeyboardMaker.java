@@ -8,7 +8,7 @@ import android.content.Context;
 import org.koishi.launcher.h2co3.control.ckb.button.GameButton;
 import org.koishi.launcher.h2co3.control.definitions.map.KeyMap;
 import org.koishi.launcher.h2co3.control.definitions.map.MouseMap;
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class CustomizeKeyboardMaker {
         KeyboardRecorder defKR = new KeyboardRecorder();
         ArrayList<GameButtonRecorder> defGBRs = new ArrayList<>();
         //设置屏幕像素参数
-        defKR.setScreenArgs(DisplayUtils.getDisplayWindowSize(mContext)[0], DisplayUtils.getDisplayWindowSize(mContext)[1]);
+        defKR.setScreenArgs(DisplayUtils.getWindowSize(mContext)[0], DisplayUtils.getWindowSize(mContext)[1]);
         //设置版本号
         defKR.setVersionCode(KeyboardRecorder.VERSION_THIS);
         //添加默认按键
@@ -143,7 +143,7 @@ public class CustomizeKeyboardMaker {
 
         public GameButtonBuilder(Context context) {
             gbr = new GameButtonRecorder();
-            sizeDp = new float[]{DisplayUtils.getDpFromPx(context, DisplayUtils.getDisplayWindowSize(context)[0]), DisplayUtils.getDpFromPx(context, DisplayUtils.getDisplayWindowSize(context)[1])};
+            sizeDp = new float[]{DisplayUtils.getDpFromPx(context, DisplayUtils.getWindowSize(context)[0]), DisplayUtils.getDpFromPx(context, DisplayUtils.getWindowSize(context)[1])};
         }
 
         public GameButtonRecorder build() {

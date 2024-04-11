@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.input.Input;
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public abstract class BaseController implements Controller {
         this.context = h2CO3ControlClient.getActivity();
         inputs = new ArrayList<>();
         this.internalTime = intervalTime;
-        this.mConfig = new Config(DisplayUtils.getDisplayWindowSize(context)[0], DisplayUtils.getDisplayWindowSize(context)[1]);
+        this.mConfig = new Config(DisplayUtils.getWindowSize(context)[0], DisplayUtils.getWindowSize(context)[1]);
         this.isTimerEnable = enableTimer;
         if (enableTimer) {
             createAutoSaveTimer();

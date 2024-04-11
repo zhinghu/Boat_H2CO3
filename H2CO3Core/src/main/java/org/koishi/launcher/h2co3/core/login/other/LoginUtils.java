@@ -43,7 +43,6 @@ public class LoginUtils {
         authRequest.setAgent(agent);
         authRequest.setRequestUser(true);
         authRequest.setClientToken("Boat_H2CO3");
-        System.out.println(gson.toJson(authRequest));
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), gson.toJson(authRequest));
         Request request = new Request.Builder()
                 .url(baseUrl + "/authserver/authenticate")

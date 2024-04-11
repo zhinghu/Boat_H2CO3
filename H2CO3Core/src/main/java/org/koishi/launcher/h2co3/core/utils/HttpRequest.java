@@ -1,12 +1,10 @@
-package org.koishi.launcher.h2co3.core.login.utils;
+package org.koishi.launcher.h2co3.core.utils;
 
-import static org.koishi.launcher.h2co3.core.login.utils.NetworkUtils.resolveConnection;
 import static org.koishi.launcher.h2co3.core.utils.Lang.mapOf;
+import static org.koishi.launcher.h2co3.core.utils.NetworkUtils.resolveConnection;
 
 import com.google.gson.JsonParseException;
 
-import org.koishi.launcher.h2co3.core.utils.Pair;
-import org.koishi.launcher.h2co3.core.utils.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.function.ExceptionalBiConsumer;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.io.IOUtils;
@@ -15,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -42,7 +39,7 @@ public abstract class HttpRequest {
     }
 
     @SafeVarargs
-    public static HttpGetRequest GET(String url, Pair<String, String>... query) {
+    public static HttpGetRequest GET(String url, Pair<String, String>... query) throws UnsupportedEncodingException {
         return GET(NetworkUtils.withQuery(url, mapOf(query)));
     }
 
@@ -157,7 +154,7 @@ public abstract class HttpRequest {
             return string(payload instanceof String ? (String) payload : JsonUtils.GSON.toJson(payload), "application/json");
         }
 
-        public HttpPostRequest form(Map<String, String> params) {
+        public HttpPostRequest form(Map<String, String> params) throws UnsupportedEncodingException {
             return string(NetworkUtils.withQuery("", params), "application/x-www-form-urlencoded");
         }
 

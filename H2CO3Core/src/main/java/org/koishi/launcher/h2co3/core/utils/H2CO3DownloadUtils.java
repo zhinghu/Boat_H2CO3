@@ -19,42 +19,37 @@ public class H2CO3DownloadUtils {
     }
 
     public static void download(URL url, OutputStream os) throws IOException {
-        HttpURLConnection conn = null;
-        InputStream is = null;
-        try {
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(10000);
-            conn.setDoInput(true);
-            conn.connect();
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                throw new IOException("Server returned HTTP " + conn.getResponseCode()
-                        + ": " + conn.getResponseMessage());
-            }
-            is = conn.getInputStream();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(10000);
+        conn.setDoInput(true);
+        conn.connect();
+        if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Server returned HTTP " + conn.getResponseCode()
+                    + ": " + conn.getResponseMessage());
+        }
+        try (InputStream is = conn.getInputStream()) {
             IOUtils.copy(is, os);
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-            if (conn != null) {
-                conn.disconnect();
-            }
         }
     }
 
     public static String downloadString(String url) throws IOException {
-        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
             download(url, bos);
             return bos.toString("UTF-8");
+        } finally {
+            bos.close();
         }
     }
 
     public static void downloadFile(String url, File out) throws IOException {
         out.getParentFile().mkdirs();
-        File tempOut = File.createTempFile(out.getName(), ".part", out.getParentFile());
+        File tempOut = new File(out.getParentFile(), out.getName() + ".part");
         try (OutputStream bos = new BufferedOutputStream(new FileOutputStream(tempOut))) {
             download(url, bos);
-            tempOut.renameTo(out);
+            if (!tempOut.renameTo(out)) {
+                throw new IOException("File rename failed");
+            }
         } finally {
             if (tempOut.exists()) {
                 tempOut.delete();
@@ -64,17 +59,17 @@ public class H2CO3DownloadUtils {
 
     public static void downloadFileMonitored(String urlInput, File outputFile, byte[] buffer,
                                              H2CO3DownloaderFeedback monitor) throws IOException {
+        if (outputFile == null) {
+            throw new IllegalArgumentException("Output file cannot be null");
+        }
+
         if (!outputFile.exists()) {
             outputFile.getParentFile().mkdirs();
         }
 
-        HttpURLConnection conn = null;
-        InputStream is = null;
-        FileOutputStream fos = null;
-        try {
-            conn = (HttpURLConnection) new URL(urlInput).openConnection();
-            is = conn.getInputStream();
-            fos = new FileOutputStream(outputFile);
+        HttpURLConnection conn = (HttpURLConnection) new URL(urlInput).openConnection();
+        try (InputStream is = conn.getInputStream();
+             FileOutputStream fos = new FileOutputStream(outputFile)) {
             int cur;
             int oval = 0;
             int len = conn.getContentLength();
@@ -85,16 +80,6 @@ public class H2CO3DownloadUtils {
                 oval += cur;
                 fos.write(buffer, 0, cur);
                 monitor.updateProgress(oval, len);
-            }
-        } finally {
-            if (fos != null) {
-                fos.close();
-            }
-            if (is != null) {
-                is.close();
-            }
-            if (conn != null) {
-                conn.disconnect();
             }
         }
     }

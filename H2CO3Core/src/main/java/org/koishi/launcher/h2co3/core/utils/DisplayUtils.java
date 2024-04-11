@@ -1,8 +1,7 @@
-package org.koishi.launcher.h2co3.core.login.utils;
+package org.koishi.launcher.h2co3.core.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -10,7 +9,6 @@ import android.view.WindowManager;
 public class DisplayUtils {
 
     private static final String NAV_BAR_HEIGHT_RES_NAME = "navigation_bar_height";
-    private static final String SHOW_NAV_BAR_RES_NAME = "config_showNavigationBar";
 
     public static int getPxFromDp(Context context, float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;
@@ -28,24 +26,16 @@ public class DisplayUtils {
     }
 
     public static boolean checkDeviceHasNavigationBar(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            if (windowManager != null) {
-                Display display = windowManager.getDefaultDisplay();
-                DisplayMetrics realDisplayMetrics = new DisplayMetrics();
-                display.getRealMetrics(realDisplayMetrics);
-                int realHeight = realDisplayMetrics.heightPixels;
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                display.getMetrics(displayMetrics);
-                int displayHeight = displayMetrics.heightPixels;
-                return realHeight - displayHeight > 0;
-            }
-        } else {
-            Resources rs = context.getResources();
-            int id = rs.getIdentifier(SHOW_NAV_BAR_RES_NAME, "bool", "android");
-            if (id > 0) {
-                return rs.getBoolean(id);
-            }
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        if (windowManager != null) {
+            Display display = windowManager.getDefaultDisplay();
+            DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+            display.getRealMetrics(realDisplayMetrics);
+            int realHeight = realDisplayMetrics.heightPixels;
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            display.getMetrics(displayMetrics);
+            int displayHeight = displayMetrics.heightPixels;
+            return realHeight - displayHeight > 0;
         }
         return false;
     }
@@ -56,15 +46,10 @@ public class DisplayUtils {
         return resourceId > 0 ? resources.getDimensionPixelSize(resourceId) : 0;
     }
 
-    public static int[] getApplicationWindowSize(Context context) {
+    public static int[] getWindowSize(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return new int[]{displayMetrics.widthPixels, displayMetrics.heightPixels};
-    }
-
-    public static int[] getDisplayWindowSize(Context context) {
-        int[] applicationWindowSize = getApplicationWindowSize(context);
-        int screenWidth = applicationWindowSize[0];
-        int screenHeight = applicationWindowSize[1];
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
         int navigationBarHeight = checkDeviceHasNavigationBar(context) ? getNavigationBarHeight(context) : 0;
         return new int[]{screenWidth, screenHeight + navigationBarHeight};
     }

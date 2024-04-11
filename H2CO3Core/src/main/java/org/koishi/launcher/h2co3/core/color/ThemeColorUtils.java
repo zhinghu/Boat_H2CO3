@@ -7,16 +7,14 @@ import android.util.TypedValue;
 public class ThemeColorUtils {
     public static int getColorFromTheme(Context context, int attr) {
         TypedValue typedValue = new TypedValue();
-        boolean resolved = context.getTheme().resolveAttribute(attr, typedValue, true);
-        if (resolved) {
-            if (typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT
-                    && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+        if (context.getTheme().resolveAttribute(attr, typedValue, true)) {
+            if (typedValue.type == TypedValue.TYPE_INT_COLOR_ARGB8 || typedValue.type == TypedValue.TYPE_INT_COLOR_RGB8) {
                 return typedValue.data;
             } else if (typedValue.type == TypedValue.TYPE_STRING) {
                 return Color.parseColor(typedValue.string.toString());
             }
         }
-        return Color.RED; // 默认使用红色
+        return Color.RED;
     }
 
 

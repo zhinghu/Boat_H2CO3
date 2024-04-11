@@ -24,8 +24,8 @@ import org.koishi.launcher.h2co3.control.ckb.support.CkbThemeMarker;
 import org.koishi.launcher.h2co3.control.ckb.support.CkbThemeRecorder;
 import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.control.event.BaseKeyEvent;
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.ColorUtils;
+import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.util.Arrays;

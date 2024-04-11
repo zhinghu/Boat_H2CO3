@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.core.login.utils;
+package org.koishi.launcher.h2co3.core.utils;
 
 import static org.koishi.launcher.h2co3.core.utils.Pair.pair;
 import static org.koishi.launcher.h2co3.core.utils.StringUtils.removeSurrounding;
@@ -8,8 +8,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.os.Build;
 
-import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.utils.Pair;
 import org.koishi.launcher.h2co3.core.utils.io.IOUtils;
 
 import java.io.FileNotFoundException;
@@ -24,7 +22,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +41,7 @@ public final class NetworkUtils {
     private NetworkUtils() {
     }
 
-    public static String withQuery(String baseUrl, Map<String, String> params) {
+    public static String withQuery(String baseUrl, Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder(baseUrl);
         boolean first = true;
         for (Entry<String, String> param : params.entrySet()) {
@@ -65,11 +62,11 @@ public final class NetworkUtils {
         return sb.toString();
     }
 
-    public static List<Pair<String, String>> parseQuery(URI uri) {
+    public static List<Pair<String, String>> parseQuery(URI uri) throws UnsupportedEncodingException {
         return parseQuery(uri.getRawQuery());
     }
 
-    public static List<Pair<String, String>> parseQuery(String queryParameterString) {
+    public static List<Pair<String, String>> parseQuery(String queryParameterString) throws UnsupportedEncodingException {
         if (queryParameterString == null) return Collections.emptyList();
 
         List<Pair<String, String>> result = new ArrayList<>();
@@ -120,7 +117,7 @@ public final class NetworkUtils {
      * @param location the url to be URL encoded
      * @return encoded URL
      */
-    public static String encodeLocation(String location) {
+    public static String encodeLocation(String location) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();
         boolean left = true;
         for (char ch : location.toCharArray()) {
@@ -247,7 +244,7 @@ public final class NetworkUtils {
         return detectFileName(conn);
     }
 
-    public static String detectFileName(HttpURLConnection conn) {
+    public static String detectFileName(HttpURLConnection conn) throws UnsupportedEncodingException {
         String disposition = conn.getHeaderField("Content-Disposition");
         if (disposition == null || !disposition.contains("filename=")) {
             String u = conn.getURL().toString();
@@ -283,12 +280,12 @@ public final class NetworkUtils {
     }
 
     // ==== Shortcut methods for encoding/decoding URLs in UTF-8 ====
-    public static String encodeURL(String toEncode) {
-        return URLEncoder.encode(toEncode, UTF_8);
+    public static String encodeURL(String toEncode) throws UnsupportedEncodingException {
+        return URLEncoder.encode(toEncode, "UTF-8");
     }
 
-    public static String decodeURL(String toDecode) {
-        return URLDecoder.decode(toDecode, UTF_8);
+    public static String decodeURL(String toDecode) throws UnsupportedEncodingException {
+        return URLDecoder.decode(toDecode, "UTF-8");
     }
     // ====
 }

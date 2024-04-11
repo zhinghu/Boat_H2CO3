@@ -16,7 +16,7 @@ import org.koishi.launcher.h2co3.control.ckb.support.GameButtonRecorder;
 import org.koishi.launcher.h2co3.control.ckb.support.KeyboardRecorder;
 import org.koishi.launcher.h2co3.control.controller.Controller;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.DialogUtils;
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
 
@@ -82,8 +82,8 @@ public class CkbManager {
 
     private void init() {
         buttonList = new GameButtonArray<>();
-        displayWidth = DisplayUtils.checkDeviceHasNavigationBar(mContext) ? DisplayUtils.getApplicationWindowSize(mContext)[0] + DisplayUtils.getNavigationBarHeight(mContext) : DisplayUtils.getApplicationWindowSize(mContext)[0];
-        displayHeight = DisplayUtils.getApplicationWindowSize(mContext)[1];
+        displayWidth = DisplayUtils.checkDeviceHasNavigationBar(mContext) ? DisplayUtils.getWindowSize(mContext)[0] + DisplayUtils.getNavigationBarHeight(mContext) : DisplayUtils.getWindowSize(mContext)[0];
+        displayHeight = DisplayUtils.getWindowSize(mContext)[1];
         autoLoadKeyboard();
     }
 

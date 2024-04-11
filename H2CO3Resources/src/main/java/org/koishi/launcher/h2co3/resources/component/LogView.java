@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import org.koishi.launcher.h2co3.core.login.utils.DisplayUtils;
+import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 
 public class LogView extends ScrollView {
 

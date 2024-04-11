@@ -18,7 +18,7 @@ import com.hjq.permissions.XXPermissions;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.login.utils.NetworkUtils;
+import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;

@@ -11,8 +11,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:ignore="MissingConstraints">
+    android:layout_height="match_parent">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -23,36 +32,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-                    <RadioGroup
-                        android:id="@+id/typeRadioGroup"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="horizontal">
+        <RadioGroup
+            android:id="@+id/typeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/rb_release"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/app_10dp"
-                            android:checked="true"
-                            android:text="@string/download_release" />
+            <RadioButton
+                android:id="@+id/rb_release"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_10dp"
+                android:checked="true"
+                android:text="@string/download_release" />
 
-                        <RadioButton
-                            android:id="@+id/rb_snapshot"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/app_10dp"
-                            android:text="@string/download_snapshot" />
+            <RadioButton
+                android:id="@+id/rb_snapshot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_10dp"
+                android:text="@string/download_snapshot" />
 
-                        <RadioButton
-                            android:id="@+id/rb_old_beta"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/app_10dp"
-                            android:text="@string/download_old_beta" />
+            <RadioButton
+                android:id="@+id/rb_old_beta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/app_10dp"
+                android:text="@string/download_old_beta" />
 
-                    </RadioGroup>
+        </RadioGroup>
 
         <me.zhanghai.android.fastscroll.FixOnItemTouchListenerRecyclerView
             android:id="@+id/loadingversionFileListView1"
@@ -63,8 +72,6 @@
             tools:listitem="@layout/item_version" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
