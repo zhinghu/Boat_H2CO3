@@ -1,4 +1,4 @@
-package org.koishi.launcher.h2co3.utils.download;
+package org.koishi.launcher.h2co3.dialog;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,6 +19,8 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
+import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
+import org.koishi.launcher.h2co3.utils.download.TaskListPane;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -120,7 +122,7 @@ public class TaskDialog extends MaterialAlertDialogBuilder implements View.OnCli
         if (view == cancelButton) {
             Optional.ofNullable(executor).ifPresent(TaskExecutor::cancel);
             onCancel.getCancellationAction().accept(this);
-            paneAlert.dismiss();
+            dismiss();
         }
     }
 }

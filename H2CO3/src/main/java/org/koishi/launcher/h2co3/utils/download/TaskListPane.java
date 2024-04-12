@@ -240,12 +240,6 @@ public final class TaskListPane extends BaseAdapter {
             title = parent.findViewById(R.id.title);
             icon = parent.findViewById(R.id.icon);
 
-            int[][] state = {
-                    {
-
-                    }
-            };
-
             String stageKey = StringUtils.substringBefore(stage, ':');
             String stageValue = StringUtils.substringAfter(stage, ':');
 

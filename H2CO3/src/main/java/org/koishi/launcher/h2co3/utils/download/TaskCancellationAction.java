@@ -1,5 +1,7 @@
 package org.koishi.launcher.h2co3.utils.download;
 
+import org.koishi.launcher.h2co3.dialog.TaskDialog;
+
 import java.util.function.Consumer;
 
 public final class TaskCancellationAction {

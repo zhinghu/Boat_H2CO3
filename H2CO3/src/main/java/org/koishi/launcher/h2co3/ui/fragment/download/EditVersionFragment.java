@@ -32,12 +32,12 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
+import org.koishi.launcher.h2co3.dialog.TaskDialog;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialog;
 import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
 import org.koishi.launcher.h2co3.utils.download.InstallerItem;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
-import org.koishi.launcher.h2co3.utils.download.TaskDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,7 +182,6 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
     private void showCompletionDialog(Context context) {
         H2CO3CustomViewDialog builder1 = new H2CO3CustomViewDialog(context);
-        builder1.setCancelable(false);
         builder1.setMessage("完成");
         builder1.create().show();
     }
