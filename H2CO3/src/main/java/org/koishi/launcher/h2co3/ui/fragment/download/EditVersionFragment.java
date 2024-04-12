@@ -60,13 +60,15 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
     private boolean isChooseInstallerVersionDialogShowing;
     private RemoteVersionListAdapter.OnRemoteVersionSelectListener listener;
     private ListView installerVersionListView;
+    private VersionList<?> currentVersionList;
+    private DownloadProviders downloadProviders;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_download_edit_version, container, false);
         initView();
-        DownloadProviders.init();
+        downloadProviders = new DownloadProviders();
         Bundle args = getArguments();
         System.out.println(args);
         if (args != null) {
@@ -85,6 +87,8 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
         });
         for (InstallerItem library : group.getLibraries()) {
             String libraryId = library.getLibraryId();
+            System.out.println(libraryId);
+
             if (libraryId.equals("game")) continue;
             library.action.set(() -> {
                 if (LibraryAnalyzer.LibraryType.FABRIC_API.getPatchId().equals(libraryId)) {
@@ -96,16 +100,15 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                 }
 
                 if (library.incompatibleLibraryName.get() == null) {
-                    listener = new RemoteVersionListAdapter.OnRemoteVersionSelectListener() {
-                        @Override
-                        public void onSelect(RemoteVersion remoteVersion) {
-                            map.put(libraryId, remoteVersion);
-                            System.out.println(map);
-                            reload();
-                            chooseInstallerVersionDialogAlert.dismiss();
-                        }
-                    };
+
+                    currentVersionList = downloadProviders.getDownloadProvider().getVersionListById(libraryId);
                     showChooseInstallerVersionDialog(libraryId);
+                    listener = remoteVersion -> {
+                        map.put(libraryId, remoteVersion);
+                        System.out.println(map);
+                        reload();
+                        chooseInstallerVersionDialogAlert.dismiss();
+                    };
                 }
             });
             library.removeAction.set(() -> {
@@ -115,57 +118,54 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
         }
 
 
-        downloadButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String versionName = Objects.requireNonNull(versionNameEditText.getText()).toString();
-                Profile profile = new Profile(versionName);
-                ConfigurationManager.addConfiguration(profile);
-                ConfigurationManager.setSelectedConfiguration(profile);
+        downloadButton.setOnClickListener(v -> {
+            String versionName = versionNameEditText.getText() != null ? versionNameEditText.getText().toString() : "";
+            Profile profile = new Profile(versionName);
+            ConfigurationManager.addConfiguration(profile);
+            ConfigurationManager.setSelectedConfiguration(profile);
 
-                DefaultDependencyManager dependencyManager = ConfigurationManager.getSelectedConfiguration().getDependency();
-                GameBuilder builder = dependencyManager.gameBuilder();
+            DefaultDependencyManager dependencyManager = ConfigurationManager.getSelectedConfiguration().getDependency();
+            GameBuilder builder = dependencyManager.gameBuilder();
 
-                builder.name(versionName);
-                builder.gameVersion(gameVersion);
+            builder.name(versionName);
+            builder.gameVersion(gameVersion);
 
-                String minecraftPatchId = LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId();
-                for (Map.Entry<String, RemoteVersion> entry : map.entrySet()) {
-                    if (!minecraftPatchId.equals(entry.getKey())) {
-                        builder.version(entry.getValue());
-                        System.out.println(entry.getValue());
-                    }
+            String minecraftPatchId = LibraryAnalyzer.LibraryType.MINECRAFT.getPatchId();
+            for (Map.Entry<String, RemoteVersion> entry : map.entrySet()) {
+                if (!minecraftPatchId.equals(entry.getKey())) {
+                    builder.version(entry.getValue());
+                    System.out.println(entry.getValue());
                 }
-
-                Task<?> task = builder.buildAsync();
-
-                TaskCancellationAction taskCancellationAction = new TaskCancellationAction(TaskDialog::dismiss);
-                TaskDialog pane = new TaskDialog(requireContext(), taskCancellationAction);
-                AlertDialog paneAlert = pane.create();
-                paneAlert.setTitle("Installing...");
-
-                Schedulers.androidUIThread().execute(() -> {
-                    TaskExecutor executor = task.executor(new TaskListener() {
-                        @Override
-                        public void onStop(boolean success, TaskExecutor executor) {
-                            Schedulers.androidUIThread().execute(() -> {
-                                if (success) {
-                                    showCompletionDialog(getContext());
-                                } else {
-                                    if (executor.getException() == null) {
-                                        return;
-                                    }
-                                    paneAlert.dismiss();
-                                    H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
-                                }
-                            });
-                        }
-                    });
-                    pane.setExecutor(executor);
-                    paneAlert.show();
-                    executor.start();
-                });
             }
+
+            Task<?> task = builder.buildAsync();
+
+            TaskCancellationAction taskCancellationAction = new TaskCancellationAction(TaskDialog::dismiss);
+            TaskDialog pane = new TaskDialog(requireContext(), taskCancellationAction);
+            AlertDialog paneAlert = pane.create();
+            paneAlert.setTitle("Installing...");
+
+            Schedulers.androidUIThread().execute(() -> {
+                TaskExecutor executor = task.executor(new TaskListener() {
+                    @Override
+                    public void onStop(boolean success, TaskExecutor executor) {
+                        Schedulers.androidUIThread().execute(() -> {
+                            if (success) {
+                                showCompletionDialog(getContext());
+                            } else {
+                                if (executor.getException() == null) {
+                                    return;
+                                }
+                                paneAlert.dismiss();
+                                H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
+                            }
+                        });
+                    }
+                });
+                pane.setExecutor(executor);
+                paneAlert.show();
+                executor.start();
+            });
         });
 
 
@@ -204,13 +204,12 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
 
     private List<RemoteVersion> loadVersions(String libraryId) {
-        return DownloadProviders.getDownloadProvider().getVersionListById(libraryId).getVersions(gameVersion).stream()
+        return downloadProviders.getDownloadProvider().getVersionListById(libraryId).getVersions(gameVersion).stream()
                 .sorted().collect(Collectors.toList());
     }
 
     public void refreshList(String libraryId) {
         installerVersionListView.setVisibility(View.GONE);
-        VersionList<?> currentVersionList = DownloadProviders.getDownloadProvider().getVersionListById(libraryId);
         currentVersionList.refreshAsync(gameVersion).whenComplete((result, exception) -> {
             if (exception == null) {
                 List<RemoteVersion> items = loadVersions(libraryId);
@@ -220,10 +219,8 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                         Toast.makeText(getContext(), "null", Toast.LENGTH_SHORT).show();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {
-                        if (items.isEmpty()) {
-                        } else {
-                            RemoteVersionListAdapter adapter = new RemoteVersionListAdapter(getContext(), (ArrayList<RemoteVersion>) items, listener);
-
+                        if (!items.isEmpty()) {
+                            RemoteVersionListAdapter adapter = new RemoteVersionListAdapter(getContext(), new ArrayList<>(items), listener);
                             installerVersionListView.setAdapter(adapter);
                         }
                         installerVersionListView.setVisibility(View.VISIBLE);

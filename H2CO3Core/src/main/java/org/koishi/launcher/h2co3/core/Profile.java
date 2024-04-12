@@ -58,7 +58,8 @@ public final class Profile implements Observable {
     }
 
     public DefaultDependencyManager getDependency() {
-        return getDependency(DownloadProviders.getDownloadProvider());
+        DownloadProviders downloadProviders = new DownloadProviders();
+        return getDependency(downloadProviders.getDownloadProvider());
     }
 
     public DefaultDependencyManager getDependency(DownloadProvider downloadProvider) {

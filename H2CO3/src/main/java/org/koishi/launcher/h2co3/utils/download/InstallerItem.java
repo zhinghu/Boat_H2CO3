@@ -84,24 +84,22 @@ public class InstallerItem {
 
     @SuppressLint("UseCompatLoadingForDrawables")
     private Drawable getDrawable(Context context, LibraryAnalyzer.LibraryType id) {
-        switch (id) {
-            case FORGE:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_forge);
-            case NEO_FORGE:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_neoforge);
-            case LITELOADER:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_liteloader);
-            case OPTIFINE:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_optifine);
-            case FABRIC:
-            case FABRIC_API:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_fabric);
-            case QUILT:
-            case QUILT_API:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
-            default:
-                return context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
-        }
+        return switch (id) {
+            case FORGE ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_forge);
+            case NEO_FORGE ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_neoforge);
+            case LITELOADER ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_liteloader);
+            case OPTIFINE ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_optifine);
+            case FABRIC, FABRIC_API ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_fabric);
+            case QUILT, QUILT_API ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_quilt);
+            default ->
+                    context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_mc_mods);
+        };
     }
 
     public View createView() {
