@@ -5477,7 +5477,7 @@ int stb_vorbis_get_samples_float(stb_vorbis *f, int channels, float **buffer, in
 }
 #endif // STB_VORBIS_NO_PULLDATA_API
 
-/* Version history
+/* VersionMod history
     1.17    - 2019-07-08 - fix CVE-2019-13217, -13218, -13219, -13220, -13221, -13222, -13223
                            found with Mayhem by ForAllSecure
     1.16    - 2019-03-04 - fix warnings

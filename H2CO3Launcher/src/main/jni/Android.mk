@@ -33,7 +33,6 @@ LOCAL_SRC_FILES  := xhook/xh_core.c \
                     xhook/xh_version.c \
                     xhook/xhook.c\
                     h2co3Launcher/h2co3Launcher_loader.c \
-                    h2co3Launcher/h2co3Launcher.c \
                     h2co3Launcher/h2co3Launcher_bridge.c \
                     h2co3Launcher/h2co3Launcher_event.c
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/h2co3Launcher/include \

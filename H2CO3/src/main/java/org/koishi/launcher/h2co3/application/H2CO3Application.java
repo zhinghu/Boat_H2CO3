@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
 
+import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.resources.R;
 import org.koishi.launcher.h2co3.ui.CrashActivity;
 
@@ -40,6 +41,7 @@ public class H2CO3Application extends Application implements Application.Activit
     public void onCreate() {
         super.onCreate();
         this.registerActivityLifecycleCallbacks(this);
+        H2CO3Tools.loadPaths(this);
         CaocConfig.Builder.create()
                 .backgroundMode(CaocConfig.BACKGROUND_MODE_SHOW_CUSTOM)
                 .enabled(true)

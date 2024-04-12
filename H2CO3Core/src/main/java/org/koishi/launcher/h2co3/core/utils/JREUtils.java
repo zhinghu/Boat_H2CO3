@@ -14,6 +14,8 @@ public class JREUtils {
     private static final String JVM_LIB_NAME = "libjvm.so";
     private static final String SERVER_DIR_NAME = "server";
     private static final String CLIENT_DIR_NAME = "client";
+    private static final String OS_ARCH_KEY = "OS_ARCH";
+    private static final String ARCH_X86_VALUES = "i386/i486/i586";
 
     private static Map<String, String> readJREReleaseProperties(String javaPath) throws IOException {
         Map<String, String> jreReleaseMap = new ArrayMap<>();
@@ -30,14 +32,14 @@ public class JREUtils {
     }
 
     public static String getJreLibDir(String javaPath) throws IOException {
-        String jreArchitecture = readJREReleaseProperties(javaPath).get("OS_ARCH");
-        if (Architecture.archAsInt(jreArchitecture) == Architecture.ARCH_X86) {
-            jreArchitecture = "i386/i486/i586";
-        }
-        String jreLibDir = File.separator + LIB_DIR_NAME;
+        String jreArchitecture = readJREReleaseProperties(javaPath).get(OS_ARCH_KEY);
         if (jreArchitecture == null) {
             throw new IOException("Unsupported architecture!");
         }
+        if (Architecture.archAsInt(jreArchitecture) == Architecture.ARCH_X86) {
+            jreArchitecture = ARCH_X86_VALUES;
+        }
+        String jreLibDir = File.separator + LIB_DIR_NAME;
         for (String arch : jreArchitecture.split("/")) {
             File file = new File(javaPath, LIB_DIR_NAME + File.separator + arch);
             if (file.exists() && file.isDirectory()) {

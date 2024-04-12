@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.LocaleList;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class LocaleUtils {
@@ -17,6 +20,8 @@ public class LocaleUtils {
      * 3: Traditional Chinese
      * 4: Vietnamese
      */
+
+    private static DateTimeFormatter dateTimeFormatter;
 
     public static boolean isChinese(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("launcher", Context.MODE_PRIVATE);
@@ -50,16 +55,32 @@ public class LocaleUtils {
     }
 
     public static Locale getLocale(int lang) {
-        return switch (lang) {
-            case 1 -> Locale.ENGLISH;
-            case 2 -> Locale.CHINA;
-            case 3 -> Locale.TAIWAN;
-            default -> getSystemLocale();
-        };
+        switch (lang) {
+            case 1:
+                return Locale.ENGLISH;
+            case 2:
+                return Locale.CHINA;
+            case 3:
+                return Locale.TAIWAN;
+            default:
+                return getSystemLocale();
+        }
     }
 
     public static Locale getSystemLocale() {
         return LocaleList.getDefault().get(0);
+    }
+
+    public static String formatDateTime(Context context, Instant instant) {
+        return getDateTimeFormatter(context).format(instant);
+    }
+
+    public static DateTimeFormatter getDateTimeFormatter(Context context) {
+        if (dateTimeFormatter == null) {
+            @SuppressLint("DiscouragedApi") int resId = context.getResources().getIdentifier("world_time", "string", context.getPackageName());
+            dateTimeFormatter = DateTimeFormatter.ofPattern(context.getString(resId)).withZone(ZoneId.systemDefault());
+        }
+        return dateTimeFormatter;
     }
 
 }

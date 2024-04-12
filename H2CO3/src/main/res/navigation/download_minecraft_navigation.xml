@@ -21,6 +21,14 @@
     <fragment
         android:id="@+id/editVersionFragment"
         android:name="org.koishi.launcher.h2co3.ui.fragment.download.EditVersionFragment"
-        tools:layout="@layout/fragment_download_edit_version"></fragment>
+        tools:layout="@layout/fragment_download_edit_version">
+        <action
+            android:id="@+id/action_editVersionFragment_to_chooseVersionFragment"
+            app:destination="@id/chooseVersionFragment"
+            app:enterAnim="@anim/fragment_enter"
+            app:exitAnim="@anim/fragment_exit"
+            app:popEnterAnim="@anim/fragment_enter_pop"
+            app:popExitAnim="@anim/fragment_exit_pop" />
+    </fragment>
 
 </navigation>

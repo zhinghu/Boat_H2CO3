@@ -17,7 +17,7 @@ import org.lwjgl.system.NativeType;
 import org.lwjgl.system.libffi.FFICIF;
 
 @FunctionalInterface
-@NativeType("FCLinjectorfun")
+@NativeType("H2CO3LauncherInjectorfun")
 public interface H2CO3LauncherInjectorCallbackI extends CallbackI {
 
     FFICIF CIF = apiCreateCIF(

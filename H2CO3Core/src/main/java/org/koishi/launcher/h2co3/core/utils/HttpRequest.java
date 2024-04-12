@@ -8,6 +8,8 @@ import com.google.gson.JsonParseException;
 import org.koishi.launcher.h2co3.core.utils.function.ExceptionalBiConsumer;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.io.IOUtils;
+import org.koishi.launcher.h2co3.core.utils.io.ResponseCodeException;
+import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 
 import java.io.IOException;
 import java.io.OutputStream;

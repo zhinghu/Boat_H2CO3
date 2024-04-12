@@ -81,6 +81,7 @@ static void makeContextCurrentOSMesa(_GLFWwindow* window)
         window->context.Clear = (PFNGLCLEAR) window->context.getProcAddress("glClear");
         window->context.ClearColor = (PFNGLCLEARCOLOR) window->context.getProcAddress("glClearColor");
         window->context.ReadPixels = (PFNGLREADPIXELS) window->context.getProcAddress("glReadPixels");
+        window->context.Finish = (PFNGLFINISH) window->context.getProcAddress("glFinish");
         if (!window->context.Clear || !window->context.ClearColor || !window->context.ReadPixels) {
             _glfwInputError(GLFW_PLATFORM_ERROR, "Entry point retrieval is broken");
             return;
@@ -129,8 +130,7 @@ static void swapBuffersOSMesa(_GLFWwindow* window)
     if (strcmp(getenv("LIBGL_STRING"), "VirGLRenderer") == 0) {
         window->context.Finish();
         vtest_swap_buffers();
-    } else if (strcmp(getenv("LIBGL_STRING"), "Zink") == 0 ||
-               strcmp(getenv("LIBGL_STRING"), "Freedreno") == 0) {
+    } else {
         OSMesaContext context = OSMesaGetCurrentContext();
         if (context == NULL) {
             printf("OSMesa: attempted to swap buffers without context!");

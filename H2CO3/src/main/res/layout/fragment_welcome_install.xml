@@ -90,7 +90,7 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/h2co3Launcher"
-                style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+                style="@style/Theme.H2CO3.CardViewOutlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -141,7 +141,7 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/java8"
-                style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+                style="@style/Theme.H2CO3.CardViewOutlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -192,7 +192,7 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/java11"
-                style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+                style="@style/Theme.H2CO3.CardViewOutlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -243,7 +243,7 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/java17"
-                style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+                style="@style/Theme.H2CO3.CardViewOutlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -294,7 +294,7 @@
 
             <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
                 android:id="@+id/java21"
-                style="@style/Theme.H2CO3.CardViewElevated.NoPadding"
+                style="@style/Theme.H2CO3.CardViewOutlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -364,19 +364,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/nextButton"
-            style="@style/Widget.Material3.Button.IconButton.Filled"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            app:icon="@drawable/ic_arrow_right_black"
-            app:iconGravity="textEnd"
-            app:iconSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:fabCustomSize="65dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_arrow_right_black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

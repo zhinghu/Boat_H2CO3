@@ -41,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.circularreveal.CircularRevealFrameLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -108,6 +109,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private ConstraintLayout loginApi;
     private TextInputLayout loginPasswordLayout;
     private H2CO3Button login, homeUserListButton;
+    private LinearProgressIndicator loadingNoticeProgress;
     private H2CO3CustomViewDialog loginDialog;
     private List<UserBean> userList = new ArrayList<>();
     private Spinner serverSpinner;
@@ -193,6 +195,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         homeUserListLayout = findViewById(view, R.id.home_user_list_layout);
         recyclerView = findViewById(view, R.id.recycler_view_user_list);
         homeNoticeTextView = findViewById(view, R.id.home_notice_text);
+        loadingNoticeProgress = findViewById(view, R.id.progressIndicator);
     }
 
     @NotNull
@@ -275,9 +278,13 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     }
                     message = str.toString();
                 }
+                handler.post(() -> homeNoticeTextView.setVisibility(View.VISIBLE));
+                handler.post(() -> loadingNoticeProgress.hide());
                 handler.post(() -> homeNoticeTextView.setText(message));
             } catch (IOException e) {
                 message = e.getMessage();
+                handler.post(() -> homeNoticeTextView.setVisibility(View.VISIBLE));
+                handler.post(() -> loadingNoticeProgress.hide());
                 handler.post(() -> homeNoticeTextView.setText(message));
             }
         });

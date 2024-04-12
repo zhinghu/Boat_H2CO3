@@ -33,8 +33,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navGraph="@navigation/download_list_navigation" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -56,10 +55,8 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav"
-            style="@style/Widget.GoogleMaterial.NavigationView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?android:colorBackground"
             android:fitsSystemWindows="true"
             app:menu="@menu/download_list_menu"
             app:menuGravity="center" />

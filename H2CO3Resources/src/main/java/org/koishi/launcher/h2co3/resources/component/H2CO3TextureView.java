@@ -1,22 +1,25 @@
 package org.koishi.launcher.h2co3.resources.component;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.TextureView;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 
-import org.koishi.launcher.h2co3.resources.R;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import java.util.Locale;
+public class H2CO3TextureView extends TextureView implements TextureView.SurfaceTextureListener {
 
-public class H2CO3TextureView extends FrameLayout {
-    private TextureView mTextureView;
-    private TextView mFpsTextView;
-    private long mFrameCount = 0; // 帧数计数器
-    private long mLastFpsTime = 0; // 上次更新帧数的时间
+    private SurfaceTextureListener surfaceTextureListener;
+    private ExecutorService renderExecutor;
+    private Surface surface;
+    private Paint textPaint;
+    private long lastFrameTime;
+    private int frameCount;
 
     public H2CO3TextureView(Context context) {
         super(context);
@@ -34,69 +37,88 @@ public class H2CO3TextureView extends FrameLayout {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_fps_texture_view, this, true);
-        mTextureView = findViewById(R.id.texture_view);
-        mFpsTextView = findViewById(R.id.fps_text_view);
+        setSurfaceTextureListener(this);
+        renderExecutor = Executors.newSingleThreadExecutor();
+        textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(30);
+        lastFrameTime = System.currentTimeMillis();
+        frameCount = 0;
+    }
+
+    public void setSurfaceTextureListener(SurfaceTextureListener listener) {
+        this.surfaceTextureListener = listener;
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                // SurfaceTexture可用时开始绘制
-                startDrawing();
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                // SurfaceTexture尺寸变化时更新布局
-                updateLayout(width, height);
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                // SurfaceTexture销毁时停止绘制
-                stopDrawing();
-                return true;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                // SurfaceTexture更新时计算帧数
-                calculateFps();
-            }
-        });
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        this.surface = new Surface(surface);
+        if (surfaceTextureListener != null) {
+            surfaceTextureListener.onSurfaceTextureAvailable(surface, width, height);
+        }
     }
 
-    private void startDrawing() {
-        // 开始绘制
-        // TODO: 在这里实现绘制逻辑
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        if (surfaceTextureListener != null) {
+            surfaceTextureListener.onSurfaceTextureSizeChanged(surface, width, height);
+        }
     }
 
-    private void stopDrawing() {
-        // 停止绘制
-        // TODO: 在这里实现停止绘制的逻辑
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (this.surface != null) {
+            this.surface.release();
+            this.surface = null;
+        }
+        if (renderExecutor != null) {
+            renderExecutor.shutdown();
+        }
+        if (surfaceTextureListener != null) {
+            return surfaceTextureListener.onSurfaceTextureDestroyed(surface);
+        }
+        return false;
     }
 
-    private void calculateFps() {
-        // 计算帧数
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        if (surfaceTextureListener != null) {
+            surfaceTextureListener.onSurfaceTextureUpdated(surface);
+        }
+        frameCount++;
         long currentTime = System.currentTimeMillis();
-        if (mLastFpsTime == 0) {
-            mLastFpsTime = currentTime;
-        }
-        mFrameCount++;
-        if (currentTime - mLastFpsTime >= 1000) {
-            float fps = mFrameCount * 1000f / (currentTime - mLastFpsTime);
-            mFpsTextView.setText(String.format(Locale.getDefault(), "FPS: %.2f", fps));
-            mFrameCount = 0;
-            mLastFpsTime = currentTime;
+        if (currentTime - lastFrameTime >= 1000) {
+            float fps = frameCount * 1000f / (currentTime - lastFrameTime);
+            drawFps(fps);
+            lastFrameTime = currentTime;
+            frameCount = 0;
         }
     }
 
-    private void updateLayout(int width, int height) {
-        // 更新布局
-        // TODO: 在这里更新布局的逻辑
+    private void drawFps(float fps) {
+        Canvas canvas = lockCanvas();
+        if (canvas != null) {
+            canvas.drawColor(Color.TRANSPARENT);
+            canvas.drawText("FPS: " + String.format("%.2f", fps), 10, 40, textPaint);
+            unlockCanvasAndPost(canvas);
+        }
+    }
+
+    public Surface getSurface() {
+        return surface;
+    }
+
+    public void renderFrame(Runnable renderTask) {
+        renderExecutor.execute(renderTask);
+    }
+
+    public interface SurfaceTextureListener {
+        void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height);
+
+        void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height);
+
+        boolean onSurfaceTextureDestroyed(SurfaceTexture surface);
+
+        void onSurfaceTextureUpdated(SurfaceTexture surface);
     }
 }

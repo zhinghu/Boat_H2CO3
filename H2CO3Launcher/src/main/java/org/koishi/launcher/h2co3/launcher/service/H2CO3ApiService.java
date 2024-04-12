@@ -7,7 +7,7 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
 
 public class H2CO3ApiService extends Service {
 

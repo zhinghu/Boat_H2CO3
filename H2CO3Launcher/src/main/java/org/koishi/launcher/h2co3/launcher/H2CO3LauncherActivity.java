@@ -18,8 +18,9 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.resources.component.H2CO3TextureView;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.util.TimerTask;
@@ -27,7 +28,7 @@ import java.util.TimerTask;
 public abstract class H2CO3LauncherActivity extends H2CO3Activity implements TextureView.SurfaceTextureListener {
 
     protected static final String TAG = "H2CO3LauncherActivity";
-    public TextureView mainTextureView;
+    public H2CO3TextureView mainTextureView;
     public RelativeLayout baseLayout;
     public H2CO3LauncherBridgeCallBack h2co3LauncherCallback;
     private int output = 0;
@@ -55,8 +56,6 @@ public abstract class H2CO3LauncherActivity extends H2CO3Activity implements Tex
     static {
         System.loadLibrary("h2co3Launcher");
     }
-
-    public native void nOnCreate();
 
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {

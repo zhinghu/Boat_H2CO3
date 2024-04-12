@@ -18,7 +18,8 @@ identity.
 
 Vicious assault the mumbers or H2O2 search & research team and made the account be limited; Bribery
 of other Boat developers to unshell & decrypt the H2O2 test software in the form of payment and
-tried to wipe off copyright information of the custom version laucnher make it as his own software
+tried to wipe off copyright information of the custom versionMod laucnher make it as his own
+software
 and propaganda it.(Unsucceed)
 
 ### Top3 "赐" QQ：1025477808

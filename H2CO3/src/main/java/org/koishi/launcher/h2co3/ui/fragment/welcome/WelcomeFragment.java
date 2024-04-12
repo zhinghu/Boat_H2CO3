@@ -7,21 +7,25 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.RuntimeUtils;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 import org.koishi.launcher.h2co3.ui.H2CO3MainActivity;
+
 import java.io.IOException;
 
 public class WelcomeFragment extends Fragment {
@@ -29,7 +33,7 @@ public class WelcomeFragment extends Fragment {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private H2CO3TextView title, description;
     private LinearProgressIndicator progressIndicator;
-    private Button nextButton;
+    private FloatingActionButton nextButton;
     private NavController navController;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
@@ -68,7 +72,6 @@ public class WelcomeFragment extends Fragment {
         if (isFirstLaunch) {
             H2CO3Auth.resetUserState();
             H2CO3GameHelper.setDir(H2CO3Tools.MINECRAFT_DIR);
-            H2CO3Tools.setH2CO3Value("isFirstLaunch", false);
             showWelcomeUI();
         } else {
             checkPermission();
@@ -78,7 +81,8 @@ public class WelcomeFragment extends Fragment {
     private void showWelcomeUI() {
         title.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
-        progressIndicator.setVisibility(View.VISIBLE);
+        progressIndicator.show();
+        nextButton.show();
     }
 
     private void checkPermission() {

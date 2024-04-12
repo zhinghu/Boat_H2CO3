@@ -163,5 +163,7 @@
     <string name="title_modList">Mod</string>
     <string name="title_modPackList">ModPack</string>
     <string name="title_resourcesPack">ResourcesPack</string>
+    <string name="install_installer_not_installed">No Installed</string>
+    <string name="install_installer_fabric_api_warning">FabricAPI is a fabric mod</string>
 
 </resources>

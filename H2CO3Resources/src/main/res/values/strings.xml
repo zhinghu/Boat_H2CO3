@@ -180,13 +180,6 @@
     <string name="spinner_bmclapi">bmclapi</string>
     <string name="refresh">Refresh</string>
 
-    <string name="terminal_exec">Execute</string>
-    <string name="title_terminal">Terminal</string>
-    <string name="terminal_text">Input command</string>
-    <string name="terminal_clear">Clear</string>
-    <string name="terminal_undo">Undo</string>
-    <string name="terminal_redo">Redo</string>
-    <string name="terminal_clear_history">Delete history</string>
     <string name="title_download">Download</string>
 
     <string name="storage_permission">Storage Permission</string>
@@ -210,6 +203,8 @@
     <string name="title_quilt" translatable="false">Quilt</string>
     <string name="title_qsl_qfapi" translatable="false">QSL &amp; QSAPI</string>
     <string name="title_liteloader" translatable="false">LiteLoader</string>
+    <string name="install_installer_not_installed">No Installed</string>
+    <string name="install_installer_fabric_api_warning">FabricAPI is a fabric mod</string>
 
 
 </resources>

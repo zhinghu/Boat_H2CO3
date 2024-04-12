@@ -12,12 +12,11 @@
 
 package org.koishi.launcher.h2co3.ui;
 
-import static org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherHelper.launchMinecraft;
+import static org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherHelper.launchMinecraft;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -31,14 +30,14 @@ import androidx.annotation.NonNull;
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.controller.H2CO3VirtualController;
 import org.koishi.launcher.h2co3.control.controller.HardwareController;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridgeCallBack;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.MCOptionUtils;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.launcher.H2CO3LauncherActivity;
 import org.koishi.launcher.h2co3.launcher.R;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridgeCallBack;
-import org.koishi.launcher.h2co3.launcher.utils.MCOptionUtils;
 import org.koishi.launcher.h2co3.resources.component.activity.H2CO3Activity;
 
 import java.io.IOException;
@@ -51,17 +50,16 @@ import java.util.logging.Level;
 public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implements H2CO3ControlClient, TextureView.SurfaceTextureListener {
 
     private static final int CURSOR_SIZE = 16;
-    private static final int[] GRABBED_POINTER = new int[]{999, 89999};
+    private static final int[] GRABBED_POINTER = new int[]{0, 0};
     private boolean grabbed = false;
     private ImageView cursorIcon;
     private int screenWidth;
     private int screenHeight;
-    private int scaleFactor = 1;
+    private final int scaleFactor = 1;
     public static WeakReference<H2CO3LauncherBridge.LogReceiver> logReceiver;
 
     public static void receiveLog(String str) throws IOException {
         if (logReceiver == null || logReceiver.get() == null) {
-            Log.e(TAG, "LogReceiver is null. So use default receiver.");
             logReceiver = new WeakReference<>(new H2CO3LauncherBridge.LogReceiver() {
                 final StringBuilder builder = new StringBuilder();
 
@@ -83,7 +81,6 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nOnCreate();
         setContentView(R.layout.overlay);
         mainTextureView = findViewById(R.id.main_game_render_view);
         mainTextureView.setSurfaceTextureListener(this);
@@ -183,8 +180,6 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
             output++;
         }
     }
-
-    private boolean firstLog = true;
 
     private void configureSurfaceTexture(SurfaceTexture surface, int width, int height) {
         surface.setDefaultBufferSize(width * scaleFactor, height * scaleFactor);

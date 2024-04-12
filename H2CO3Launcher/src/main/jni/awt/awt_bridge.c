@@ -80,7 +80,8 @@ Java_sun_awt_peer_cacio_H2CO3LauncherClipboard_clipboardCopy(JNIEnv *env, jclass
 }
 
 JNIEXPORT jintArray JNICALL JNIEXPORT
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_renderAWTScreenFrame(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_renderAWTScreenFrame(
+        JNIEnv *env,
                                                                                        jclass clazz) {
     if (runtimeJNIEnvPtr_GRAPHICS == NULL) {
         if (runtimeJavaVMPtr == NULL) {
@@ -136,7 +137,8 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_renderAWTScree
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_nativeSendData(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_nativeSendData(
+        JNIEnv *env,
                                                                                  jclass clazz,
                                                                                  jint type,
                                                                                  jint i1, jint i2,
@@ -174,7 +176,8 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_nativeSendData
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_nativeMoveWindow(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_nativeMoveWindow(
+        JNIEnv *env,
                                                                                    jclass clazz,
                                                                                    jint x,
                                                                                    jint y) {

@@ -295,28 +295,34 @@ int _glfwPlatformCreateWindow(_GLFWwindow *window,
                               const _GLFWwndconfig *wndconfig,
                               const _GLFWctxconfig *ctxconfig,
                               const _GLFWfbconfig *fbconfig) {
-    if (!createNativeWindow(window, wndconfig))
+    if (!createNativeWindow(window, wndconfig)) {
         return GLFW_FALSE;
+    }
 
     if (ctxconfig->client != GLFW_NO_API) {
         if (ctxconfig->source == GLFW_EGL_CONTEXT_API ||
             ctxconfig->source == GLFW_NATIVE_CONTEXT_API) {
-            if (!_glfwInitEGL())
+            if (!_glfwInitEGL()) {
                 return GLFW_FALSE;
-            if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig))
+            }
+            if (!_glfwCreateContextEGL(window, ctxconfig, fbconfig)) {
                 return GLFW_FALSE;
+            }
         } else if (ctxconfig->source == GLFW_OSMESA_CONTEXT_API) {
             const char *renderer = getenv("LIBGL_STRING");
-            if (strcmp(renderer, "Zink") == 0 ||
-                strcmp(renderer, "Freedreno") == 0 ||
-                strcmp(renderer, "VirGLRenderer") == 0) {
-                if (!_glfwInitEGL())
+            if (renderer && (strcmp(renderer, "Zink") == 0 ||
+                             strcmp(renderer, "Freedreno") == 0 ||
+                             strcmp(renderer, "VirGLRenderer") == 0)) {
+                if (!_glfwInitEGL()) {
                     return GLFW_FALSE;
+                }
             }
-            if (!_glfwInitOSMesa())
+            if (!_glfwInitOSMesa()) {
                 return GLFW_FALSE;
-            if (!_glfwCreateContextOSMesa(window, ctxconfig, fbconfig))
+            }
+            if (!_glfwCreateContextOSMesa(window, ctxconfig, fbconfig)) {
                 return GLFW_FALSE;
+            }
         }
     }
 
@@ -616,11 +622,11 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
                                           _GLFWwindow *window,
                                           const VkAllocationCallbacks *allocator,
                                           VkSurfaceKHR *surface) {
-    VkResult err;
-    VkAndroidSurfaceCreateInfoKHR sci;
-    PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR;
+    if (!instance || !window || !surface) {
+        return VK_ERROR_INITIALIZATION_FAILED;
+    }
 
-    vkCreateAndroidSurfaceKHR = (PFN_vkCreateAndroidSurfaceKHR)
+    PFN_vkCreateAndroidSurfaceKHR vkCreateAndroidSurfaceKHR = (PFN_vkCreateAndroidSurfaceKHR)
             vkGetInstanceProcAddr(instance, "vkCreateAndroidSurfaceKHR");
     if (!vkCreateAndroidSurfaceKHR) {
         _glfwInputError(GLFW_API_UNAVAILABLE,
@@ -628,11 +634,11 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
         return VK_ERROR_EXTENSION_NOT_PRESENT;
     }
 
-    memset(&sci, 0, sizeof(sci));
+    VkAndroidSurfaceCreateInfoKHR sci = {0};
     sci.sType = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
     sci.window = window->h2co3Launcher.handle;
 
-    err = vkCreateAndroidSurfaceKHR(instance, &sci, allocator, surface);
+    VkResult err = vkCreateAndroidSurfaceKHR(instance, &sci, allocator, surface);
     if (err) {
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "H2CO3LAUNCHER: Failed to create Vulkan Android surface: %s",

@@ -107,7 +107,7 @@ int h2co3LauncherPollEvent(H2CO3LauncherEvent *event) {
 
 
 JNIEXPORT jintArray JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_getPointer(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_getPointer(JNIEnv *env,
                                                                              jclass thiz) {
     jintArray ja = (*env)->NewIntArray(env, 2);
     int arr[2] = {current_event.x, current_event.y};
@@ -116,7 +116,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_getPointer(JNI
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_pushEvent(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_pushEvent(JNIEnv *env,
                                                                             jclass clazz,
                                                                             jlong time,
                                                                             jint type, jint p1,
@@ -163,7 +163,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_pushEvent(JNIE
 
     if (pthread_mutex_lock(&h2co3Launcher->event_queue_mutex) != 0) {
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_pushEvent:Failed to acquire mutex");
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_pushEvent:Failed to acquire mutex");
         return;
     }
 
@@ -173,28 +173,29 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_pushEvent(JNIE
 
     if (pthread_mutex_unlock(&h2co3Launcher->event_queue_mutex) != 0) {
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_pushEvent:Failed to release mutex");
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_pushEvent:Failed to release mutex");
     }
 
     if (write(h2co3Launcher->event_pipe_fd[1], "E", 1) != 1) {
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_pushEvent:Failed to write to event pipe");
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_pushEvent:Failed to write to event pipe");
     }
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setEventPipe(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setEventPipe(
+        JNIEnv *env,
                                                                                jclass clazz) {
     if (pipe(h2co3Launcher->event_pipe_fd) == -1) {
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_setEventPipe:Failed to create event pipe : %s",
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_setEventPipe:Failed to create event pipe : %s",
                 strerror(errno));
         return;
     }
     h2co3Launcher->epoll_fd = epoll_create(3);
     if (h2co3Launcher->epoll_fd == -1) {
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_setEventPipe:Failed to get epoll fd : %s",
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_setEventPipe:Failed to get epoll fd : %s",
                 strerror(errno));
         return;
     }
@@ -207,7 +208,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setEventPipe(J
         close(h2co3Launcher->event_pipe_fd[1]);
         close(h2co3Launcher->epoll_fd);
         H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setEventPipe:Failed to add epoll event : %s",
+                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setEventPipe:Failed to add epoll event : %s",
                 strerror(errno));
         return;
     }
@@ -215,7 +216,7 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setEventPipe(J
     pthread_mutex_init(&h2co3Launcher->event_queue_mutex, NULL);
     h2co3Launcher->has_event_pipe = 1;
     H2CO3_INTERNAL_LOG(
-            "Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLib_setEventPipe:Succeeded to set event pipe");
+            "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_setEventPipe:Succeeded to set event pipe");
 }
 
 H2CO3injectorfun injectorCallback;

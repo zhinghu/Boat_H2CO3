@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 
 import org.koishi.launcher.h2co3.control.client.H2CO3ControlClient;
 import org.koishi.launcher.h2co3.control.input.Input;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3LauncherBridge;
 import org.koishi.launcher.h2co3.core.utils.DisplayUtils;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3LauncherBridge;
 
 import java.util.ArrayList;
 import java.util.Timer;

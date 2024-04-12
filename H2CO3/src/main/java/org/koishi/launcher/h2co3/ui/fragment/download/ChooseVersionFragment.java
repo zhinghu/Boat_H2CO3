@@ -6,8 +6,6 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
-import static org.koishi.launcher.h2co3.core.H2CO3Settings.getDownloadSource;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +17,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +31,6 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.H2CO3DownloadUtils;
-import org.koishi.launcher.h2co3.core.utils.Version;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 
@@ -42,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChooseVersionFragment extends H2CO3Fragment {
 
@@ -57,6 +56,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
     private LinearProgressIndicator progressIndicator;
     private NavController navController;
+    private ChooseVersionViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         navController = Navigation.findNavController(requireParentFragment().requireView());
         initView(view);
         initListeners();
-
+        viewModel = new ViewModelProvider(this).get(ChooseVersionViewModel.class);
         versionList = new ArrayList<>();
         filteredList = new ArrayList<>();
         versionAdapter = new VersionAdapter(filteredList);
@@ -72,7 +72,15 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
 
-        fetchVersionsFromApi();
+        if (viewModel.getVersionList().isEmpty()) {
+            fetchVersionsFromApi();
+        } else {
+            versionList = viewModel.getVersionList();
+            filteredList = viewModel.getFilteredList();
+            versionAdapter = new VersionAdapter(filteredList);
+            recyclerView.setAdapter(versionAdapter);
+        }
+
 
         return view;
     }
@@ -91,7 +99,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
     private void fetchVersionsFromApi() {
         recyclerView.setAdapter(null);
-        String apiUrl = getDownloadSource();
+        String apiUrl = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
         if (apiUrl != null && !apiUrl.isEmpty()) {
             fetchVersions(apiUrl);
         } else {
@@ -176,12 +184,13 @@ public class ChooseVersionFragment extends H2CO3Fragment {
             return versionList.size();
         }
 
+
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             public TextView versionNameTextView;
             public TextView versionTypeTextView;
             public H2CO3CardView versionCardView;
 
-            private boolean isHandlingClick = false;
+            private AtomicBoolean isHandlingClick = new AtomicBoolean(false);
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -193,11 +202,9 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
             @Override
             public void onClick(View v) {
-                if (isHandlingClick) {
+                if (isHandlingClick.getAndSet(true)) {
                     return;
                 }
-
-                isHandlingClick = true;
 
                 int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
@@ -209,10 +216,43 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                     bundle.putString("versionName", version.getVersionName());
 
                     navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
+                    viewModel.setVersionList(versionList);
+                    viewModel.setFilteredList(filteredList);
                 }
 
-                isHandlingClick = false;
+                isHandlingClick.set(false);
             }
+        }
+    }
+
+    public class Version {
+        private final String versionName;
+        private final String versionType;
+        private final String versionUrl;
+        private final String versionSha1;
+
+
+        public Version(String versionName, String versionType, String versionUrl, String versionSha1) {
+            this.versionName = versionName;
+            this.versionType = versionType;
+            this.versionUrl = versionUrl;
+            this.versionSha1 = versionSha1;
+        }
+
+        public String getVersionName() {
+            return versionName;
+        }
+
+        public String getVersionType() {
+            return versionType;
+        }
+
+        public String getVersionUrl() {
+            return versionUrl;
+        }
+
+        public String getVersionSha1() {
+            return versionSha1;
         }
     }
 }

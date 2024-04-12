@@ -36,7 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.launcher.utils.H2CO3GameHelper;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.utils.download.DownloadItem;
 
 import java.io.BufferedInputStream;

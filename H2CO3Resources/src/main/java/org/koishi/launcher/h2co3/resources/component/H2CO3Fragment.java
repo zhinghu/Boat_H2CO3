@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-public class H2CO3Fragment extends Fragment {
+public abstract class H2CO3Fragment extends Fragment {
 
     public final <T extends View> T findViewById(View view, int id) {
         return view.findViewById(id);

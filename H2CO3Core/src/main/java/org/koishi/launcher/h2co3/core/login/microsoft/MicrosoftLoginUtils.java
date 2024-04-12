@@ -11,13 +11,13 @@ import org.json.JSONObject;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.login.Texture.Texture;
 import org.koishi.launcher.h2co3.core.login.Texture.TextureType;
-import org.koishi.launcher.h2co3.core.utils.AuthenticationException;
 import org.koishi.launcher.h2co3.core.utils.HttpRequest;
 import org.koishi.launcher.h2co3.core.utils.NetworkUtils;
-import org.koishi.launcher.h2co3.core.utils.ResponseCodeException;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.TolerableValidationException;
 import org.koishi.launcher.h2co3.core.utils.gson.tools.Validation;
+import org.koishi.launcher.h2co3.core.utils.io.AuthenticationException;
+import org.koishi.launcher.h2co3.core.utils.io.ResponseCodeException;
 
 import java.io.IOException;
 import java.io.OutputStream;

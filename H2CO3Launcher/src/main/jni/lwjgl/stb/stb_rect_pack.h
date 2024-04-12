@@ -39,7 +39,7 @@
 //    Jeremy Jaussaud
 //    Fabian Giesen
 //
-// Version history:
+// VersionMod history:
 //
 //     1.01  (2021-07-11)  always use large rect mode, expose STBRP__MAXVAL in public section
 //     1.00  (2019-02-25)  avoid small space waste; gracefully fail too-wide rectangles

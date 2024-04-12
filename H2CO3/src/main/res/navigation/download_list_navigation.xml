@@ -9,25 +9,25 @@
         android:id="@+id/minecraftVersionListFragment"
         android:name="org.koishi.launcher.h2co3.ui.fragment.download.MinecraftVersionListFragment"
         android:label="MinecraftVersionListFragment"
-        tools:layout="@layout/fragment_download_minecraft_list"></fragment>
+        tools:layout="@layout/fragment_download_minecraft_list" />
 
     <fragment
         android:id="@+id/modListFragment"
         android:name="org.koishi.launcher.h2co3.ui.fragment.download.ModListFragment"
         android:label="ModListFragment"
-        tools:layout="@layout/fragment_download_mod_list"></fragment>
+        tools:layout="@layout/fragment_download_mod_list" />
 
     <fragment
         android:id="@+id/modPackListFragment"
         android:name="org.koishi.launcher.h2co3.ui.fragment.download.ModPackListFragment"
         android:label="ModPackListFragment"
-        tools:layout="@layout/fragment_download_modpack_list"></fragment>
+        tools:layout="@layout/fragment_download_modpack_list" />
 
     <fragment
         android:id="@+id/resourcesPackListFragment"
         android:name="org.koishi.launcher.h2co3.ui.fragment.download.ResourcesPackListFragment"
         android:label="ResourcesPackListFragment"
-        tools:layout="@layout/fragment_download_resources_list"></fragment>
+        tools:layout="@layout/fragment_download_resources_list" />
 
 
 </navigation>

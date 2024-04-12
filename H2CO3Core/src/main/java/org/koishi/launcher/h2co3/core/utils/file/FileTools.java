@@ -12,6 +12,8 @@
 
 package org.koishi.launcher.h2co3.core.utils.file;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -160,7 +162,7 @@ public final class FileTools {
     }
 
     public static String readText(File file) throws IOException {
-        return readText(file, StandardCharsets.UTF_8);
+        return readText(file, UTF_8);
     }
 
     public static String readText(File file, Charset charset) throws IOException {
@@ -168,7 +170,7 @@ public final class FileTools {
     }
 
     public static String readText(Path file) throws IOException {
-        return readText(file, StandardCharsets.UTF_8);
+        return readText(file, UTF_8);
     }
 
     public static String readText(Path file, Charset charset) throws IOException {

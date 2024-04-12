@@ -10,7 +10,6 @@ import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSupports;
-import org.koishi.launcher.h2co3.resources.component.dialog.support.TaskDialog;
 
 public class DialogUtils {
 
@@ -88,12 +87,6 @@ public class DialogUtils {
             }
         });
         builder.show();
-    }
-
-    public static TaskDialog createTaskDialog(Context context, String totalTaskName, String currentTaskName, boolean cancelable) {
-        return new TaskDialog(context, cancelable)
-                .setCurrentTaskName(currentTaskName)
-                .setTotalTaskName(totalTaskName);
     }
 
     public static void createColorPickerDialog(Context context, String title, String pName, String nName, int initColor, int type, final DialogSupports support) {

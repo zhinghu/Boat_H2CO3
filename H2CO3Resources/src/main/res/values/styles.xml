@@ -13,7 +13,7 @@
 <resources>
     <!---CardView-->
     <style name="Theme.H2CO3.CardViewOutlined" parent="@style/Widget.Material3.CardView.Outlined">
-        <item name="android:checkable">true</item>
+        <item name="android:checkable">false</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
@@ -208,8 +208,8 @@
     </style>
 
     <style name="PopupAnimation">
-        <item name="android:windowEnterAnimation">@anim/popup_in</item>
-        <item name="android:windowExitAnimation">@anim/popup_out</item>
+        <item name="android:windowEnterAnimation">@anim/pop_in</item>
+        <item name="android:windowExitAnimation">@anim/pop_out</item>
     </style>
 
     <style name="AppTheme.SheetAboveKeyboard" parent="Theme.Material3.Dark.BottomSheetDialog">
@@ -225,12 +225,10 @@
 
     <style name="Widget.GoogleMaterial.NavigationView" parent="@style/Widget.MaterialComponents.NavigationView">
         <item name="itemShapeAppearanceOverlay">@style/MaterialShape</item>
-        <item name="itemShapeInsetBottom">@null</item>
         <item name="itemShapeInsetEnd">@dimen/app_10dp</item>
         <item name="itemShapeInsetStart">@dimen/app_10dp</item>
         <item name="itemShapeInsetTop">@null</item>
         <item name="itemPadding">30dp</item>
-        <item name="itemTextAppearanceActiveBoldEnabled">true</item>
     </style>
 
     <style name="MaterialShape">

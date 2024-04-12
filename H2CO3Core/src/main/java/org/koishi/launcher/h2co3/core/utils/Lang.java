@@ -358,6 +358,11 @@ public final class Lang {
             return e;
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static <T> Stream<T> toStream(Optional<T> optional) {
+        return optional.map(Stream::of).orElseGet(Stream::empty);
+    }
+
     public static <R> R handleUncaughtException(Throwable e) {
         Objects.requireNonNull(Thread.currentThread().getUncaughtExceptionHandler()).uncaughtException(Thread.currentThread(), e);
         return null;

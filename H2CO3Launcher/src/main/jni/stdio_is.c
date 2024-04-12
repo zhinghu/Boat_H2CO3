@@ -66,7 +66,7 @@ static void *logger_thread() {
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_logcat_Logger_begin(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_logcat_Logger_begin(JNIEnv *env,
                                                             __attribute((unused)) jclass clazz,
                                                             jstring logPath) {
 // TODO: implement logToActivity()
@@ -120,7 +120,7 @@ void custom_exit(int code) {
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLoader_setupExitTrap(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLoader_setupExitTrap(JNIEnv *env,
                                                                           __attribute((unused)) jclass clazz,
                                                                           jobject context) {
     exitTrap_ctx = (*env)->NewGlobalRef(env, context);
@@ -135,7 +135,7 @@ Java_org_koishi_launcher_h2co3_launcher_H2CO3LauncherLoader_setupExitTrap(JNIEnv
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_logcat_Logger_appendToLog(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_logcat_Logger_appendToLog(JNIEnv *env,
                                                                   __attribute((unused)) jclass clazz,
                                                                   jstring text) {
     const char *appendString = (*env)->GetStringUTFChars(env, text, NULL);
@@ -152,7 +152,8 @@ Java_org_koishi_launcher_h2co3_launcher_logcat_Logger_appendToLog(JNIEnv *env,
     }
 }
 
-JNIEXPORT void JNICALL Java_org_koishi_launcher_h2co3_launcher_logcat_setLogListener(JNIEnv *env,
+JNIEXPORT void JNICALL
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_logcat_setLogListener(JNIEnv *env,
                                                                                      __attribute((unused)) jclass clazz,
                                                                                      jobject log_listener) {
     jobject logListenerLocal = logListener;

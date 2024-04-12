@@ -69,6 +69,7 @@
             android:layout_height="match_parent"
             android:listSelector="?attr/selectableItemBackground"
             tools:itemCount="4"
+            android:splitMotionEvents="false"
             tools:listitem="@layout/item_version" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

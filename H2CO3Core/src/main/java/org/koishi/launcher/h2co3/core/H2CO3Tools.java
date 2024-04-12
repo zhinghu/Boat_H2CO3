@@ -28,7 +28,7 @@ import rikka.material.app.MaterialActivity;
 public class H2CO3Tools {
 
 
-    public static final String DOWNLOAD_SOURCE_URL = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
+    public static final String DOWNLOAD_SOURCE = "Source";
     public static String H2CO3_CONTROL_DIR;
     public static String CACIOCAVALLO_8_DIR;
     public static String CACIOCAVALLO_11_DIR;
@@ -105,7 +105,7 @@ public class H2CO3Tools {
         PUBLIC_FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/games/org.koishi.launcher/h2co3";
 
         LOG_DIR = PUBLIC_FILE_PATH + "/log";
-        CACHE_DIR = context.getCacheDir() + "/boat_h2co3";
+        CACHE_DIR = context.getFilesDir() + "/boat_h2co3/";
 
         APP_DATA_PATH = "/data/data/org.koishi.launcher.h2co3";
         RUNTIME_DIR = APP_DATA_PATH + "/app_runtime";

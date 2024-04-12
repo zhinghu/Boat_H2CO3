@@ -81,4 +81,7 @@ dependencies {
     implementation 'androidx.webkit:webkit:1.10.0'
     implementation "org.greenrobot:eventbus:3.3.1"
     implementation 'com.github.QuadFlask:colorpicker:0.0.15'
+    implementation 'com.github.marschall:zipfilesystem-standalone:1.0.1'
+    implementation 'org.jenkins-ci:constant-pool-scanner:1.2'
+    implementation 'com.moandjiezana.toml:toml4j:0.7.2'
 }

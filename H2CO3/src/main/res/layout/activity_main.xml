@@ -46,19 +46,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/nav"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
-            app:navGraph="@navigation/home_navigation" />
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.25" />
 
-        <com.google.android.material.navigation.NavigationView
+        <com.google.android.material.navigationrail.NavigationRailView
             android:id="@+id/nav"
-            style="@style/Widget.GoogleMaterial.NavigationView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -66,7 +58,6 @@
             android:fitsSystemWindows="true"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/bottom_nav_menu"
-            app:layout_constraintEnd_toStartOf="@id/guide"
             app:menuGravity="center" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

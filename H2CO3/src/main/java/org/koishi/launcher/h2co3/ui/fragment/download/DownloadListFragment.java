@@ -1,7 +1,6 @@
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
@@ -20,8 +18,13 @@ import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 public class DownloadListFragment extends H2CO3Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
-    private Fragment currentFragment;
+    private H2CO3Fragment currentFragment;
     private View view;
+
+    private MinecraftVersionListFragment minecraftVersionListFragment;
+    private ModListFragment modListFragment;
+    private ModPackListFragment modPackListFragment;
+    private ResourcesPackListFragment resourcesPackListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         view = inflater.inflate(R.layout.fragment_download_list, container, false);
         initUI();
         if (savedInstanceState != null) {
-            currentFragment = getChildFragmentManager().getFragment(savedInstanceState, "currentFragment");
+            currentFragment = (H2CO3Fragment) getChildFragmentManager().getFragment(savedInstanceState, "currentFragment");
         }
         if (currentFragment == null) {
             initFragment(new MinecraftVersionListFragment());
@@ -46,28 +49,29 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
     }
 
     private void initUI() {
+        minecraftVersionListFragment = new MinecraftVersionListFragment();
+        modListFragment = new ModListFragment();
+        modPackListFragment = new ModPackListFragment();
+        resourcesPackListFragment = new ResourcesPackListFragment();
         navigationView = view.findViewById(R.id.nav);
     }
 
-    private void initFragment(Fragment fragment) {
-        // 检查是否已经被添加过，避免重复添加
-        if (currentFragment == null || currentFragment != fragment) {
+    private void initFragment(H2CO3Fragment fragment) {
+        if (currentFragment != fragment) {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.setCustomAnimations(org.koishi.launcher.h2co3.resources.R.anim.fragment_enter_pop, org.koishi.launcher.h2co3.resources.R.anim.fragment_exit_pop);
-            if (currentFragment != null) {
-                transaction.remove(currentFragment);
+            if (fragment.isAdded()) {
+                transaction.show(fragment);
+            } else {
+                transaction.add(R.id.fragmentContainerView, fragment);
             }
-            currentFragment = fragment;
-            transaction.replace(R.id.fragmentContainerView, fragment);
-            transaction.commit(); // commit 必须在onSaveInstanceState之前
-        }
-    }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (currentFragment != null) {
-            getChildFragmentManager().putFragment(outState, "currentFragment", currentFragment);
+            if (currentFragment != null && currentFragment != fragment) {
+                transaction.hide(currentFragment);
+            }
+
+            currentFragment = fragment;
+            transaction.commit();
         }
     }
 
@@ -85,19 +89,18 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         item.setChecked(true);
 
         if (itemId == R.id.navigation_minecraftVersion) {
-            switchFragment(new MinecraftVersionListFragment());
+            switchFragment(minecraftVersionListFragment);
         } else if (itemId == R.id.navigation_modList) {
-            switchFragment(new ModListFragment());
+            switchFragment(modListFragment);
         } else if (itemId == R.id.navigation_modPackList) {
-            switchFragment(new ModPackListFragment());
+            switchFragment(modPackListFragment);
         } else if (itemId == R.id.navigation_resourcesPack) {
-            switchFragment(new ResourcesPackListFragment());
+            switchFragment(resourcesPackListFragment);
         }
         return true;
     }
 
-    private void switchFragment(Fragment fragment) {
-        // 直接在这里进行Fragment的切换，而不是延迟执行
+    private void switchFragment(H2CO3Fragment fragment) {
         initFragment(fragment);
     }
 
@@ -108,4 +111,5 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         }
         menu.getItem(index).setChecked(true);
     }
+
 }

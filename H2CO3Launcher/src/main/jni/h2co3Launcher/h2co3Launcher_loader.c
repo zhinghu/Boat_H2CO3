@@ -34,8 +34,9 @@ static pthread_t logger;
 
 void correctUtfBytes(char *bytes) {
     char three = 0;
-    while (*bytes != '\0') {
-        unsigned char utf8 = *(bytes++);
+    char *currentByte = bytes;
+    while (*currentByte != '\0') {
+        unsigned char utf8 = *(currentByte++);
         three = 0;
         // Switch on the high four bits.
         switch (utf8 >> 4) {
@@ -59,14 +60,14 @@ void correctUtfBytes(char *bytes) {
                  * Note: 1111 is valid for normal UTF-8, but not the
                  * modified UTF-8 used here.
                  */
-                *(bytes - 1) = '?';
+                *(currentByte - 1) = '?';
                 break;
             case 0x0e:
                 // Bit pattern 1110, so there are two additional bytes.
-                utf8 = *(bytes++);
+                utf8 = *(currentByte++);
                 if ((utf8 & 0xc0) != 0x80) {
-                    --bytes;
-                    *(bytes - 1) = '?';
+                    --currentByte;
+                    *(currentByte - 1) = '?';
                     break;
                 }
                 three = 1;
@@ -74,11 +75,11 @@ void correctUtfBytes(char *bytes) {
             case 0x0c:
             case 0x0d:
                 // Bit pattern 110x, so there is one additional byte.
-                utf8 = *(bytes++);
+                utf8 = *(currentByte++);
                 if ((utf8 & 0xc0) != 0x80) {
-                    --bytes;
-                    if (three)--bytes;
-                    *(bytes - 1) = '?';
+                    --currentByte;
+                    if (three)--currentByte;
+                    *(currentByte - 1) = '?';
                 }
                 break;
         }
@@ -91,7 +92,7 @@ static void *logger_thread() {
     (*vm)->AttachCurrentThread(vm, &env, NULL);
     char buffer[2048];
     ssize_t _s;
-    jstring str;
+    jstring str = NULL;
     while (1) {
         memset(buffer, '\0', sizeof(buffer));
         _s = read(h2co3LauncherFd[0], buffer, sizeof(buffer) - 1);
@@ -107,53 +108,69 @@ static void *logger_thread() {
         if (buffer[0] == '\0')
             continue;
         else {
-            //fix "input is not valid Modified UTF-8" caused by NewStringUTF
             correctUtfBytes(buffer);
+            if (str != NULL) {
+                (*env)->DeleteLocalRef(env, str);
+            }
             str = (*env)->NewStringUTF(env, buffer);
             (*env)->CallVoidMethod(env, h2co3Launcher->object_H2CO3LauncherBridge, log_method, str);
-            (*env)->DeleteLocalRef(env, str);
         }
+    }
+    if (str != NULL) {
+        (*env)->DeleteLocalRef(env, str);
     }
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_redirectStdio(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redirectStdio(
+        JNIEnv *env,
                                                                                 jobject jobject,
                                                                                 jstring path) {
     setvbuf(stdout, 0, _IOLBF, 0);
     setvbuf(stderr, 0, _IONBF, 0);
+
     if (pipe(h2co3LauncherFd) < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to create log pipe!");
         return 1;
     }
+
     if (dup2(h2co3LauncherFd[1], STDOUT_FILENO) != STDOUT_FILENO &&
         dup2(h2co3LauncherFd[1], STDERR_FILENO) != STDERR_FILENO) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "failed to redirect stdio!");
         return 2;
     }
+
     jclass bridge = (*env)->FindClass(env,
-                                      "org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge");
+                                      "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge");
     log_method = (*env)->GetMethodID(env, bridge, "receiveLog", "(Ljava/lang/String;)V");
     if (!log_method) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to find receive method!");
         return 4;
     }
+
     h2co3Launcher->logFile = fdopen(h2co3LauncherFd[1], "a");
     H2CO3_INTERNAL_LOG("Log pipe ready.");
+
     (*env)->GetJavaVM(env, &log_pipe_jvm);
+
     int result = pthread_create(&logger, 0, logger_thread, 0);
     if (result != 0) {
         return 5;
     }
+
     pthread_detach(logger);
+
     return 0;
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_chdir(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_chdir(JNIEnv *env,
                                                                         jobject jobject,
                                                                         jstring path) {
-    char const *dir = (*env)->GetStringUTFChars(env, path, 0);
+    const char *dir = (*env)->GetStringUTFChars(env, path, 0);
+    if (dir == NULL) {
+        return -1;
+    }
 
     int b = chdir(dir);
 
@@ -162,12 +179,12 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_chdir(JNIEnv *
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setenv(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setenv(JNIEnv *env,
                                                                          jobject jobject,
                                                                          jstring str1,
                                                                          jstring str2) {
-    char const *name = (*env)->GetStringUTFChars(env, str1, 0);
-    char const *value = (*env)->GetStringUTFChars(env, str2, 0);
+    const char *name = (*env)->GetStringUTFChars(env, str1, 0);
+    const char *value = (*env)->GetStringUTFChars(env, str2, 0);
 
     setenv(name, value, 1);
 
@@ -176,19 +193,15 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setenv(JNIEnv 
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_dlopen(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_dlopen(JNIEnv *env,
                                                                          jobject jobject,
                                                                          jstring str) {
-    dlerror();
-
     int ret = 0;
     char const *lib_name = (*env)->GetStringUTFChars(env, str, 0);
 
-    void *handle;
-    dlerror();
-    handle = dlopen(lib_name, RTLD_GLOBAL | RTLD_LAZY);
-
+    void *handle = dlopen(lib_name, RTLD_GLOBAL | RTLD_LAZY);
     char *error = dlerror();
+
     __android_log_print(error == NULL ? ANDROID_LOG_INFO : ANDROID_LOG_ERROR, "H2CO3",
                         "loading %s (error = %s)", lib_name, error);
 
@@ -201,19 +214,34 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_dlopen(JNIEnv 
 }
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setLdLibraryPath(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setLdLibraryPath(
+        JNIEnv *env,
                                                                                    jobject jobject,
                                                                                    jstring ldLibraryPath) {
-    android_update_LD_LIBRARY_PATH_t android_update_LD_LIBRARY_PATH;
-    void *libdl_handle = dlopen("libdl.so", RTLD_LAZY);
-    void *updateLdLibPath = dlsym(libdl_handle, "android_update_LD_LIBRARY_PATH");
-    if (updateLdLibPath == NULL) {
-        updateLdLibPath = dlsym(libdl_handle, "__loader_android_update_LD_LIBRARY_PATH");
-        char *error = dlerror();
-        __android_log_print(error == NULL ? ANDROID_LOG_INFO : ANDROID_LOG_ERROR, "H2CO3",
-                            "loading %s (error = %s)", "libdl.so", error);
+    static android_update_LD_LIBRARY_PATH_t android_update_LD_LIBRARY_PATH = NULL;
+    static void *libdl_handle = NULL;
+
+    if (libdl_handle == NULL) {
+        libdl_handle = dlopen("libdl.so", RTLD_LAZY);
+        if (libdl_handle == NULL) {
+            return;
+        }
     }
-    android_update_LD_LIBRARY_PATH = (android_update_LD_LIBRARY_PATH_t) updateLdLibPath;
+
+    if (android_update_LD_LIBRARY_PATH == NULL) {
+        void *updateLdLibPath = dlsym(libdl_handle, "android_update_LD_LIBRARY_PATH");
+        if (updateLdLibPath == NULL) {
+            updateLdLibPath = dlsym(libdl_handle, "__loader_android_update_LD_LIBRARY_PATH");
+            char *error = dlerror();
+            __android_log_print(error == NULL ? ANDROID_LOG_INFO : ANDROID_LOG_ERROR, "H2CO3",
+                                "loading %s (error = %s)", "libdl.so", error);
+            if (updateLdLibPath == NULL) {
+                return;
+            }
+        }
+        android_update_LD_LIBRARY_PATH = (android_update_LD_LIBRARY_PATH_t) updateLdLibPath;
+    }
+
     const char *ldLibPathUtf = (*env)->GetStringUTFChars(env, ldLibraryPath, 0);
     android_update_LD_LIBRARY_PATH(ldLibPathUtf);
     (*env)->ReleaseStringUTFChars(env, ldLibraryPath, ldLibPathUtf);
@@ -232,13 +260,14 @@ void custom_exit(int code) {
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setupExitTrap(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setupExitTrap(
+        JNIEnv *env,
                                                                                 jobject jobject1,
                                                                                 jobject bridge) {
     exitTrap_bridge = (*env)->NewGlobalRef(env, bridge);
     (*env)->GetJavaVM(env, &exitTrap_jvm);
     jclass exitTrap_exitClass = (*env)->NewGlobalRef(env, (*env)->FindClass(env,
-                                                                            "org/koishi/launcher/h2co3/launcher/utils/H2CO3LauncherBridge"));
+                                                                            "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge"));
     exitTrap_method = (*env)->GetMethodID(env, exitTrap_exitClass, "onExit", "(I)V");
     (*env)->DeleteGlobalRef(env, exitTrap_exitClass);
     // Enable xhook debug mode here
@@ -262,7 +291,7 @@ int
 );
 
 JNIEXPORT void JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setupJLI(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setupJLI(JNIEnv *env,
                                                                            jobject jobject) {
 
     void *handle;
@@ -274,19 +303,18 @@ Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_setupJLI(JNIEn
 }
 
 JNIEXPORT jint JNICALL
-Java_org_koishi_launcher_h2co3_launcher_utils_H2CO3LauncherBridge_jliLaunch(JNIEnv *env,
+Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_jliLaunch(JNIEnv *env,
                                                                             jobject jobject,
                                                                             jobjectArray argsArray) {
     int argc = (*env)->GetArrayLength(env, argsArray);
-    char *argv[argc];
+    char **argv = (char **) malloc(argc * sizeof(char *));
     for (int i = 0; i < argc; i++) {
         jstring str = (*env)->GetObjectArrayElement(env, argsArray, i);
-        int len = (*env)->GetStringUTFLength(env, str);
-        char *buf = malloc(len + 1);
-        int characterLen = (*env)->GetStringLength(env, str);
-        (*env)->GetStringUTFRegion(env, str, 0, characterLen, buf);
-        buf[len] = 0;
-        argv[i] = buf;
+        const char *utfString = (*env)->GetStringUTFChars(env, str, NULL);
+        int len = strlen(utfString);
+        argv[i] = (char *) malloc(len + 1);
+        strcpy(argv[i], utfString);
+        (*env)->ReleaseStringUTFChars(env, str, utfString);
     }
 
     return JLI_Launch(argc, argv,

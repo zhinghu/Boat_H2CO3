@@ -95,7 +95,6 @@ public final class NetworkUtils {
         URLConnection connection = url.openConnection();
         String host = url.getHost().toLowerCase();
         if (endsWithDomainSuffix(host, "d.pcs.baidu.com") || endsWithDomainSuffix(host, "baidupcs.com")) {
-            // Docs: https://alist.nn.ci/zh/guide/drivers/baidu.html
             connection.setRequestProperty("User-Agent", "pan.baidu.com");
         } else {
             connection.setRequestProperty("User-Agent", "Boat_H2CO3/" + Build.getRadioVersion());

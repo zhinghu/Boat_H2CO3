@@ -37,9 +37,7 @@ public class H2CO3Activity extends MaterialActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        H2CO3Tools.loadPaths(this);
-        if (Build.VERSION.SDK_INT >= 999) {
-            //这里做你想做的事
+        if (Build.VERSION.SDK_INT >= 31) {
             boolean spIsAuth = H2CO3Tools.getH2CO3Value("enable_monet", true, Boolean.class);
             if (spIsAuth) {
                 setTheme(R.style.Theme_H2CO3_DynamicColors);
