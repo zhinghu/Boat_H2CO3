@@ -198,7 +198,7 @@ public class Version implements Comparable<Version>, Validation {
     }
 
     public boolean isHidden() {
-        return hidden == null ? false : hidden;
+        return hidden != null && hidden;
     }
 
     private Version setHidden(Boolean hidden) {
@@ -206,7 +206,7 @@ public class Version implements Comparable<Version>, Validation {
     }
 
     public boolean isRoot() {
-        return root == null ? false : root;
+        return root != null && root;
     }
 
     public boolean isResolved() {
@@ -430,16 +430,16 @@ public class Version implements Comparable<Version>, Validation {
             throw new JsonParseException("VersionMod ID cannot be blank");
         if (downloads != null)
             for (Map.Entry<DownloadType, DownloadInfo> entry : downloads.entrySet()) {
-                if (!(entry.getKey() instanceof DownloadType))
+                if (entry.getKey() == null)
                     throw new JsonParseException("VersionMod downloads key must be DownloadType");
-                if (!(entry.getValue() instanceof DownloadInfo))
+                if (entry.getValue() == null)
                     throw new JsonParseException("VersionMod downloads value must be DownloadInfo");
             }
         if (logging != null)
             for (Map.Entry<DownloadType, LoggingInfo> entry : logging.entrySet()) {
-                if (!(entry.getKey() instanceof DownloadType))
+                if (entry.getKey() == null)
                     throw new JsonParseException("VersionMod logging key must be DownloadType");
-                if (!(entry.getValue() instanceof LoggingInfo))
+                if (entry.getValue() == null)
                     throw new JsonParseException("VersionMod logging value must be LoggingInfo");
             }
     }

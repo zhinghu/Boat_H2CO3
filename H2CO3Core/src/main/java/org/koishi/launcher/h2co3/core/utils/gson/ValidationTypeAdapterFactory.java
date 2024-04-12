@@ -54,6 +54,7 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
             @Override
             public T read(JsonReader reader) throws IOException {
                 T t = delegate.read(reader);
+                System.out.println(t);
                 if (t instanceof Validation) {
                     try {
                         ((Validation) t).validate();

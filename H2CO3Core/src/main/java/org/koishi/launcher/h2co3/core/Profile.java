@@ -12,6 +12,7 @@ import com.google.gson.annotations.JsonAdapter;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.koishi.launcher.h2co3.core.download.CacheRepository;
 import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.download.DefaultGameRepository;
 import org.koishi.launcher.h2co3.core.download.DownloadProvider;
@@ -64,6 +65,7 @@ public final class Profile implements Observable {
 
     public DefaultDependencyManager getDependency(DownloadProvider downloadProvider) {
         H2CO3CacheRepository cacheRepository = H2CO3CacheRepository.REPOSITORY;
+        CacheRepository.setInstance(cacheRepository);
         cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
         System.out.println(cacheRepository.getDirectory());
         return new DefaultDependencyManager(repository, downloadProvider, cacheRepository);

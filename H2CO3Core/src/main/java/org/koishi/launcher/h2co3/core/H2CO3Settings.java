@@ -1,7 +1,6 @@
 package org.koishi.launcher.h2co3.core;
 
 import static org.koishi.launcher.h2co3.core.H2CO3Tools.DOWNLOAD_SOURCE;
-import static org.koishi.launcher.h2co3.core.download.DownloadProviders.DEFAULT_RAW_PROVIDER_ID;
 
 import org.koishi.launcher.h2co3.core.login.bean.UserBean;
 
@@ -34,7 +33,7 @@ public class H2CO3Settings {
      *
      */
     public static String getDownloadSource() {
-        return H2CO3Tools.getH2CO3Value(DOWNLOAD_SOURCE, DEFAULT_RAW_PROVIDER_ID, String.class);
+        return H2CO3Tools.getH2CO3Value(DOWNLOAD_SOURCE, "balanced", String.class);
     }
 
     public static void setDownloadSource(String type) {
@@ -89,5 +88,11 @@ public class H2CO3Settings {
         H2CO3Tools.setH2CO3Value(H2CO3Tools.LOGIN_TOKEN, token);
     }
 
+    public static String getDownloadType() {
+        return H2CO3Tools.getH2CO3Value("DOWNLOAD_TYPE", "bmclapi", String.class);
+    }
 
+    public static void setDownloadType(String defaultRawProviderId) {
+        H2CO3Tools.setH2CO3Value("DOWNLOAD_TYPE", defaultRawProviderId);
+    }
 }
