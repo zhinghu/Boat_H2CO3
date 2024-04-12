@@ -5,10 +5,10 @@ import static org.koishi.launcher.h2co3.core.utils.Pair.pair;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
+import org.koishi.launcher.h2co3.core.game.StringArgument;
 import org.koishi.launcher.h2co3.core.utils.Argument;
 import org.koishi.launcher.h2co3.core.utils.Arguments;
 import org.koishi.launcher.h2co3.core.utils.Pair;
-import org.koishi.launcher.h2co3.core.utils.StringArgument;
 
 import java.util.ArrayList;
 import java.util.Arrays;

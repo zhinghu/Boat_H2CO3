@@ -17,6 +17,8 @@
  */
 package org.koishi.launcher.h2co3.core.utils.gson;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -54,7 +56,7 @@ public final class ValidationTypeAdapterFactory implements TypeAdapterFactory {
             @Override
             public T read(JsonReader reader) throws IOException {
                 T t = delegate.read(reader);
-                System.out.println(t);
+                Log.d("H2CO3", t.toString());
                 if (t instanceof Validation) {
                     try {
                         ((Validation) t).validate();

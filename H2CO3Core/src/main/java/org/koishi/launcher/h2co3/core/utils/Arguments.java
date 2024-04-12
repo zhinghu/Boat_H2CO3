@@ -4,6 +4,9 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.koishi.launcher.h2co3.core.game.RuledArgument;
+import org.koishi.launcher.h2co3.core.game.StringArgument;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

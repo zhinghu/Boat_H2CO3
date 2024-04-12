@@ -6,6 +6,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.JsonAdapter;
 
+import org.koishi.launcher.h2co3.core.game.RuledArgument;
+import org.koishi.launcher.h2co3.core.game.StringArgument;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;

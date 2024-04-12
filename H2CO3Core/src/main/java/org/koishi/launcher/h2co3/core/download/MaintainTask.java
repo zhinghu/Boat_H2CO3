@@ -24,13 +24,13 @@ import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryTyp
 import static org.koishi.launcher.h2co3.core.download.LibraryAnalyzer.LibraryType.OPTIFINE;
 
 import org.koishi.launcher.h2co3.core.game.GameRepository;
+import org.koishi.launcher.h2co3.core.game.StringArgument;
 import org.koishi.launcher.h2co3.core.game.VersionLibraryBuilder;
 import org.koishi.launcher.h2co3.core.utils.Argument;
 import org.koishi.launcher.h2co3.core.utils.Artifact;
 import org.koishi.launcher.h2co3.core.utils.CompatibilityRule;
 import org.koishi.launcher.h2co3.core.utils.Logging;
 import org.koishi.launcher.h2co3.core.utils.SimpleMultimap;
-import org.koishi.launcher.h2co3.core.utils.StringArgument;
 import org.koishi.launcher.h2co3.core.utils.StringUtils;
 import org.koishi.launcher.h2co3.core.utils.gson.JsonUtils;
 import org.koishi.launcher.h2co3.core.utils.task.Task;

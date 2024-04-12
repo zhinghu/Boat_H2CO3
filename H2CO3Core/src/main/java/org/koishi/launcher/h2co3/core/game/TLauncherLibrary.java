@@ -20,7 +20,7 @@ public class TLauncherLibrary {
     private final String url;
     private final LibraryDownloadInfo artifact;
 
-    @SerializedName("classifies") // stupid typo made by TLauncher
+    @SerializedName("classifies")
     private final Map<String, LibraryDownloadInfo> classifiers;
     private final ExtractRules extract;
     private final Map<OperatingSystem, String> natives;

@@ -131,14 +131,10 @@ public class DefaultGameRepository implements GameRepository {
 
     @Override
     public File getRunDirectory(String id) {
-        switch (getGameDirectoryType(id)) {
-            case VERSION_FOLDER:
-                return getVersionRoot(id);
-            case ROOT_FOLDER:
-                return getBaseDirectory();
-            default:
-                throw new IllegalStateException();
-        }
+        return switch (getGameDirectoryType(id)) {
+            case VERSION_FOLDER -> getVersionRoot(id);
+            case ROOT_FOLDER -> getBaseDirectory();
+        };
     }
 
     @Override
