@@ -527,7 +527,7 @@ final class ListChangeBuilder<E> {
             c.perm = EMPTY_PERM;
         }
         if (c.removed == null) {
-            c.removed = Collections.<E>emptyList();
+            c.removed = Collections.emptyList();
         } else {
             c.removed = Collections.unmodifiableList(c.removed);
         }
@@ -611,7 +611,7 @@ final class ListChangeBuilder<E> {
 
     private static class IterableChange<E> extends Change<E> {
 
-        private SubChange[] changes;
+        private final SubChange[] changes;
         private int cursor = -1;
 
         private IterableChange(SubChange[] changes, ObservableList<E> list) {

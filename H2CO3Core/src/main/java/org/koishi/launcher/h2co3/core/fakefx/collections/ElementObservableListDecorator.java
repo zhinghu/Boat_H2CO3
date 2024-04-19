@@ -14,7 +14,7 @@ public final class ElementObservableListDecorator<E> extends ObservableListBase<
 
     private final ObservableList<E> decoratedList;
     private final ListChangeListener<E> listener;
-    private ElementObserver<E> observer;
+    private final ElementObserver<E> observer;
 
 
     public ElementObservableListDecorator(ObservableList<E> decorated,

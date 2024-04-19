@@ -132,8 +132,7 @@ public abstract class DoublePropertyBase extends DoubleProperty {
         ObservableDoubleValue newObservable;
         if (rawObservable instanceof ObservableDoubleValue) {
             newObservable = (ObservableDoubleValue) rawObservable;
-        } else if (rawObservable instanceof ObservableNumberValue) {
-            final ObservableNumberValue numberValue = (ObservableNumberValue) rawObservable;
+        } else if (rawObservable instanceof ObservableNumberValue numberValue) {
             newObservable = new ValueWrapper(rawObservable) {
 
                 @Override
@@ -234,7 +233,7 @@ public abstract class DoublePropertyBase extends DoubleProperty {
 
     private abstract class ValueWrapper extends DoubleBinding {
 
-        private ObservableValue<? extends Number> observable;
+        private final ObservableValue<? extends Number> observable;
 
         public ValueWrapper(ObservableValue<? extends Number> observable) {
             this.observable = observable;

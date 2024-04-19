@@ -5,16 +5,29 @@
  */
 package org.lwjgl.stb;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memIntBufferSafe;
+import static org.lwjgl.system.MemoryUtil.memPutAddress;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemCallocChecked;
 
-import java.nio.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeResource;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
+import javax.annotation.Nullable;
 
 /**
  * A range of packed character data, used by {@link STBTruetype#stbtt_PackFontRanges PackFontRanges}

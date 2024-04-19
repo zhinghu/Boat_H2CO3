@@ -57,7 +57,7 @@ public abstract class ReadOnlyBooleanProperty extends BooleanExpression
             public boolean get() {
                 valid = true;
                 final Boolean value = property.getValue();
-                return value == null ? false : value;
+                return value != null && value;
             }
 
             @Override
@@ -105,7 +105,5 @@ public abstract class ReadOnlyBooleanProperty extends BooleanExpression
             }
         };
     }
-
-    ;
 
 }

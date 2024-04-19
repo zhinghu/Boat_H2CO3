@@ -11,7 +11,7 @@ import java.util.RandomAccess;
  * a temporary list that is then passed to Collections.unmodifiableList).
  */
 public class UnmodifiableArrayList<T> extends AbstractList<T> implements RandomAccess {
-    private T[] elements;
+    private final T[] elements;
     private final int size;
 
     /**

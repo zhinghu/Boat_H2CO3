@@ -5,10 +5,11 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callP;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.NativeType;
 
 /** Native bindings to GLX 1.2. */
 public class GLX12 extends GLX11 {

@@ -72,7 +72,7 @@ public final class FilteredList<E> extends TransformationList<E, E> {
      */
     private ObjectProperty<Predicate<? super E>> predicate;
 
-    public final ObjectProperty<Predicate<? super E>> predicateProperty() {
+    public ObjectProperty<Predicate<? super E>> predicateProperty() {
         if (predicate == null) {
             predicate = new ObjectPropertyBase<Predicate<? super E>>() {
                 @Override
@@ -95,11 +95,11 @@ public final class FilteredList<E> extends TransformationList<E, E> {
         return predicate;
     }
 
-    public final Predicate<? super E> getPredicate() {
+    public Predicate<? super E> getPredicate() {
         return predicate == null ? null : predicate.get();
     }
 
-    public final void setPredicate(Predicate<? super E> predicate) {
+    public void setPredicate(Predicate<? super E> predicate) {
         predicateProperty().set(predicate);
     }
 
@@ -233,7 +233,7 @@ public final class FilteredList<E> extends TransformationList<E, E> {
         int pos = c.getFrom();
 
         ListIterator<? extends E> it = getSource().listIterator(pos);
-        for (; fpos < to && it.nextIndex() < c.getTo(); ) {
+        while (fpos < to && it.nextIndex() < c.getTo()) {
             if (pred.test(it.next())) {
                 filtered[fpos] = it.previousIndex();
                 nextAdd(fpos, fpos + 1);

@@ -32,8 +32,8 @@ import java.lang.reflect.Type;
 @JsonAdapter(Profile.Serializer.class)
 public final class Profile implements Observable {
     private final ObservableHelper observableHelper = new ObservableHelper(this);
-    private H2CO3GameRepository repository;
-    private ObjectProperty<File> gameDir;
+    private final H2CO3GameRepository repository;
+    private final ObjectProperty<File> gameDir;
     private String name;
 
     public Profile(String name) {

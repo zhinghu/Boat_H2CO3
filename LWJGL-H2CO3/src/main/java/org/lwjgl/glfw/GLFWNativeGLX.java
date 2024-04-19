@@ -5,16 +5,23 @@
  */
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.APIUtil.apiLog;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.invokePP;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memPutAddress;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static org.lwjgl.system.MemoryUtil.nmemFree;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.FunctionProvider;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.SharedLibrary;
 
-import javax.annotation.*;
-import org.lwjgl.opengl.GL;
-
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /** Native bindings to the GLFW library's GLX native access functions. */
 public class GLFWNativeGLX {

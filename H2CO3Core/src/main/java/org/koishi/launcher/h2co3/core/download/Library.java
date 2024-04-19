@@ -177,10 +177,9 @@ public class Library implements Comparable<Library>, Validation {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Library))
+        if (!(obj instanceof Library other))
             return false;
 
-        Library other = (Library) obj;
         return getName().equals(other.getName()) && (isNative() == other.isNative());
     }
 

@@ -128,10 +128,7 @@ public class PlatformUtil {
         @SuppressWarnings("removal")
         String useGles2 =
                 AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty("use.gles2"));
-        if ("true".equals(useGles2))
-            return true;
-        else
-            return false;
+        return "true".equals(useGles2);
     }
 
     /**

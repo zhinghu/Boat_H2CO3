@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -258,7 +257,7 @@ public class H2CO3Tools {
     }
 
     public static String read(InputStream is) throws IOException {
-        List<String> lines = IOUtils.readLines(is, StandardCharsets.UTF_8);
+        List<String> lines = IOUtils.readLines(is, "UTF-8");
         return String.join("", lines);
     }
 
@@ -273,7 +272,7 @@ public class H2CO3Tools {
             if (!parent.mkdirs()) throw new IOException("Failed to create parent directory");
         }
         try (FileOutputStream outStream = new FileOutputStream(file)) {
-            IOUtils.write(content, outStream, StandardCharsets.UTF_8);
+            IOUtils.write(content, outStream, "UTF-8");
         }
     }
 

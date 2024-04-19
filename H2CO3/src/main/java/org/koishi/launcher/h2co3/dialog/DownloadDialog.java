@@ -229,6 +229,7 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
 
     private class DownloadTask extends AsyncTask<Void, Integer, Void> {
         private final DownloadAdapter adapter;
+        private AlertDialog dialog;
 
         public DownloadTask(DownloadAdapter adapter) {
             this.adapter = adapter;
@@ -331,8 +332,6 @@ public class DownloadDialog extends MaterialAlertDialogBuilder {
             Path folderPath = Paths.get(DOWNLOAD_PATH, item.getPath().substring(0, lastIndex + 1));
             Files.createDirectories(folderPath);
         }
-
-        private AlertDialog dialog;
 
         private void showErrorDialogOnUIThread(String message) {
             new Handler(Looper.getMainLooper()).post(() -> {

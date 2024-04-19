@@ -7,5 +7,5 @@ public enum ModLoaderType {
     FABRIC,
     QUILT,
     LITE_LOADER,
-    PACK;
+    PACK
 }

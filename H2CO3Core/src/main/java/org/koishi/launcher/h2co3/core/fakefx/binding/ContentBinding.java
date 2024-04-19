@@ -124,8 +124,7 @@ public class ContentBinding {
                 return false;
             }
 
-            if (obj instanceof ListContentBinding) {
-                final ListContentBinding<?> other = (ListContentBinding<?>) obj;
+            if (obj instanceof ListContentBinding<?> other) {
                 final List<?> list2 = other.listRef.get();
                 return list1 == list2;
             }
@@ -177,8 +176,7 @@ public class ContentBinding {
                 return false;
             }
 
-            if (obj instanceof SetContentBinding) {
-                final SetContentBinding<?> other = (SetContentBinding<?>) obj;
+            if (obj instanceof SetContentBinding<?> other) {
                 final Set<?> set2 = other.setRef.get();
                 return set1 == set2;
             }
@@ -231,8 +229,7 @@ public class ContentBinding {
                 return false;
             }
 
-            if (obj instanceof MapContentBinding) {
-                final MapContentBinding<?, ?> other = (MapContentBinding<?, ?>) obj;
+            if (obj instanceof MapContentBinding<?, ?> other) {
                 final Map<?, ?> map2 = other.mapRef.get();
                 return map1 == map2;
             }

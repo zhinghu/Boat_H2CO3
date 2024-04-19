@@ -16,7 +16,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      *
      * @param listener the listener for listening to the list changes
      */
-    public void addListener(ListChangeListener<? super E> listener);
+    void addListener(ListChangeListener<? super E> listener);
 
     /**
      * Tries to remove a listener from this observable list. If the listener is not
@@ -24,7 +24,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      *
      * @param listener a listener to remove
      */
-    public void removeListener(ListChangeListener<? super E> listener);
+    void removeListener(ListChangeListener<? super E> listener);
 
     /**
      * A convenience method for var-arg addition of elements.
@@ -32,7 +32,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @param elements the elements to add
      * @return true (as specified by Collection.add(E))
      */
-    public boolean addAll(E... elements);
+    boolean addAll(E... elements);
 
     /**
      * Clears the ObservableList and adds all the elements passed as var-args.
@@ -41,7 +41,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @return true (as specified by Collection.add(E))
      * @throws NullPointerException if the specified arguments contain one or more null elements
      */
-    public boolean setAll(E... elements);
+    boolean setAll(E... elements);
 
     /**
      * Clears the ObservableList and adds all elements from the collection.
@@ -50,7 +50,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @return true (as specified by Collection.add(E))
      * @throws NullPointerException if the specified collection contains one or more null elements
      */
-    public boolean setAll(Collection<? extends E> col);
+    boolean setAll(Collection<? extends E> col);
 
     /**
      * A convenience method for var-arg usage of the {@link #removeAll(Collection) removeAll} method.
@@ -58,7 +58,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @param elements the elements to be removed
      * @return true if list changed as a result of this call
      */
-    public boolean removeAll(E... elements);
+    boolean removeAll(E... elements);
 
     /**
      * A convenience method for var-arg usage of the {@link #retainAll(Collection) retainAll} method.
@@ -66,7 +66,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @param elements the elements to be retained
      * @return true if list changed as a result of this call
      */
-    public boolean retainAll(E... elements);
+    boolean retainAll(E... elements);
 
     /**
      * A simplified way of calling {@code sublist(from, to).clear()}. As this is a common operation,
@@ -76,7 +76,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @param to   the end of the range to remove (exclusive)
      * @throws IndexOutOfBoundsException if an illegal range is provided
      */
-    public void remove(int from, int to);
+    void remove(int from, int to);
 
     /**
      * Creates a {@link FilteredList} wrapper of this list using
@@ -86,7 +86,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @return new {@code FilteredList}
      * @since JavaFX 8.0
      */
-    public default FilteredList<E> filtered(Predicate<E> predicate) {
+    default FilteredList<E> filtered(Predicate<E> predicate) {
         return new FilteredList<>(this, predicate);
     }
 
@@ -98,7 +98,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @return new {@code SortedList}
      * @since JavaFX 8.0
      */
-    public default SortedList<E> sorted(Comparator<E> comparator) {
+    default SortedList<E> sorted(Comparator<E> comparator) {
         return new SortedList<>(this, comparator);
     }
 
@@ -109,7 +109,7 @@ public interface ObservableList<E> extends List<E>, Observable {
      * @return new {@code SortedList}
      * @since JavaFX 8.0
      */
-    public default SortedList<E> sorted() {
+    default SortedList<E> sorted() {
         Comparator naturalOrder = new Comparator<E>() {
 
             @Override

@@ -93,8 +93,8 @@ public final class ContextAttribs {
 
     // STATE
 
-    private int majorVersion;
-    private int minorVersion;
+    private final int majorVersion;
+    private final int minorVersion;
 
     private int profileMask;
     private int contextFlags;

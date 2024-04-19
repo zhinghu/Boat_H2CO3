@@ -74,9 +74,8 @@ public abstract class ReadOnlySetProperty<E> extends SetExpression<E> implements
         if (obj == this)
             return true;
 
-        if (!(obj instanceof Set))
+        if (!(obj instanceof Set c))
             return false;
-        Set c = (Set) obj;
         if (c.size() != size())
             return false;
         try {

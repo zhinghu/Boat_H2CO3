@@ -26,7 +26,7 @@ public interface ObservableArray<T extends ObservableArray<T>> extends Observabl
      * @param listener the listener for listening to the array changes
      * @throws NullPointerException if {@code listener} is {@code null}
      */
-    public void addListener(ArrayChangeListener<T> listener);
+    void addListener(ArrayChangeListener<T> listener);
 
     /**
      * Tries to remove a listener from this observable array. If the listener is not
@@ -35,7 +35,7 @@ public interface ObservableArray<T extends ObservableArray<T>> extends Observabl
      * @param listener a listener to remove
      * @throws NullPointerException if {@code listener} is {@code null}
      */
-    public void removeListener(ArrayChangeListener<T> listener);
+    void removeListener(ArrayChangeListener<T> listener);
 
     /**
      * Sets new length of data in this array. This method grows capacity
@@ -46,7 +46,7 @@ public interface ObservableArray<T extends ObservableArray<T>> extends Observabl
      * @param size new length of data in this array
      * @throws NegativeArraySizeException if size is negative
      */
-    public void resize(int size);
+    void resize(int size);
 
     /**
      * Grows the capacity of this array if the current capacity is less than
@@ -55,24 +55,24 @@ public interface ObservableArray<T extends ObservableArray<T>> extends Observabl
      *
      * @param capacity the capacity of this array
      */
-    public void ensureCapacity(int capacity);
+    void ensureCapacity(int capacity);
 
     /**
      * Shrinks the capacity to the current size of data in the array.
      */
-    public void trimToSize();
+    void trimToSize();
 
     /**
      * Empties the array by resizing it to 0. Capacity is not changed.
      *
      * @see #trimToSize()
      */
-    public void clear();
+    void clear();
 
     /**
      * Retrieves length of data in this array.
      *
      * @return length of data in this array
      */
-    public int size();
+    int size();
 }

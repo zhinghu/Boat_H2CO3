@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class CommandBuilder {
     private static final Pattern UNSTABLE_OPTION_PATTERN = Pattern.compile("-XX:(?<key>[a-zA-Z0-9]+)=(?<value>.*)");
@@ -21,6 +20,61 @@ public final class CommandBuilder {
     private final List<String> raw = new ArrayList<>();
 
     public CommandBuilder() {
+    }
+
+    public static String pwshString(String str) {
+        return "'" + str.replace("'", "''") + "'";
+    }
+
+    public static boolean hasExecutionPolicy() {
+        try {
+            final Process process = Runtime.getRuntime().exec(new String[]{"powershell", "-Command", "Get-ExecutionPolicy"});
+            if (!process.waitFor(5, TimeUnit.SECONDS)) {
+                process.destroy();
+                return false;
+            }
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), OperatingSystem.NATIVE_CHARSET))) {
+                String policy = reader.readLine();
+                return "Unrestricted".equalsIgnoreCase(policy) || "RemoteSigned".equalsIgnoreCase(policy);
+            }
+        } catch (Throwable ignored) {
+        }
+        return false;
+    }
+
+    public static boolean setExecutionPolicy() {
+        try {
+            final Process process = Runtime.getRuntime().exec(new String[]{"powershell", "-Command", "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser"});
+            if (!process.waitFor(5, TimeUnit.SECONDS)) {
+                process.destroy();
+                return false;
+            }
+        } catch (Throwable ignored) {
+        }
+        return true;
+    }
+
+    private static boolean containsEscape(String str, String escapeChars) {
+        for (int i = 0; i < escapeChars.length(); i++) {
+            if (str.indexOf(escapeChars.charAt(i)) >= 0)
+                return true;
+        }
+        return false;
+    }
+
+    private static String escape(String str, char... escapeChars) {
+        for (char ch : escapeChars) {
+            str = str.replace(String.valueOf(ch), "\\" + ch);
+        }
+        return str;
+    }
+
+    public static String toBatchStringLiteral(String s) {
+        return containsEscape(s, " \t\"^&<>|") ? '"' + escape(s, '\\', '"') + '"' : s;
+    }
+
+    public static String toShellStringLiteral(String s) {
+        return containsEscape(s, " \t\"!#$&'()*,;<=>?[\\]^`{|}~") ? '"' + escape(s, '"', '$', '&', '`') + '"' : s;
     }
 
     public CommandBuilder add(String... args) {
@@ -188,60 +242,5 @@ public final class CommandBuilder {
 
     public List<String> asMutableList() {
         return new ArrayList<>(raw);
-    }
-
-    public static String pwshString(String str) {
-        return "'" + str.replace("'", "''") + "'";
-    }
-
-    public static boolean hasExecutionPolicy() {
-        try {
-            final Process process = Runtime.getRuntime().exec(new String[]{"powershell", "-Command", "Get-ExecutionPolicy"});
-            if (!process.waitFor(5, TimeUnit.SECONDS)) {
-                process.destroy();
-                return false;
-            }
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), OperatingSystem.NATIVE_CHARSET))) {
-                String policy = reader.readLine();
-                return "Unrestricted".equalsIgnoreCase(policy) || "RemoteSigned".equalsIgnoreCase(policy);
-            }
-        } catch (Throwable ignored) {
-        }
-        return false;
-    }
-
-    public static boolean setExecutionPolicy() {
-        try {
-            final Process process = Runtime.getRuntime().exec(new String[]{"powershell", "-Command", "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser"});
-            if (!process.waitFor(5, TimeUnit.SECONDS)) {
-                process.destroy();
-                return false;
-            }
-        } catch (Throwable ignored) {
-        }
-        return true;
-    }
-
-    private static boolean containsEscape(String str, String escapeChars) {
-        for (int i = 0; i < escapeChars.length(); i++) {
-            if (str.indexOf(escapeChars.charAt(i)) >= 0)
-                return true;
-        }
-        return false;
-    }
-
-    private static String escape(String str, char... escapeChars) {
-        for (char ch : escapeChars) {
-            str = str.replace(String.valueOf(ch), "\\" + ch);
-        }
-        return str;
-    }
-
-    public static String toBatchStringLiteral(String s) {
-        return containsEscape(s, " \t\"^&<>|") ? '"' + escape(s, '\\', '"') + '"' : s;
-    }
-
-    public static String toShellStringLiteral(String s) {
-        return containsEscape(s, " \t\"!#$&'()*,;<=>?[\\]^`{|}~") ? '"' + escape(s, '"', '$', '&', '`') + '"' : s;
     }
 }

@@ -5,11 +5,12 @@
  */
 package org.lwjgl.system.linux;
 
-import java.nio.*;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
 
 /** Native bindings to &lt;unistd.h&gt;. */
 public class UNISTD {

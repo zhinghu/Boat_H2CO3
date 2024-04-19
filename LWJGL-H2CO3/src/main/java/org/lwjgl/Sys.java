@@ -148,7 +148,7 @@ public final class Sys {
                     return serviceManagerClass.getMethod("lookup", String.class);
                 }
             });
-            Object basicService = lookupMethod.invoke(serviceManagerClass, new Object[]{"javax.jnlp.BasicService"});
+            Object basicService = lookupMethod.invoke(serviceManagerClass, "javax.jnlp.BasicService");
             final Class<?> basicServiceClass = Class.forName("javax.jnlp.BasicService");
             Method showDocumentMethod = AccessController.doPrivileged(new PrivilegedExceptionAction<Method>() {
                 public Method run() throws Exception {

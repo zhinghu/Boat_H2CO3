@@ -91,5 +91,4 @@ public class ReadOnlyDoubleWrapper extends SimpleDoubleProperty {
         }
     }
 
-    ;
 }

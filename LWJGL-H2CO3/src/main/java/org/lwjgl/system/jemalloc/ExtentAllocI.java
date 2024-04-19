@@ -5,12 +5,17 @@
  */
 package org.lwjgl.system.jemalloc;
 
-import org.lwjgl.system.*;
-import org.lwjgl.system.libffi.*;
+import static org.lwjgl.system.APIUtil.apiClosureRetP;
+import static org.lwjgl.system.APIUtil.apiCreateCIF;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memGetInt;
+import static org.lwjgl.system.libffi.LibFFI.FFI_DEFAULT_ABI;
+import static org.lwjgl.system.libffi.LibFFI.ffi_type_pointer;
+import static org.lwjgl.system.libffi.LibFFI.ffi_type_uint32;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.libffi.LibFFI.*;
+import org.lwjgl.system.CallbackI;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.libffi.FFICIF;
 
 /**
  * Instances of this interface may be set to the {@link ExtentHooks} struct.
@@ -46,11 +51,11 @@ public interface ExtentAllocI extends CallbackI {
         long __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetAddress(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 3 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 4 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 5 * POINTER_SIZE)),
-                memGetInt(memGetAddress(args + 6 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 3L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 4L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 5L * POINTER_SIZE)),
+                memGetInt(memGetAddress(args + 6L * POINTER_SIZE))
         );
         apiClosureRetP(ret, __result);
     }

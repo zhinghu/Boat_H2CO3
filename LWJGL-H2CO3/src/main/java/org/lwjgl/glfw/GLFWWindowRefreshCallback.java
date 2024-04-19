@@ -5,13 +5,12 @@
  */
 package org.lwjgl.glfw;
 
-import javax.annotation.*;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowRefreshCallback;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
 
-import static org.lwjgl.system.MemoryUtil.*;
-
-import static org.lwjgl.glfw.GLFW.*;
+import javax.annotation.Nullable;
 
 /**
  * Instances of this class may be passed to the {@link GLFW#glfwSetWindowRefreshCallback SetWindowRefreshCallback} method.

@@ -45,7 +45,7 @@ public interface FT_List_DestructorI extends CallbackI {
         invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetAddress(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE))
         );
     }
 

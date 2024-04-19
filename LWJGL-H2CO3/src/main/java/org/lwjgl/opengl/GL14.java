@@ -5,15 +5,19 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callPV;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.NativeType;
 
-import org.lwjgl.system.*;
-
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 /**
  * The OpenGL functionality up to version 1.4. Includes the deprecated symbols of the Compatibility Profile.

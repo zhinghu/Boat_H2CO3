@@ -91,7 +91,7 @@ public class FXCollections {
         return new SynchronizedObservableMap<K, V>(map);
     }
 
-    private static ObservableMap EMPTY_OBSERVABLE_MAP = new EmptyObservableMap();
+    private static final ObservableMap EMPTY_OBSERVABLE_MAP = new EmptyObservableMap();
 
     @SuppressWarnings("unchecked")
     public static <K, V> ObservableMap<K, V> emptyObservableMap() {
@@ -179,7 +179,7 @@ public class FXCollections {
         return new SynchronizedObservableList<E>(list);
     }
 
-    private static ObservableList EMPTY_OBSERVABLE_LIST = new EmptyObservableList();
+    private static final ObservableList EMPTY_OBSERVABLE_LIST = new EmptyObservableList();
 
     @SuppressWarnings("unchecked")
     public static <E> ObservableList<E> emptyObservableList() {
@@ -211,7 +211,7 @@ public class FXCollections {
         return new SynchronizedObservableSet<E>(set);
     }
 
-    private static ObservableSet EMPTY_OBSERVABLE_SET = new EmptyObservableSet();
+    private static final ObservableSet EMPTY_OBSERVABLE_SET = new EmptyObservableSet();
 
     @SuppressWarnings("unchecked")
     public static <E> ObservableSet<E> emptyObservableSet() {
@@ -325,7 +325,7 @@ public class FXCollections {
      */
     @SuppressWarnings("unchecked")
     public static void shuffle(ObservableList list, Random rnd) {
-        Object newContent[] = list.toArray();
+        Object[] newContent = list.toArray();
 
         for (int i = list.size(); i > 1; i--) {
             swap(newContent, i - 1, rnd.nextInt(i));
@@ -1134,7 +1134,7 @@ public class FXCollections {
         public ListIterator<T> listIterator(final int index) {
             return new ListIterator<T>() {
 
-                ListIterator<T> i = list.listIterator(index);
+                final ListIterator<T> i = list.listIterator(index);
 
                 @Override
                 public boolean hasNext() {
@@ -2096,9 +2096,8 @@ public class FXCollections {
              */
             @Override
             public boolean contains(Object o) {
-                if (!(o instanceof Map.Entry))
+                if (!(o instanceof Entry<?, ?> e))
                     return false;
-                Entry<?, ?> e = (Entry<?, ?>) o;
                 return s.contains(
                         (e instanceof CheckedEntry) ? e : checkedEntry(e, valueType));
             }
@@ -2150,9 +2149,8 @@ public class FXCollections {
             public boolean equals(Object o) {
                 if (o == this)
                     return true;
-                if (!(o instanceof Set))
+                if (!(o instanceof Set<?> that))
                     return false;
-                Set<?> that = (Set<?>) o;
                 return that.size() == s.size()
                         && containsAll(that); // Invokes safe containsAll() above
             }

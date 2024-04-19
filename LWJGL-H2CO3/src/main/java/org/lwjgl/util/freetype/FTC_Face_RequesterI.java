@@ -47,8 +47,8 @@ public interface FTC_Face_RequesterI extends CallbackI {
         int __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetAddress(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 3 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 3L * POINTER_SIZE))
         );
         apiClosureRet(ret, __result);
     }

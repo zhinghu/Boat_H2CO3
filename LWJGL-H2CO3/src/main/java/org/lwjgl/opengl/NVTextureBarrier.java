@@ -5,8 +5,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
-
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/NV/NV_texture_barrier.txt">NV_texture_barrier</a> extension.
  * 

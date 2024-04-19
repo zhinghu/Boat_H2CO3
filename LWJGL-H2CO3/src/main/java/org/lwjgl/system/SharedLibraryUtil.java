@@ -4,10 +4,15 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import java.nio.*;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAlloc;
+import static org.lwjgl.system.MemoryUtil.memFree;
+import static org.lwjgl.system.MemoryUtil.memRealloc;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
+
+import javax.annotation.Nullable;
 
 public final class SharedLibraryUtil {
 

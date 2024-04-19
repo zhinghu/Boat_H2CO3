@@ -5,11 +5,12 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
-import java.util.Set;
+import static org.lwjgl.system.Checks.checkFunctions;
+import static org.lwjgl.system.Checks.reportMissing;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
+import org.lwjgl.system.FunctionProvider;
+
+import java.util.Set;
 
 /** Defines the WGL capabilities of an OpenGL device. */
 public final class WGLCapabilities {

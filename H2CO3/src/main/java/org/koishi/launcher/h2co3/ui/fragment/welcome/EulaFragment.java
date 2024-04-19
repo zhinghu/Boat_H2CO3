@@ -69,8 +69,8 @@ public class EulaFragment extends H2CO3Fragment implements View.OnClickListener 
                 str = NetworkUtils.doGet(NetworkUtils.toURL(EULA_URL));
                 load = true;
             } catch (IOException e) {
-                e.printStackTrace();
                 str = getString(org.koishi.launcher.h2co3.resources.R.string.title_error);
+                load = true;
             }
             final String s = str;
             if (getActivity() != null) {

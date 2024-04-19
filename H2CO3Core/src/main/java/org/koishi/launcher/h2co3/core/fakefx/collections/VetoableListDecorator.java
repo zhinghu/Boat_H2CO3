@@ -17,12 +17,33 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
     private int modCount;
     private ListListenerHelper<E> helper;
 
-    private static interface ModCountAccessor {
-        public int get();
-
-        public int incrementAndGet();
-
-        public int decrementAndGet();
+    private void removeFromList(List<E> backingList, int offset, Collection<?> col, boolean complement) {
+        int[] toBeRemoved = new int[2];
+        int pointer = -1;
+        for (int i = 0; i < backingList.size(); ++i) {
+            final E el = backingList.get(i);
+            if (col.contains(el) ^ complement) {
+                if (pointer == -1) {
+                    toBeRemoved[pointer + 1] = offset + i;
+                    toBeRemoved[pointer + 2] = offset + i + 1;
+                    pointer += 2;
+                } else {
+                    if (toBeRemoved[pointer - 1] == offset + i) {
+                        toBeRemoved[pointer - 1] = offset + i + 1;
+                    } else {
+                        int[] tmp = new int[toBeRemoved.length + 2];
+                        System.arraycopy(toBeRemoved, 0, tmp, 0, toBeRemoved.length);
+                        toBeRemoved = tmp;
+                        toBeRemoved[pointer + 1] = offset + i;
+                        toBeRemoved[pointer + 2] = offset + i + 1;
+                        pointer += 2;
+                    }
+                }
+            }
+        }
+        if (pointer != -1) {
+            onProposedChange(Collections.emptyList(), toBeRemoved);
+        }
     }
 
     /**
@@ -96,32 +117,14 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
         }
     }
 
-    private void removeFromList(List<E> backingList, int offset, Collection<?> col, boolean complement) {
-        int[] toBeRemoved = new int[2];
-        int pointer = -1;
-        for (int i = 0; i < backingList.size(); ++i) {
-            final E el = backingList.get(i);
-            if (col.contains(el) ^ complement) {
-                if (pointer == -1) {
-                    toBeRemoved[pointer + 1] = offset + i;
-                    toBeRemoved[pointer + 2] = offset + i + 1;
-                    pointer += 2;
-                } else {
-                    if (toBeRemoved[pointer - 1] == offset + i) {
-                        toBeRemoved[pointer - 1] = offset + i + 1;
-                    } else {
-                        int[] tmp = new int[toBeRemoved.length + 2];
-                        System.arraycopy(toBeRemoved, 0, tmp, 0, toBeRemoved.length);
-                        toBeRemoved = tmp;
-                        toBeRemoved[pointer + 1] = offset + i;
-                        toBeRemoved[pointer + 2] = offset + i + 1;
-                        pointer += 2;
-                    }
-                }
-            }
-        }
-        if (pointer != -1) {
-            onProposedChange(Collections.<E>emptyList(), toBeRemoved);
+    @Override
+    public void remove(int from, int to) {
+        onProposedChange(Collections.emptyList(), from, to);
+        try {
+            modCount++;
+            list.remove(from, to);
+        } catch (Exception e) {
+            modCount--;
         }
     }
 
@@ -136,13 +139,14 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
     }
 
     @Override
-    public void remove(int from, int to) {
-        onProposedChange(Collections.<E>emptyList(), from, to);
+    public void clear() {
+        onProposedChange(Collections.emptyList(), 0, size());
         try {
             modCount++;
-            list.remove(from, to);
+            list.clear();
         } catch (Exception e) {
             modCount--;
+            throw e;
         }
     }
 
@@ -265,11 +269,12 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
     }
 
     @Override
-    public void clear() {
-        onProposedChange(Collections.<E>emptyList(), 0, size());
+    public E remove(int index) {
+        onProposedChange(Collections.emptyList(), index, index + 1);
         try {
             modCount++;
-            list.clear();
+            E ret = list.remove(index);
+            return ret;
         } catch (Exception e) {
             modCount--;
             throw e;
@@ -299,17 +304,12 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
         }
     }
 
-    @Override
-    public E remove(int index) {
-        onProposedChange(Collections.<E>emptyList(), index, index + 1);
-        try {
-            modCount++;
-            E ret = list.remove(index);
-            return ret;
-        } catch (Exception e) {
-            modCount--;
-            throw e;
-        }
+    private interface ModCountAccessor {
+        int get();
+
+        int incrementAndGet();
+
+        int decrementAndGet();
     }
 
     @Override
@@ -406,7 +406,7 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
         @Override
         public boolean add(E e) {
             checkForComodification();
-            onProposedChange(Collections.<E>singletonList(e), offset + size(), offset + size());
+            onProposedChange(Collections.singletonList(e), offset + size(), offset + size());
             try {
                 incrementModCount();
                 subList.add(e);
@@ -501,7 +501,7 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
         @Override
         public void clear() {
             checkForComodification();
-            onProposedChange(Collections.<E>emptyList(), offset, offset + size());
+            onProposedChange(Collections.emptyList(), offset, offset + size());
             try {
                 incrementModCount();
                 subList.clear();
@@ -540,7 +540,7 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
         @Override
         public E remove(int index) {
             checkForComodification();
-            onProposedChange(Collections.<E>emptyList(), offset + index, offset + index + 1);
+            onProposedChange(Collections.emptyList(), offset + index, offset + index + 1);
             try {
                 incrementModCount();
                 E res = subList.remove(index);
@@ -672,7 +672,7 @@ public abstract class VetoableListDecorator<E> implements ObservableList<E> {
             if (lastReturned == -1) {
                 throw new IllegalStateException();
             }
-            onProposedChange(Collections.<E>emptyList(), offset + lastReturned, offset + lastReturned + 1);
+            onProposedChange(Collections.emptyList(), offset + lastReturned, offset + lastReturned + 1);
             try {
                 incrementModCount();
                 it.remove();

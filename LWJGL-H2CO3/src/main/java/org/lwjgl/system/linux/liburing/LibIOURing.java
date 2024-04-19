@@ -5,7 +5,8 @@
  */
 package org.lwjgl.system.linux.liburing;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
 
 /**
  * Native bindings to <a href="https://github.com/axboe/liburing">io_uring</a>, a Linux-specific API for asynchronous I/O.

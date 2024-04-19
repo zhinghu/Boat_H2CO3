@@ -5,18 +5,26 @@
  */
 package org.lwjgl.system.windows;
 
-import javax.annotation.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddressOptional;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkNT2Safe;
+import static org.lwjgl.system.Checks.checkSafe;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
 
-import java.nio.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.SharedLibrary;
 
-import org.lwjgl.*;
+import java.nio.ByteBuffer;
 
-import org.lwjgl.system.*;
-
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /** Native bindings to {@code dpapi.h} and {@code crypt32.dll}. */
 public class Crypt32 {

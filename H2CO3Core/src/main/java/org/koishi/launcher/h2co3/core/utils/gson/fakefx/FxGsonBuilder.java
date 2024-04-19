@@ -14,12 +14,9 @@ import org.koishi.launcher.h2co3.core.utils.gson.fakefx.factories.JavaFxProperty
 public class FxGsonBuilder {
 
     private final GsonBuilder builder;
-
+    private final boolean includeExtras = false;
     private boolean strictProperties = true;
-
     private boolean strictPrimitives = true;
-
-    private boolean includeExtras = false;
 
     public FxGsonBuilder() {
         this(new GsonBuilder());

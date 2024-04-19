@@ -5,7 +5,8 @@
  */
 package org.lwjgl.system.macosx;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.SharedLibrary;
 
 /**
  * Native bindings to libSystem, the MacOS system library.

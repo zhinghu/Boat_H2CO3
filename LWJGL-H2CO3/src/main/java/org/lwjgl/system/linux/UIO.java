@@ -5,7 +5,8 @@
  */
 package org.lwjgl.system.linux;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
 
 /** Native bindings to &lt;sys/uio.h&gt;. */
 public class UIO {

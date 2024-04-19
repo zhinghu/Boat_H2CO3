@@ -4,9 +4,9 @@ import java.util.EventObject;
 
 public class PropertyChangeEvent extends EventObject {
     private static final long serialVersionUID = 7042693688939648123L;
-    private String propertyName;
-    private Object newValue;
-    private Object oldValue;
+    private final String propertyName;
+    private final Object newValue;
+    private final Object oldValue;
     private Object propagationId;
 
     public PropertyChangeEvent(Object source, String propertyName, Object oldValue, Object newValue) {

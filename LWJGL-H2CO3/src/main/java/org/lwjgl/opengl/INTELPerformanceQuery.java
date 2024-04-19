@@ -5,14 +5,22 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkNT1;
+import static org.lwjgl.system.JNI.callPPPPPPPV;
+import static org.lwjgl.system.JNI.callPPPPPV;
+import static org.lwjgl.system.JNI.callPPV;
+import static org.lwjgl.system.JNI.callPV;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/INTEL/INTEL_performance_query.txt">INTEL_performance_query</a> extension.

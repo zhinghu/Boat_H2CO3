@@ -5,14 +5,19 @@
  */
 package org.lwjgl.openal;
 
-import java.nio.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.invokePV;
+import static org.lwjgl.system.JNI.invokeV;
+import static org.lwjgl.system.JNI.invokeZ;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * Native bindings to the {@code ALC_EXT_EFX} extension.

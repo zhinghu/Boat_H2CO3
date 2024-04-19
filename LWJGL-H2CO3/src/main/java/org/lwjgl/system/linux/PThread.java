@@ -5,7 +5,8 @@
  */
 package org.lwjgl.system.linux;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
 
 /** Native bindings to &lt;pthread.h&gt;. */
 public class PThread {

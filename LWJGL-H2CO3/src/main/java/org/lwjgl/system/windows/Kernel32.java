@@ -5,11 +5,17 @@
  */
 package org.lwjgl.system.windows;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddressOptional;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callI;
+import static org.lwjgl.system.JNI.callP;
+import static org.lwjgl.system.JNI.callPI;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.SharedLibrary;
 
 /** Native bindings to Kernel32 library. */
 public class Kernel32 {

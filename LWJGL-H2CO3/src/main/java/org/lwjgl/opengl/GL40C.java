@@ -5,16 +5,27 @@
  */
 package org.lwjgl.opengl;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.DEBUG;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkNT1;
+import static org.lwjgl.system.Checks.checkSafe;
+import static org.lwjgl.system.JNI.callPPV;
+import static org.lwjgl.system.JNI.callPV;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.memASCII;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
 
-import java.nio.*;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeType;
 
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * The OpenGL functionality up to version 4.0. Includes only Core Profile symbols.

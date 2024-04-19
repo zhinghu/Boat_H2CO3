@@ -30,10 +30,10 @@ final class ElementObserver<E> {
         }
     }
 
-    private Callback<E, Observable[]> extractor;
+    private final Callback<E, Observable[]> extractor;
     private final Callback<E, InvalidationListener> listenerGenerator;
     private final ObservableListBase<E> list;
-    private IdentityHashMap<E, ElementsMapElement> elementsMap =
+    private final IdentityHashMap<E, ElementsMapElement> elementsMap =
             new IdentityHashMap<E, ElementsMapElement>();
 
     ElementObserver(Callback<E, Observable[]> extractor, Callback<E, InvalidationListener> listenerGenerator, ObservableListBase<E> list) {

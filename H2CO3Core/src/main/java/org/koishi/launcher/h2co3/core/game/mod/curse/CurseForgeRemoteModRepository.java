@@ -67,6 +67,7 @@ public final class CurseForgeRemoteModRepository implements RemoteModRepository 
     private static final int WORD_PERFECT_MATCH_WEIGHT = 50;
     private final Type type;
     private final int section;
+
     public CurseForgeRemoteModRepository(Type type, int section) {
         this.type = type;
         this.section = section;

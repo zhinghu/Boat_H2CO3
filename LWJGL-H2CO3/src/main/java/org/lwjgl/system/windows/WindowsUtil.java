@@ -4,7 +4,7 @@
  */
 package org.lwjgl.system.windows;
 
-import static org.lwjgl.system.windows.WinBase.*;
+import static org.lwjgl.system.windows.WinBase.getLastError;
 
 public final class WindowsUtil {
 

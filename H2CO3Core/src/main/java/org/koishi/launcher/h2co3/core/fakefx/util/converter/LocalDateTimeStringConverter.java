@@ -140,7 +140,7 @@ public class LocalDateTimeStringConverter extends StringConverter<LocalDateTime>
 
 
     static class LdtConverter<T extends Temporal> extends StringConverter<T> {
-        private Class<T> type;
+        private final Class<T> type;
         Locale locale;
         Chronology chronology;
         DateTimeFormatter formatter;

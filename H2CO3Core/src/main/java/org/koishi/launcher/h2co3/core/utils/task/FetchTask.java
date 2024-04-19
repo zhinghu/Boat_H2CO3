@@ -251,6 +251,7 @@ public abstract class FetchTask<T> extends Task<T> {
         if (exception != null)
             throw new DownloadException(failedURL, exception);
     }
+
     protected enum EnumCheckETag {
         CHECK_E_TAG,
         NOT_CHECK_E_TAG,

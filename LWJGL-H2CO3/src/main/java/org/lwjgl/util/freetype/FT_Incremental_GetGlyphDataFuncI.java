@@ -48,7 +48,7 @@ public interface FT_Incremental_GetGlyphDataFuncI extends CallbackI {
         int __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetInt(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE))
         );
         apiClosureRet(ret, __result);
     }

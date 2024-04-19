@@ -4,12 +4,25 @@
  */
 package org.lwjgl.system;
 
-import org.lwjgl.*;
+import static org.lwjgl.system.APIUtil.DEBUG_STREAM;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.getAllocator;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memPutAddress;
+import static org.lwjgl.system.Pointer.POINTER_SIZE;
+import static org.lwjgl.system.jni.JNINativeInterface.GetVersion;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_10;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_19;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_1_1;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_1_2;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_1_4;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_1_6;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_1_8;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_20;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_21;
+import static org.lwjgl.system.jni.JNINativeInterface.JNI_VERSION_9;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.Pointer.*;
-import static org.lwjgl.system.jni.JNINativeInterface.*;
+import org.lwjgl.PointerBuffer;
 
 /** This class supports bindings with thread-local data. [INTERNAL USE ONLY] */
 public final class ThreadLocalUtil {

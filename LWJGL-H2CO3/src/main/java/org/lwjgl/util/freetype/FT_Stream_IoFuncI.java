@@ -48,8 +48,8 @@ public interface FT_Stream_IoFuncI extends CallbackI {
         long __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetCLong(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
-                memGetCLong(memGetAddress(args + 3 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE)),
+                memGetCLong(memGetAddress(args + 3L * POINTER_SIZE))
         );
         apiClosureRet(ret, __result);
     }

@@ -5,13 +5,14 @@
  */
 package org.lwjgl.opengl;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callPP;
+import static org.lwjgl.system.MemoryUtil.memASCIISafe;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /** Native bindings to GLX 1.1. */
 public class GLX11 extends GLX {

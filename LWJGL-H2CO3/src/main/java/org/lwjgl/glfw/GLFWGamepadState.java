@@ -5,16 +5,29 @@
  */
 package org.lwjgl.glfw;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkGT;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.memFloatBuffer;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemCallocChecked;
 
-import java.nio.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeResource;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
+import javax.annotation.Nullable;
 
 /**
  * Describes the input state of a gamepad.
@@ -258,7 +271,7 @@ public class GLFWGamepadState extends Struct<GLFWGamepadState> implements Native
     public static ByteBuffer nbuttons(long struct) { return memByteBuffer(struct + GLFWGamepadState.BUTTONS, 15); }
     /** Unsafe version of {@link #buttons(int) buttons}. */
     public static byte nbuttons(long struct, int index) {
-        return UNSAFE.getByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1);
+        return UNSAFE.getByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15));
     }
     /** Unsafe version of {@link #axes}. */
     public static FloatBuffer naxes(long struct) { return memFloatBuffer(struct + GLFWGamepadState.AXES, 6); }
@@ -270,11 +283,11 @@ public class GLFWGamepadState extends Struct<GLFWGamepadState> implements Native
     /** Unsafe version of {@link #buttons(ByteBuffer) buttons}. */
     public static void nbuttons(long struct, ByteBuffer value) {
         if (CHECKS) { checkGT(value, 15); }
-        memCopy(memAddress(value), struct + GLFWGamepadState.BUTTONS, value.remaining() * 1);
+        memCopy(memAddress(value), struct + GLFWGamepadState.BUTTONS, value.remaining());
     }
     /** Unsafe version of {@link #buttons(int, byte) buttons}. */
     public static void nbuttons(long struct, int index, byte value) {
-        UNSAFE.putByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1, value);
+        UNSAFE.putByte(null, struct + GLFWGamepadState.BUTTONS + check(index, 15), value);
     }
     /** Unsafe version of {@link #axes(FloatBuffer) axes}. */
     public static void naxes(long struct, FloatBuffer value) {

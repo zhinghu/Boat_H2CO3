@@ -11,10 +11,10 @@ import java.util.zip.GZIPInputStream;
  */
 public final class IOUtils {
 
+    public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
+
     private IOUtils() {
     }
-
-    public static final int DEFAULT_BUFFER_SIZE = 8 * 1024;
 
     /**
      * Read all bytes to a buffer from given input stream. The stream will not be closed.

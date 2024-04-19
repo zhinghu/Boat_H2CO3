@@ -27,7 +27,6 @@ public abstract class LongPropertyBase extends LongProperty {
 
     private long value;
     private ObservableLongValue observable = null;
-    ;
     private InvalidationListener listener = null;
     private boolean valid = true;
     private ExpressionHelper<Number> helper = null;
@@ -133,8 +132,7 @@ public abstract class LongPropertyBase extends LongProperty {
         ObservableLongValue newObservable;
         if (rawObservable instanceof ObservableLongValue) {
             newObservable = (ObservableLongValue) rawObservable;
-        } else if (rawObservable instanceof ObservableNumberValue) {
-            final ObservableNumberValue numberValue = (ObservableNumberValue) rawObservable;
+        } else if (rawObservable instanceof ObservableNumberValue numberValue) {
             newObservable = new ValueWrapper(rawObservable) {
 
                 @Override
@@ -235,7 +233,7 @@ public abstract class LongPropertyBase extends LongProperty {
 
     private abstract class ValueWrapper extends LongBinding {
 
-        private ObservableValue<? extends Number> observable;
+        private final ObservableValue<? extends Number> observable;
 
         public ValueWrapper(ObservableValue<? extends Number> observable) {
             this.observable = observable;

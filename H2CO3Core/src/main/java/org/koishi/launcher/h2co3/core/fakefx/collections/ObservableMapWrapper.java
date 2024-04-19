@@ -5,6 +5,7 @@ import org.koishi.launcher.h2co3.core.fakefx.beans.InvalidationListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -229,14 +230,14 @@ public class ObservableMapWrapper<K, V> implements ObservableMap<K, V> {
 
         @Override
         public boolean contains(Object o) {
-            return backingMap.keySet().contains(o);
+            return backingMap.containsKey(o);
         }
 
         @Override
         public Iterator<K> iterator() {
             return new Iterator<K>() {
 
-                private Iterator<Entry<K, V>> entryIt = backingMap.entrySet().iterator();
+                private final Iterator<Entry<K, V>> entryIt = backingMap.entrySet().iterator();
                 private K lastKey;
                 private V lastValue;
 
@@ -353,14 +354,14 @@ public class ObservableMapWrapper<K, V> implements ObservableMap<K, V> {
 
         @Override
         public boolean contains(Object o) {
-            return backingMap.values().contains(o);
+            return backingMap.containsValue(o);
         }
 
         @Override
         public Iterator<V> iterator() {
             return new Iterator<V>() {
 
-                private Iterator<Entry<K, V>> entryIt = backingMap.entrySet().iterator();
+                private final Iterator<Entry<K, V>> entryIt = backingMap.entrySet().iterator();
                 private K lastKey;
                 private V lastValue;
 
@@ -497,18 +498,15 @@ public class ObservableMapWrapper<K, V> implements ObservableMap<K, V> {
 
         @Override
         public final boolean equals(Object o) {
-            if (!(o instanceof Map.Entry)) {
+            if (!(o instanceof Entry e)) {
                 return false;
             }
-            Entry e = (Entry) o;
             Object k1 = getKey();
             Object k2 = e.getKey();
-            if (k1 == k2 || (k1 != null && k1.equals(k2))) {
+            if (Objects.equals(k1, k2)) {
                 Object v1 = getValue();
                 Object v2 = e.getValue();
-                if (v1 == v2 || (v1 != null && v1.equals(v2))) {
-                    return true;
-                }
+                return Objects.equals(v1, v2);
             }
             return false;
         }
@@ -547,7 +545,7 @@ public class ObservableMapWrapper<K, V> implements ObservableMap<K, V> {
         public Iterator<Entry<K, V>> iterator() {
             return new Iterator<Entry<K, V>>() {
 
-                private Iterator<Entry<K, V>> backingIt = backingMap.entrySet().iterator();
+                private final Iterator<Entry<K, V>> backingIt = backingMap.entrySet().iterator();
                 private K lastKey;
                 private V lastValue;
 

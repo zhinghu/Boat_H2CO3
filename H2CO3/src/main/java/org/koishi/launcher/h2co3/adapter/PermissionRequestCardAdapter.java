@@ -17,9 +17,9 @@ import java.util.List;
 
 public class PermissionRequestCardAdapter extends RecyclerView.Adapter<PermissionRequestCardAdapter.ViewHolder> {
 
-    private Context context;
-    private List<PermissionRequestCard> permissionRequestCards;
-    private LayoutInflater inflater;
+    private final Context context;
+    private final List<PermissionRequestCard> permissionRequestCards;
+    private final LayoutInflater inflater;
 
     public PermissionRequestCardAdapter(Context context, List<PermissionRequestCard> permissionRequestCards) {
         this.context = context;

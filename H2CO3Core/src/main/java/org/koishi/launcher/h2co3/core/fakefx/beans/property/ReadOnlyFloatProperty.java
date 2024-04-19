@@ -106,6 +106,4 @@ public abstract class ReadOnlyFloatProperty extends FloatExpression implements
         };
     }
 
-    ;
-
 }

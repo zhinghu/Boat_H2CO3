@@ -4,7 +4,8 @@
  */
 package org.lwjgl.system;
 
-import org.lwjgl.system.libffi.*;
+import org.lwjgl.system.libffi.FFICIF;
+import org.lwjgl.system.libffi.LibFFI;
 
 /**
  * Interface for dynamically created native functions that call into Java code (upcalls).

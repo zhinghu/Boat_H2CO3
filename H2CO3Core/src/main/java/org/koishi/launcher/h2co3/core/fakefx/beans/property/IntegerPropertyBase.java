@@ -27,7 +27,6 @@ public abstract class IntegerPropertyBase extends IntegerProperty {
 
     private int value;
     private ObservableIntegerValue observable = null;
-    ;
     private InvalidationListener listener = null;
     private boolean valid = true;
     private ExpressionHelper<Number> helper = null;
@@ -142,8 +141,7 @@ public abstract class IntegerPropertyBase extends IntegerProperty {
         ObservableIntegerValue newObservable;
         if (rawObservable instanceof ObservableIntegerValue) {
             newObservable = (ObservableIntegerValue) rawObservable;
-        } else if (rawObservable instanceof ObservableNumberValue) {
-            final ObservableNumberValue numberValue = (ObservableNumberValue) rawObservable;
+        } else if (rawObservable instanceof ObservableNumberValue numberValue) {
             newObservable = new ValueWrapper(rawObservable) {
 
                 @Override
@@ -244,7 +242,7 @@ public abstract class IntegerPropertyBase extends IntegerProperty {
 
     private abstract class ValueWrapper extends IntegerBinding {
 
-        private ObservableValue<? extends Number> observable;
+        private final ObservableValue<? extends Number> observable;
 
         public ValueWrapper(ObservableValue<? extends Number> observable) {
             this.observable = observable;

@@ -44,16 +44,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChooseVersionFragment extends H2CO3Fragment {
 
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final Handler uiHandler = new Handler(Looper.getMainLooper());
     private RecyclerView recyclerView;
     private VersionAdapter versionAdapter;
     private RadioGroup typeRadioGroup;
-
     private List<Version> versionList;
     private List<Version> filteredList;
-
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final Handler uiHandler = new Handler(Looper.getMainLooper());
-
     private LinearProgressIndicator progressIndicator;
     private NavController navController;
     private ChooseVersionViewModel viewModel;
@@ -159,7 +156,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
     class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
 
-        private List<Version> versionList;
+        private final List<Version> versionList;
 
         public VersionAdapter(List<Version> versionList) {
             this.versionList = versionList;
@@ -186,11 +183,10 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            private final AtomicBoolean isHandlingClick = new AtomicBoolean(false);
             public TextView versionNameTextView;
             public TextView versionTypeTextView;
             public H2CO3CardView versionCardView;
-
-            private AtomicBoolean isHandlingClick = new AtomicBoolean(false);
 
             public ViewHolder(View itemView) {
                 super(itemView);

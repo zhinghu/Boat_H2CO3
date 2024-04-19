@@ -47,7 +47,7 @@ public interface FT_Raster_ResetFuncI extends CallbackI {
         invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetAddress(memGetAddress(args + POINTER_SIZE)),
-                memGetCLong(memGetAddress(args + 2 * POINTER_SIZE))
+                memGetCLong(memGetAddress(args + 2L * POINTER_SIZE))
         );
     }
 

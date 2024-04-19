@@ -128,7 +128,7 @@ public abstract class NonIterableChange<E> extends Change<E> {
         @Override
         public List<E> getRemoved() {
             checkState();
-            return Collections.<E>emptyList();
+            return Collections.emptyList();
         }
 
     }
@@ -146,7 +146,7 @@ public abstract class NonIterableChange<E> extends Change<E> {
         @Override
         public List<E> getRemoved() {
             checkState();
-            return Collections.<E>emptyList();
+            return Collections.emptyList();
         }
 
         @Override
@@ -168,7 +168,7 @@ public abstract class NonIterableChange<E> extends Change<E> {
 
         @Override
         public List<E> getRemoved() {
-            return Collections.<E>emptyList();
+            return Collections.emptyList();
         }
 
         @Override

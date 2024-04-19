@@ -4,9 +4,13 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import javax.annotation.meta.*;
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import javax.annotation.Nonnull;
+import javax.annotation.meta.TypeQualifierDefault;
 
 @Documented
 @Nonnull

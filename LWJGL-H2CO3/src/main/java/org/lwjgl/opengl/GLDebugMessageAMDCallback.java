@@ -5,11 +5,13 @@
  */
 package org.lwjgl.opengl;
 
-import javax.annotation.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * Instances of this class may be passed to the {@link AMDDebugOutput#glDebugMessageCallbackAMD DebugMessageCallbackAMD} method.

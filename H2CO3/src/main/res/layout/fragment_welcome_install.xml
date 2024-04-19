@@ -370,8 +370,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             app:fabCustomSize="65dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_arrow_right_black" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

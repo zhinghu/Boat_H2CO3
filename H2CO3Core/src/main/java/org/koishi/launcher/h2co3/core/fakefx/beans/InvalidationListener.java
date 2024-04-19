@@ -13,5 +13,5 @@ public interface InvalidationListener {
      *
      * @param observable The {@code Observable} that became invalid
      */
-    public void invalidated(Observable observable);
+    void invalidated(Observable observable);
 }

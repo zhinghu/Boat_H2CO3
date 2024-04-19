@@ -29,6 +29,15 @@ import java.util.regex.Pattern;
 public final class UUIDTypeAdapter extends TypeAdapter<UUID> {
 
     public static final UUIDTypeAdapter INSTANCE = new UUIDTypeAdapter();
+    private static final Pattern regex = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
+
+    public static String fromUUID(UUID value) {
+        return value.toString().replace("-", "");
+    }
+
+    public static UUID fromString(String input) {
+        return UUID.fromString(regex.matcher(input).replaceFirst("$1-$2-$3-$4-$5"));
+    }
 
     @Override
     public void write(JsonWriter writer, UUID value) throws IOException {
@@ -42,16 +51,6 @@ public final class UUIDTypeAdapter extends TypeAdapter<UUID> {
         } catch (IllegalArgumentException e) {
             throw new JsonParseException("UUID malformed");
         }
-    }
-
-    private static final Pattern regex = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
-
-    public static String fromUUID(UUID value) {
-        return value.toString().replace("-", "");
-    }
-
-    public static UUID fromString(String input) {
-        return UUID.fromString(regex.matcher(input).replaceFirst("$1-$2-$3-$4-$5"));
     }
 
 }

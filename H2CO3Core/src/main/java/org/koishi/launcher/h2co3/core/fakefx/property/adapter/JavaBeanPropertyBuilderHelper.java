@@ -3,6 +3,7 @@ package org.koishi.launcher.h2co3.core.fakefx.property.adapter;
 import org.koishi.launcher.h2co3.core.fakefx.reflect.ReflectUtil;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  *
@@ -23,14 +24,14 @@ public class JavaBeanPropertyBuilderHelper {
     private PropertyDescriptor descriptor;
 
     public void name(String propertyName) {
-        if ((propertyName == null) ? this.propertyName != null : !propertyName.equals(this.propertyName)) {
+        if (!Objects.equals(propertyName, this.propertyName)) {
             this.propertyName = propertyName;
             this.descriptor = null;
         }
     }
 
     public void beanClass(Class<?> beanClass) {
-        if ((beanClass == null) ? this.beanClass != null : !beanClass.equals(this.beanClass)) {
+        if (!Objects.equals(beanClass, this.beanClass)) {
             ReflectUtil.checkPackageAccess(beanClass);
             this.beanClass = beanClass;
             this.descriptor = null;
@@ -54,28 +55,28 @@ public class JavaBeanPropertyBuilderHelper {
     }
 
     public void getterName(String getterName) {
-        if ((getterName == null) ? this.getterName != null : !getterName.equals(this.getterName)) {
+        if (!Objects.equals(getterName, this.getterName)) {
             this.getterName = getterName;
             this.descriptor = null;
         }
     }
 
     public void setterName(String setterName) {
-        if ((setterName == null) ? this.setterName != null : !setterName.equals(this.setterName)) {
+        if (!Objects.equals(setterName, this.setterName)) {
             this.setterName = setterName;
             this.descriptor = null;
         }
     }
 
     public void getter(Method getter) {
-        if ((getter == null) ? this.getter != null : !getter.equals(this.getter)) {
+        if (!Objects.equals(getter, this.getter)) {
             this.getter = getter;
             this.descriptor = null;
         }
     }
 
     public void setter(Method setter) {
-        if ((setter == null) ? this.setter != null : !setter.equals(this.setter)) {
+        if (!Objects.equals(setter, this.setter)) {
             this.setter = setter;
             this.descriptor = null;
         }

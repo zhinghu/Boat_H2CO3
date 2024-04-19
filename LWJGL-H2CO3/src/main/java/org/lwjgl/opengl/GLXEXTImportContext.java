@@ -5,13 +5,18 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callP;
+import static org.lwjgl.system.JNI.callPN;
+import static org.lwjgl.system.JNI.callPNP;
+import static org.lwjgl.system.JNI.callPPPI;
+import static org.lwjgl.system.JNI.callPPV;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.IntBuffer;
 
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/EXT/GLX_EXT_import_context.txt">GLX_EXT_import_context</a> extension.

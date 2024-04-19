@@ -13,5 +13,5 @@ public interface Builder<T> {
      *
      * @return the object
      */
-    public T build();
+    T build();
 }

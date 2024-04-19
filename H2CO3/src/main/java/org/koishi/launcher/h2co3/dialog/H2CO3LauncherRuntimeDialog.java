@@ -13,10 +13,9 @@ import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3CustomViewDialo
 
 public class H2CO3LauncherRuntimeDialog extends H2CO3CustomViewDialog implements View.OnClickListener {
 
+    private static final int BUTTON_COUNT = 4;
     private H2CO3CardView[] buttons;
     private String[] javaPaths;
-
-    private static final int BUTTON_COUNT = 4;
 
     public H2CO3LauncherRuntimeDialog(Context context) {
         super(context);

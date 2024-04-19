@@ -208,8 +208,7 @@ public class McbbsModpackCompletionTask extends CompletableFutureTask<Void> {
                                 manifest.getFiles().parallelStream()
                                         .map(rawFile -> {
                                             updateProgress(finished.incrementAndGet(), manifest.getFiles().size());
-                                            if (rawFile instanceof McbbsModpackManifest.CurseFile) {
-                                                McbbsModpackManifest.CurseFile file = (McbbsModpackManifest.CurseFile) rawFile;
+                                            if (rawFile instanceof McbbsModpackManifest.CurseFile file) {
                                                 if (StringUtils.isBlank(file.getFileName())) {
                                                     try {
                                                         return file.withFileName(NetworkUtils.detectFileName(file.getUrl()));
@@ -281,8 +280,7 @@ public class McbbsModpackCompletionTask extends CompletableFutureTask<Void> {
                         FileTools.writeText(configurationFile, JsonUtils.GSON.toJson(configuration));
 
                         for (McbbsModpackManifest.File file : newManifest.getFiles())
-                            if (file instanceof McbbsModpackManifest.CurseFile) {
-                                McbbsModpackManifest.CurseFile curseFile = (McbbsModpackManifest.CurseFile) file;
+                            if (file instanceof McbbsModpackManifest.CurseFile curseFile) {
                                 if (StringUtils.isNotBlank(curseFile.getFileName())) {
                                     if (!modManager.hasSimpleMod(curseFile.getFileName())) {
                                         FileDownloadTask task = new FileDownloadTask(curseFile.getUrl(), modManager.getSimpleModPath(curseFile.getFileName()).toFile());
@@ -332,8 +330,7 @@ public class McbbsModpackCompletionTask extends CompletableFutureTask<Void> {
     }
 
     private Task<?> downloadFile(McbbsModpackManifest remoteManifest, McbbsModpackManifest.File file) throws IOException {
-        if (file instanceof McbbsModpackManifest.AddonFile) {
-            McbbsModpackManifest.AddonFile addonFile = (McbbsModpackManifest.AddonFile) file;
+        if (file instanceof McbbsModpackManifest.AddonFile addonFile) {
             return new FileDownloadTask(
                     new URL(remoteManifest.getFileApi() + "/overrides/" + NetworkUtils.encodeLocation(addonFile.getPath())),
                     modManager.getSimpleModPath(addonFile.getPath()).toFile(),

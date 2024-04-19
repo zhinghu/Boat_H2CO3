@@ -275,12 +275,12 @@ public class Keyboard {
     /**
      * current event
      */
-    private static KeyEvent current_event = new KeyEvent();
+    private static final KeyEvent current_event = new KeyEvent();
 
     /**
      * scratch event
      */
-    private static KeyEvent tmp_event = new KeyEvent();
+    private static final KeyEvent tmp_event = new KeyEvent();
 
     /**
      * One time initialization

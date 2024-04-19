@@ -5,14 +5,22 @@
  */
 package org.lwjgl.nanovg;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memASCII;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memFloatBuffer;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
 
-import java.nio.*;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * <h3>Layout</h3>

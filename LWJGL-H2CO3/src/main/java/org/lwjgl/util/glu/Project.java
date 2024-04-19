@@ -87,8 +87,8 @@ public class Project extends Util {
 	private static void __gluMultMatrixVecf(FloatBuffer m, float[] in, float[] out) {
 		for (int i = 0; i < 4; i++) {
 			out[i] =
-                    in[0] * m.get(m.position() + 0 * 4 + i)
-                            + in[1] * m.get(m.position() + 1 * 4 + i)
+                    in[0] * m.get(m.position() + i)
+                            + in[1] * m.get(m.position() + 4 + i)
                             + in[2] * m.get(m.position() + 2 * 4 + i)
                             + in[3] * m.get(m.position() + 3 * 4 + i);
 
@@ -181,7 +181,7 @@ public class Project extends Util {
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
                 r.put(r.position() + i * 4 + j,
-                        a.get(a.position() + i * 4 + 0) * b.get(b.position() + 0 * 4 + j) + a.get(a.position() + i * 4 + 1) * b.get(b.position() + 1 * 4 + j) + a.get(a.position() + i * 4 + 2) * b.get(b.position() + 2 * 4 + j) + a.get(a.position() + i * 4 + 3) * b.get(b.position() + 3 * 4 + j));
+                        a.get(a.position() + i * 4) * b.get(b.position() + j) + a.get(a.position() + i * 4 + 1) * b.get(b.position() + 4 + j) + a.get(a.position() + i * 4 + 2) * b.get(b.position() + 2 * 4 + j) + a.get(a.position() + i * 4 + 3) * b.get(b.position() + 3 * 4 + j));
             }
 		}
 	}
@@ -209,8 +209,8 @@ public class Project extends Util {
 
         __gluMakeIdentityf(matrix);
 
-        matrix.put(0 * 4 + 0, cotangent / aspect);
-        matrix.put(1 * 4 + 1, cotangent);
+        matrix.put(0, cotangent / aspect);
+        matrix.put(4 + 1, cotangent);
         matrix.put(2 * 4 + 2, -(zFar + zNear) / deltaZ);
         matrix.put(2 * 4 + 3, -1);
         matrix.put(3 * 4 + 2, -2 * zNear * zFar / deltaZ);
@@ -264,16 +264,16 @@ public class Project extends Util {
         cross(side, forward, up);
 
         __gluMakeIdentityf(matrix);
-        matrix.put(0 * 4 + 0, side[0]);
-        matrix.put(1 * 4 + 0, side[1]);
-        matrix.put(2 * 4 + 0, side[2]);
+        matrix.put(0, side[0]);
+        matrix.put(4, side[1]);
+        matrix.put(2 * 4, side[2]);
 
-        matrix.put(0 * 4 + 1, up[0]);
-        matrix.put(1 * 4 + 1, up[1]);
+        matrix.put(1, up[0]);
+        matrix.put(4 + 1, up[1]);
         matrix.put(2 * 4 + 1, up[2]);
 
-        matrix.put(0 * 4 + 2, -forward[0]);
-        matrix.put(1 * 4 + 2, -forward[1]);
+        matrix.put(2, -forward[0]);
+        matrix.put(4 + 2, -forward[1]);
         matrix.put(2 * 4 + 2, -forward[2]);
 
         glMultMatrix(matrix);
@@ -322,7 +322,7 @@ public class Project extends Util {
         in[2] = in[2] * in[3] + 0.5f;
 
         // Map x,y to viewport
-        win_pos.put(0, in[0] * viewport.get(viewport.position() + 2) + viewport.get(viewport.position() + 0));
+        win_pos.put(0, in[0] * viewport.get(viewport.position() + 2) + viewport.get(viewport.position()));
         win_pos.put(1, in[1] * viewport.get(viewport.position() + 3) + viewport.get(viewport.position() + 1));
         win_pos.put(2, in[2]);
 
@@ -362,7 +362,7 @@ public class Project extends Util {
         in[3] = 1.0f;
 
         // Map x and y from window coordinates
-        in[0] = (in[0] - viewport.get(viewport.position() + 0)) / viewport.get(viewport.position() + 2);
+        in[0] = (in[0] - viewport.get(viewport.position())) / viewport.get(viewport.position() + 2);
         in[1] = (in[1] - viewport.get(viewport.position() + 1)) / viewport.get(viewport.position() + 3);
 
         // Map to range -1 to 1
@@ -377,7 +377,7 @@ public class Project extends Util {
 
         out[3] = 1.0f / out[3];
 
-        obj_pos.put(obj_pos.position() + 0, out[0] * out[3]);
+        obj_pos.put(obj_pos.position(), out[0] * out[3]);
         obj_pos.put(obj_pos.position() + 1, out[1] * out[3]);
         obj_pos.put(obj_pos.position() + 2, out[2] * out[3]);
 
@@ -405,7 +405,7 @@ public class Project extends Util {
 
 		/* Translate and scale the picked region to the entire window */
         glTranslatef(
-                (viewport.get(viewport.position() + 2) - 2 * (x - viewport.get(viewport.position() + 0))) / deltaX,
+                (viewport.get(viewport.position() + 2) - 2 * (x - viewport.get(viewport.position()))) / deltaX,
                 (viewport.get(viewport.position() + 3) - 2 * (y - viewport.get(viewport.position() + 1))) / deltaY,
                 0);
         glScalef(viewport.get(viewport.position() + 2) / deltaX, viewport.get(viewport.position() + 3) / deltaY, 1.0f);

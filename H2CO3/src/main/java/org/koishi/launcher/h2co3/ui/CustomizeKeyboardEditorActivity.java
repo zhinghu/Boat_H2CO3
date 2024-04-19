@@ -37,9 +37,8 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
 
     private static final int SYSTEM_UI_HIDE_DELAY_MS = 3000;
     private static final int BLUR_RADIUS = 10;
-
-    private Toolbar mToolbar;
     private final int[] pointer = new int[]{0, 0};
+    private Toolbar mToolbar;
     private Controller mController;
     private boolean isGrabbed;
     private TimerTask systemUiTimerTask;

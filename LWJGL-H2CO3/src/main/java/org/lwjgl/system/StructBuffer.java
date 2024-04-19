@@ -4,14 +4,24 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import java.nio.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memCopy;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.nio.ReadOnlyBufferException;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import javax.annotation.Nullable;
 
 /** Base class of struct custom buffers. */
 public abstract class StructBuffer<T extends Struct<T>, SELF extends StructBuffer<T, SELF>> extends CustomBuffer<SELF> implements Iterable<T> {
@@ -167,15 +177,15 @@ public abstract class StructBuffer<T extends Struct<T>, SELF extends StructBuffe
     // as escaping when this happens, even if the iterator instance is not escaping and scalar replaced. This
     // is not a problem on Graal. Also, see JDK-8166840.
     private static class StructIterator<T extends Struct<T>> implements Iterator<T> {
-        private long address;
+        private final long address;
 
         @Nullable
-        private ByteBuffer container;
+        private final ByteBuffer container;
 
-        private T factory;
+        private final T factory;
 
         private int index;
-        private int fence;
+        private final int fence;
 
         StructIterator(long address, @Nullable ByteBuffer container, T factory, int position, int limit) {
             this.address = address;
@@ -224,15 +234,15 @@ public abstract class StructBuffer<T extends Struct<T>, SELF extends StructBuffe
     }
 
     private static class StructSpliterator<T extends Struct<T>> implements Spliterator<T> {
-        private long address;
+        private final long address;
 
         @Nullable
-        private ByteBuffer container;
+        private final ByteBuffer container;
 
-        private T factory;
+        private final T factory;
 
         private int index;
-        private int fence;
+        private final int fence;
 
         StructSpliterator(long address, @Nullable ByteBuffer container, T factory, int position, int limit) {
             this.address = address;

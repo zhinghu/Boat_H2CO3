@@ -63,7 +63,7 @@ public class XPMFile {
     /**
      * Array of bytes (RGBA)
      */
-    private byte bytes[];
+    private byte[] bytes;
 
 	/*
 	 * Private constructor, use load(String filename)

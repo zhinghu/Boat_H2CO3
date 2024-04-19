@@ -27,24 +27,20 @@ import java.util.List;
 public class ModpackExportInfo {
 
     private final List<String> whitelist = new ArrayList<>();
+    private final List<McbbsModpackManifest.Origin> origins = new ArrayList<>();
     private String name;
     private String author;
     private String version;
     private String description;
     private String url;
-
     private boolean forceUpdate;
     private boolean packWithLauncher;
-
     private String fileApi;
     private int minMemory;
     private List<Integer> supportedJavaVersions;
     private String launchArguments;
     private String javaArguments;
-
     private String authlibInjectorServer;
-
-    private List<McbbsModpackManifest.Origin> origins = new ArrayList<>();
 
     public ModpackExportInfo() {
     }

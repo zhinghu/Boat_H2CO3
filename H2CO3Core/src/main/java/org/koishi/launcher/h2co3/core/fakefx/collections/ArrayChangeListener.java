@@ -15,5 +15,5 @@ public interface ArrayChangeListener<T extends ObservableArray<T>> {
      * @param from            A beginning (inclusive) of an interval related to the change
      * @param to              An end (exclusive) of an interval related to the change.
      */
-    public void onChanged(T observableArray, boolean sizeChanged, int from, int to);
+    void onChanged(T observableArray, boolean sizeChanged, int from, int to);
 }

@@ -5,9 +5,9 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
+import org.lwjgl.system.NativeType;
 
-import org.lwjgl.system.*;
+import java.nio.FloatBuffer;
 
 /**
  * The OpenGL functionality up to version 2.1. Includes the deprecated symbols of the Compatibility Profile.

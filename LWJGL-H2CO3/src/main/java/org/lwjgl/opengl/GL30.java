@@ -5,13 +5,15 @@
  */
 package org.lwjgl.opengl;
 
-import javax.annotation.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.NativeType;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
-import org.lwjgl.*;
-
-import org.lwjgl.system.*;
+import javax.annotation.Nullable;
 
 /**
  * The OpenGL functionality up to version 3.0. Includes the deprecated symbols of the Compatibility Profile.

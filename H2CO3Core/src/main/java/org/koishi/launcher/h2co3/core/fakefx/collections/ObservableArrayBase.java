@@ -26,7 +26,7 @@ public abstract class ObservableArrayBase<T extends ObservableArray<T>> implemen
 
     @Override
     public final void addListener(InvalidationListener listener) {
-        listenerHelper = ArrayListenerHelper.<T>addListener(listenerHelper, (T) this, listener);
+        listenerHelper = ArrayListenerHelper.addListener(listenerHelper, (T) this, listener);
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class ObservableArrayBase<T extends ObservableArray<T>> implemen
 
     @Override
     public final void addListener(ArrayChangeListener<T> listener) {
-        listenerHelper = ArrayListenerHelper.<T>addListener(listenerHelper, (T) this, listener);
+        listenerHelper = ArrayListenerHelper.addListener(listenerHelper, (T) this, listener);
     }
 
     @Override

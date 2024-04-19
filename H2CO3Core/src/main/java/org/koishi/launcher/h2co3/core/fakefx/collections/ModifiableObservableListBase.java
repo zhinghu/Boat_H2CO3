@@ -232,7 +232,7 @@ public abstract class ModifiableObservableListBase<E> extends ObservableListBase
             this.sublist = sublist;
         }
 
-        private List<E> sublist;
+        private final List<E> sublist;
 
         @Override
         public int size() {

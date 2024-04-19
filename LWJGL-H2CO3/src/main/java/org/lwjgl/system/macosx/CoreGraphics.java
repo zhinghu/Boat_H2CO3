@@ -5,18 +5,41 @@
  */
 package org.lwjgl.system.macosx;
 
-import javax.annotation.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddressOptional;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkSafe;
+import static org.lwjgl.system.Checks.lengthSafe;
+import static org.lwjgl.system.Checks.remainingSafe;
+import static org.lwjgl.system.JNI.invokeJ;
+import static org.lwjgl.system.JNI.invokeJPPP;
+import static org.lwjgl.system.JNI.invokePCP;
+import static org.lwjgl.system.JNI.invokePD;
+import static org.lwjgl.system.JNI.invokePI;
+import static org.lwjgl.system.JNI.invokePJ;
+import static org.lwjgl.system.JNI.invokePJPPP;
+import static org.lwjgl.system.JNI.invokePJV;
+import static org.lwjgl.system.JNI.invokePNPPV;
+import static org.lwjgl.system.JNI.invokePNPV;
+import static org.lwjgl.system.JNI.invokePP;
+import static org.lwjgl.system.JNI.invokePPI;
+import static org.lwjgl.system.JNI.invokePPP;
+import static org.lwjgl.system.JNI.invokePPV;
+import static org.lwjgl.system.JNI.invokePV;
+import static org.lwjgl.system.JNI.invokePZ;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
 
-import java.nio.*;
+import org.lwjgl.CLongBuffer;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.SharedLibrary;
 
-import org.lwjgl.*;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
-import org.lwjgl.system.*;
-
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /** Native bindings to &lt;CoreGraphics.h&gt;. */
 public class CoreGraphics {

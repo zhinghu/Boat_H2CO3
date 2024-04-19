@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public final class QuiltModMetadata {
     private final int schema_version;
     private final QuiltLoader quilt_loader;
+
     public QuiltModMetadata(int schemaVersion, QuiltLoader quiltLoader) {
         this.schema_version = schemaVersion;
         this.quilt_loader = quiltLoader;
@@ -53,6 +54,7 @@ public final class QuiltModMetadata {
         private final String id;
         private final String version;
         private final Metadata metadata;
+
         public QuiltLoader(String id, String version, Metadata metadata) {
             this.id = id;
             this.version = version;

@@ -4,11 +4,13 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import java.util.function.*;
-import java.util.regex.*;
+import static org.lwjgl.system.APIUtil.DEBUG_STREAM;
+import static org.lwjgl.system.APIUtil.apiLog;
 
-import static org.lwjgl.system.APIUtil.*;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
 
 /** The platforms supported by LWJGL. */
 public enum Platform {

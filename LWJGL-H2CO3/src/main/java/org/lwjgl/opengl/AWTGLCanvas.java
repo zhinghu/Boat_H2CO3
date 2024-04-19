@@ -69,7 +69,7 @@ public class AWTGLCanvas extends Canvas implements DrawableLWJGL, ComponentListe
      * The requested pixel format
      */
     private final PixelFormat pixel_format;
-    private Object SYNC_LOCK = new Object();
+    private final Object SYNC_LOCK = new Object();
     /**
      * The drawable to share context with
      */

@@ -16,7 +16,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -152,7 +151,7 @@ public abstract class HttpRequest {
             return this;
         }
 
-        public HttpPostRequest json(Object payload) throws JsonParseException {
+        public HttpPostRequest json(Object payload) throws JsonParseException, UnsupportedEncodingException {
             return string(payload instanceof String ? (String) payload : JsonUtils.GSON.toJson(payload), "application/json");
         }
 
@@ -165,8 +164,8 @@ public abstract class HttpRequest {
             return form(mapOf(params));
         }
 
-        public HttpPostRequest string(String payload, String contentType) {
-            bytes = payload.getBytes(StandardCharsets.UTF_8);
+        public HttpPostRequest string(String payload, String contentType) throws UnsupportedEncodingException {
+            bytes = payload.getBytes("UTF-8");
             header("Content-Length", String.valueOf(bytes.length));
             contentType(contentType + "; charset=utf-8");
             return this;

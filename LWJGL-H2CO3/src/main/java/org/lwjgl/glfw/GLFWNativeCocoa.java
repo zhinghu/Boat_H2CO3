@@ -5,11 +5,13 @@
  */
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.APIUtil.apiGetFunctionAddress;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.invokePI;
+import static org.lwjgl.system.JNI.invokePP;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.NativeType;
 
 /** Native bindings to the GLFW library's Cocoa native access functions. */
 public class GLFWNativeCocoa {

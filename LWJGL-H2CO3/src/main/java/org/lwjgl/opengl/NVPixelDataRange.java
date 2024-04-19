@@ -5,11 +5,11 @@
  */
 package org.lwjgl.opengl;
 
-import java.nio.*;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.NativeType;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
 
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/NV/NV_pixel_data_range.txt">NV_pixel_data_range</a> extension.

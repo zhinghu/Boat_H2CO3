@@ -5,13 +5,16 @@
  */
 package org.lwjgl.nanovg;
 
-import javax.annotation.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
 
-import java.nio.*;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * <h3>Layout</h3>

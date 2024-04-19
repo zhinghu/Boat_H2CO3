@@ -4,11 +4,14 @@
  */
 package org.lwjgl.system;
 
-import java.nio.*;
-import java.nio.charset.*;
+import static org.lwjgl.system.Checks.DEBUG;
+import static org.lwjgl.system.MemoryUtil.ARRAY_TLC_BYTE;
+import static org.lwjgl.system.MemoryUtil.ARRAY_TLC_CHAR;
+import static org.lwjgl.system.MemoryUtil.ARRAY_TLC_SIZE;
+import static org.lwjgl.system.MemoryUtil.UNSAFE;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
 
 /**
  * String decoding utilities.
@@ -30,7 +33,7 @@ final class MultiReleaseTextDecoding {
             // The implementation below does no codepoint validation.
             byte[] bytes = length <= ARRAY_TLC_SIZE ? ARRAY_TLC_BYTE.get() : new byte[length];
             memByteBuffer(source, length).get(bytes, 0, length);
-            return new String(bytes, 0, length, StandardCharsets.UTF_8);
+            return new String(bytes, 0, length, "UTF-8");
         }
 
         char[] string = length <= ARRAY_TLC_SIZE ? ARRAY_TLC_CHAR.get() : new char[length];

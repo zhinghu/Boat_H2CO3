@@ -90,5 +90,4 @@ public class ReadOnlyObjectWrapper<T> extends SimpleObjectProperty<T> {
         }
     }
 
-    ;
 }

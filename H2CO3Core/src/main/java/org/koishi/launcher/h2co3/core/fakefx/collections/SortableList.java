@@ -43,7 +43,7 @@ public interface SortableList<E> extends List<E> {
      * @throws ClassCastException            if some of the elements cannot be cast to Comparable
      * @throws UnsupportedOperationException if list's iterator doesn't support set
      */
-    public void sort();
+    void sort();
 
     /**
      * Sort using comparator
@@ -54,6 +54,6 @@ public interface SortableList<E> extends List<E> {
      * @throws UnsupportedOperationException if the specified list's
      *                                       list-iterator does not support the <tt>set</tt> operation.
      */
-    public void sort(Comparator<? super E> comparator);
+    void sort(Comparator<? super E> comparator);
 
 }

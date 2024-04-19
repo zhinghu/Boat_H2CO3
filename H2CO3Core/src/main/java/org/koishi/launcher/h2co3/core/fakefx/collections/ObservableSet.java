@@ -10,7 +10,7 @@ public interface ObservableSet<E> extends Set<E>, Observable {
      *
      * @param listener the listener for listening to the set changes
      */
-    public void addListener(SetChangeListener<? super E> listener);
+    void addListener(SetChangeListener<? super E> listener);
 
     /**
      * Tries to removed a listener from this observable set. If the listener is not
@@ -18,5 +18,5 @@ public interface ObservableSet<E> extends Set<E>, Observable {
      *
      * @param listener a listener to remove
      */
-    public void removeListener(SetChangeListener<? super E> listener);
+    void removeListener(SetChangeListener<? super E> listener);
 }

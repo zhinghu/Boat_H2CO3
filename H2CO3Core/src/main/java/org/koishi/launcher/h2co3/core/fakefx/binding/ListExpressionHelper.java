@@ -256,7 +256,7 @@ public abstract class ListExpressionHelper<E> extends ExpressionHelperBase {
             if (currentValue != oldValue) {
                 final int safeSize = (currentValue == null) ? 0 : currentValue.size();
                 final ObservableList<E> safeOldValue = (oldValue == null) ?
-                        FXCollections.<E>emptyObservableList()
+                        FXCollections.emptyObservableList()
                         : FXCollections.unmodifiableObservableList(oldValue);
                 final Change<E> change = new NonIterableChange.GenericAddRemoveChange<E>(0, safeSize, safeOldValue, observable);
                 listener.onChanged(change);
@@ -522,7 +522,7 @@ public abstract class ListExpressionHelper<E> extends ExpressionHelperBase {
                     if (listChangeSize > 0) {
                         final int safeSize = (currentValue == null) ? 0 : currentValue.size();
                         final ObservableList<E> safeOldValue = (oldValue == null) ?
-                                FXCollections.<E>emptyObservableList()
+                                FXCollections.emptyObservableList()
                                 : FXCollections.unmodifiableObservableList(oldValue);
                         change = new NonIterableChange.GenericAddRemoveChange(0, safeSize, safeOldValue, observable);
                     }

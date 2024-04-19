@@ -5,16 +5,31 @@
  */
 package org.lwjgl.system.linux;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkGT;
+import static org.lwjgl.system.MemoryStack.stackGet;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memGetCLong;
+import static org.lwjgl.system.MemoryUtil.memPutAddress;
+import static org.lwjgl.system.MemoryUtil.memPutCLong;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemCallocChecked;
 
-import java.nio.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeResource;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
+import javax.annotation.Nullable;
 
 /**
  * Generated on {@code EnterWindow} and {@code FocusIn} when {@code KeyMapState} selected.
@@ -304,7 +319,7 @@ public class XKeymapEvent extends Struct<XKeymapEvent> implements NativeResource
     public static ByteBuffer nkey_vector(long struct) { return memByteBuffer(struct + XKeymapEvent.KEY_VECTOR, 32); }
     /** Unsafe version of {@link #key_vector(int) key_vector}. */
     public static byte nkey_vector(long struct, int index) {
-        return UNSAFE.getByte(null, struct + XKeymapEvent.KEY_VECTOR + check(index, 32) * 1);
+        return UNSAFE.getByte(null, struct + XKeymapEvent.KEY_VECTOR + check(index, 32));
     }
 
     /** Unsafe version of {@link #type(int) type}. */
@@ -320,11 +335,11 @@ public class XKeymapEvent extends Struct<XKeymapEvent> implements NativeResource
     /** Unsafe version of {@link #key_vector(ByteBuffer) key_vector}. */
     public static void nkey_vector(long struct, ByteBuffer value) {
         if (CHECKS) { checkGT(value, 32); }
-        memCopy(memAddress(value), struct + XKeymapEvent.KEY_VECTOR, value.remaining() * 1);
+        memCopy(memAddress(value), struct + XKeymapEvent.KEY_VECTOR, value.remaining());
     }
     /** Unsafe version of {@link #key_vector(int, byte) key_vector}. */
     public static void nkey_vector(long struct, int index, byte value) {
-        UNSAFE.putByte(null, struct + XKeymapEvent.KEY_VECTOR + check(index, 32) * 1, value);
+        UNSAFE.putByte(null, struct + XKeymapEvent.KEY_VECTOR + check(index, 32), value);
     }
 
     /**

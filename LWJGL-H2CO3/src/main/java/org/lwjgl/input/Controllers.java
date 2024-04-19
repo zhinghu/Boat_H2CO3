@@ -46,7 +46,7 @@ public class Controllers {
     /**
      * The controllers available
      */
-    private static ArrayList<JInputController> controllers = new ArrayList<JInputController>();
+    private static final ArrayList<JInputController> controllers = new ArrayList<JInputController>();
     /**
      * The number of controllers
      */
@@ -55,7 +55,7 @@ public class Controllers {
     /**
      * The current list of events
      */
-    private static ArrayList<ControllerEvent> events = new ArrayList<ControllerEvent>();
+    private static final ArrayList<ControllerEvent> events = new ArrayList<ControllerEvent>();
     /**
      * The current event
      */

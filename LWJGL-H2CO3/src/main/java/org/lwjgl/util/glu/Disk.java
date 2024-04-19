@@ -220,7 +220,6 @@ public class Disk extends Quadric {
               break;
           }
            default:
-               return;
        }
 	}
 

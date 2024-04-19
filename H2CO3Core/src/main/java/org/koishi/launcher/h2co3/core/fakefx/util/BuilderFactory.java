@@ -15,5 +15,5 @@ public interface BuilderFactory {
      * @return A builder for the given type, or {@code null} if this factory does not
      * produce builders for the type.
      */
-    public Builder<?> getBuilder(Class<?> type);
+    Builder<?> getBuilder(Class<?> type);
 }

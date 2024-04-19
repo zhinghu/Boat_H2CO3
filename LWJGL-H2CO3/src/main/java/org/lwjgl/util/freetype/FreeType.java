@@ -3449,10 +3449,10 @@ public class FreeType {
             long arguments = stack.nmalloc(POINTER_SIZE, POINTER_SIZE * 6);
             memPutAddress(arguments, stack.npointer(library));
             memPutAddress(arguments + POINTER_SIZE, stack.npointer(source));
-            memPutAddress(arguments + 2 * POINTER_SIZE, source_offset);
-            memPutAddress(arguments + 3 * POINTER_SIZE, stack.npointer(target));
-            memPutAddress(arguments + 4 * POINTER_SIZE, stack.npointer(atarget_offset));
-            memPutAddress(arguments + 5 * POINTER_SIZE, color);
+            memPutAddress(arguments + 2L * POINTER_SIZE, source_offset);
+            memPutAddress(arguments + 3L * POINTER_SIZE, stack.npointer(target));
+            memPutAddress(arguments + 4L * POINTER_SIZE, stack.npointer(atarget_offset));
+            memPutAddress(arguments + 5L * POINTER_SIZE, color);
 
             nffi_call(FT_Bitmap_BlendCIF.address(), __functionAddress, __result, arguments);
 
@@ -3920,7 +3920,7 @@ public class FreeType {
             long arguments = stack.nmalloc(POINTER_SIZE, POINTER_SIZE * 3);
             memPutAddress(arguments, stack.npointer(face));
             memPutAddress(arguments + POINTER_SIZE, opaque_paint);
-            memPutAddress(arguments + 2 * POINTER_SIZE, stack.npointer(paint));
+            memPutAddress(arguments + 2L * POINTER_SIZE, stack.npointer(paint));
 
             nffi_call(FT_Get_PaintCIF.address(), __functionAddress, __result, arguments);
 

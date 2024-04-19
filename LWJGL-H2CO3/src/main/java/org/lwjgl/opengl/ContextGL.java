@@ -41,7 +41,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFW;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
 /**
  * <p/>

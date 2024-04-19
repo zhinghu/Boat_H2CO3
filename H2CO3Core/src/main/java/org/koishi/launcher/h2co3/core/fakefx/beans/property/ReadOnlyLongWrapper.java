@@ -90,5 +90,4 @@ public class ReadOnlyLongWrapper extends SimpleLongProperty {
         }
     }
 
-    ;
 }

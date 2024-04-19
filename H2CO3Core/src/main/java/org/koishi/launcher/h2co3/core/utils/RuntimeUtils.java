@@ -57,9 +57,9 @@ public class RuntimeUtils {
         }
         File fileLib = new File(dest, "/" + libFolder + "/libawt_xawt.so");
         fileLib.delete();
-        if (javaPath.equals(H2CO3Tools.JAVA_8_PATH)){
-            FileUtils.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/"+getArchitectureString(Architecture.getDeviceArchitecture())+"/libawt_xawt.so"));
-        }else {
+        if (javaPath.equals(H2CO3Tools.JAVA_8_PATH)) {
+            FileUtils.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/" + getArchitectureString(Architecture.getDeviceArchitecture()) + "/libawt_xawt.so"));
+        } else {
             FileUtils.copyFile(new File(context.getApplicationInfo().nativeLibraryDir, "libawt_xawt.so"), new File(javaPath + "/lib/libawt_xawt.so"));
         }
 

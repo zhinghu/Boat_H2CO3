@@ -380,7 +380,7 @@ public class TT_OS2 extends Struct<TT_OS2> {
      * Unsafe version of {@link #panose(int) panose}.
      */
     public static byte npanose(long struct, int index) {
-        return UNSAFE.getByte(null, struct + TT_OS2.PANOSE + check(index, 10) * 1);
+        return UNSAFE.getByte(null, struct + TT_OS2.PANOSE + check(index, 10));
     }
 
     /**
@@ -422,7 +422,7 @@ public class TT_OS2 extends Struct<TT_OS2> {
      * Unsafe version of {@link #achVendID(int) achVendID}.
      */
     public static byte nachVendID(long struct, int index) {
-        return UNSAFE.getByte(null, struct + TT_OS2.ACHVENDID + check(index, 4) * 1);
+        return UNSAFE.getByte(null, struct + TT_OS2.ACHVENDID + check(index, 4));
     }
 
     /**

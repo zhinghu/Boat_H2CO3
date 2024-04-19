@@ -4,14 +4,22 @@
  */
 package org.lwjgl;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.CheckIntrinsics.checkFromIndexSize;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddress0;
+import static org.lwjgl.system.MemoryUtil.memGetCLong;
+import static org.lwjgl.system.MemoryUtil.memLongBuffer;
+import static org.lwjgl.system.MemoryUtil.memPutCLong;
 
-import javax.annotation.*;
-import java.nio.*;
+import org.lwjgl.system.CustomBuffer;
 
-import static org.lwjgl.system.CheckIntrinsics.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+
+import javax.annotation.Nullable;
 
 /**
  * This class is a container for C {@code long} data. Its interface mirrors the {@link LongBuffer} API for convenience.

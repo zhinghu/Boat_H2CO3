@@ -18,9 +18,9 @@ public interface SetChangeListener<E> {
      * @param <E> element type
      * @since JavaFX 2.1
      */
-    public static abstract class Change<E> {
+    abstract class Change<E> {
 
-        private ObservableSet<E> set;
+        private final ObservableSet<E> set;
 
         /**
          * Constructs a change associated with a set.

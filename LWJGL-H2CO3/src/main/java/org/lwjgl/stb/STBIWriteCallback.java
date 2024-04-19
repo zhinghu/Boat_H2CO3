@@ -5,13 +5,14 @@
  */
 package org.lwjgl.stb;
 
-import javax.annotation.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.ByteBuffer;
 
-import java.nio.*;
+import javax.annotation.Nullable;
 
 /**
  * Instances of this class may be used with the {@link STBImageWrite} {@code write_type_to_func} functions.

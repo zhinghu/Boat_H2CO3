@@ -4,19 +4,27 @@
  */
 package org.lwjgl.system;
 
-import org.lwjgl.*;
-import org.lwjgl.system.libffi.*;
+import static org.lwjgl.system.APIUtil.apiLog;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memGlobalRefToObject;
+import static org.lwjgl.system.jni.JNINativeInterface.DeleteGlobalRef;
+import static org.lwjgl.system.jni.JNINativeInterface.NewGlobalRef;
+import static org.lwjgl.system.libffi.LibFFI.FFI_OK;
+import static org.lwjgl.system.libffi.LibFFI.ffi_closure_alloc;
+import static org.lwjgl.system.libffi.LibFFI.ffi_closure_free;
+import static org.lwjgl.system.libffi.LibFFI.ffi_prep_closure_loc;
 
-import javax.annotation.*;
-import java.lang.reflect.*;
-import java.util.concurrent.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.libffi.FFICIF;
+import org.lwjgl.system.libffi.FFIClosure;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.jni.JNINativeInterface.*;
-import static org.lwjgl.system.libffi.LibFFI.*;
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nullable;
 
 /**
  * Base class for dynamically created native functions that call into Java code.
@@ -102,7 +110,7 @@ public abstract class Callback implements Pointer, NativeResource {
         MemoryUtil.getAllocator();
     }
 
-    private long address;
+    private final long address;
 
     /**
      * Creates a callback instance using the specified libffi CIF.

@@ -5,16 +5,26 @@
  */
 package org.lwjgl.system.linux.liburing;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkGT;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemCallocChecked;
 
-import java.nio.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeResource;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
+import javax.annotation.Nullable;
 
 /**
  * <h3>Layout</h3>
@@ -303,7 +313,7 @@ public class IOURing extends Struct<IOURing> implements NativeResource {
     public static byte nint_flags(long struct) { return UNSAFE.getByte(null, struct + IOURing.INT_FLAGS); }
     public static ByteBuffer npad(long struct) { return memByteBuffer(struct + IOURing.PAD, 3); }
     public static byte npad(long struct, int index) {
-        return UNSAFE.getByte(null, struct + IOURing.PAD + check(index, 3) * 1);
+        return UNSAFE.getByte(null, struct + IOURing.PAD + check(index, 3));
     }
     public static int npad2(long struct) { return UNSAFE.getInt(null, struct + IOURing.PAD2); }
 
@@ -323,10 +333,10 @@ public class IOURing extends Struct<IOURing> implements NativeResource {
     public static void nint_flags(long struct, byte value) { UNSAFE.putByte(null, struct + IOURing.INT_FLAGS, value); }
     public static void npad(long struct, ByteBuffer value) {
         if (CHECKS) { checkGT(value, 3); }
-        memCopy(memAddress(value), struct + IOURing.PAD, value.remaining() * 1);
+        memCopy(memAddress(value), struct + IOURing.PAD, value.remaining());
     }
     public static void npad(long struct, int index, byte value) {
-        UNSAFE.putByte(null, struct + IOURing.PAD + check(index, 3) * 1, value);
+        UNSAFE.putByte(null, struct + IOURing.PAD + check(index, 3), value);
     }
     public static void npad2(long struct, int value) { UNSAFE.putInt(null, struct + IOURing.PAD2, value); }
 

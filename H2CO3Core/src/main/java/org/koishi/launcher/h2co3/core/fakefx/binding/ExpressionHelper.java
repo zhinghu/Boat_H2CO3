@@ -5,6 +5,7 @@ import org.koishi.launcher.h2co3.core.fakefx.beans.value.ChangeListener;
 import org.koishi.launcher.h2co3.core.fakefx.beans.value.ObservableValue;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public abstract class ExpressionHelper<T> extends ExpressionHelperBase {
 
@@ -142,7 +143,7 @@ public abstract class ExpressionHelper<T> extends ExpressionHelperBase {
         protected void fireValueChangedEvent() {
             final T oldValue = currentValue;
             currentValue = observable.getValue();
-            final boolean changed = (currentValue == null) ? (oldValue != null) : !currentValue.equals(oldValue);
+            final boolean changed = !Objects.equals(currentValue, oldValue);
             if (changed) {
                 try {
                     listener.changed(observable, oldValue, currentValue);
@@ -320,7 +321,7 @@ public abstract class ExpressionHelper<T> extends ExpressionHelperBase {
                 if (curChangeSize > 0) {
                     final T oldValue = currentValue;
                     currentValue = observable.getValue();
-                    final boolean changed = (currentValue == null) ? (oldValue != null) : !currentValue.equals(oldValue);
+                    final boolean changed = !Objects.equals(currentValue, oldValue);
                     if (changed) {
                         for (int i = 0; i < curChangeSize; i++) {
                             try {

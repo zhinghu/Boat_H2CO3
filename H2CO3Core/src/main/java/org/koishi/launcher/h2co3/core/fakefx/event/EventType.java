@@ -130,7 +130,7 @@ public final class EventType<T extends Event> implements Serializable {
      *
      * @return the super type
      */
-    public final EventType<? super T> getSuperType() {
+    public EventType<? super T> getSuperType() {
         return superType;
     }
 
@@ -139,7 +139,7 @@ public final class EventType<T extends Event> implements Serializable {
      *
      * @return the name
      */
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
@@ -177,7 +177,7 @@ public final class EventType<T extends Event> implements Serializable {
     }
 
     static class EventTypeSerialization implements Serializable {
-        private List<String> path;
+        private final List<String> path;
 
         public EventTypeSerialization(List<String> path) {
             this.path = path;

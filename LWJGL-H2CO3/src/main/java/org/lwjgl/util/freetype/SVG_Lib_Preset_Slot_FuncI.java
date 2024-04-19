@@ -48,7 +48,7 @@ public interface SVG_Lib_Preset_Slot_FuncI extends CallbackI {
         int __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetByte(memGetAddress(args + POINTER_SIZE)) != 0,
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE))
         );
         apiClosureRet(ret, __result);
     }

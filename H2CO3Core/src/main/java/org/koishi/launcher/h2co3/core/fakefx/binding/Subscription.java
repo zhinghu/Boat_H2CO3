@@ -24,7 +24,7 @@ public interface Subscription {
     /**
      * An empty subscription. Does nothing when cancelled.
      */
-    static final Subscription EMPTY = () -> {
+    Subscription EMPTY = () -> {
     };
 
     /**

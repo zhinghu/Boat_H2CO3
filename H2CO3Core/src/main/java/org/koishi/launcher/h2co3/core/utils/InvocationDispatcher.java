@@ -9,6 +9,7 @@ public final class InvocationDispatcher<ARG> implements Consumer<ARG> {
 
     private final Consumer<Supplier<ARG>> handler;
     private final AtomicReference<Holder<ARG>> pendingArg = new AtomicReference<>();
+
     public InvocationDispatcher(Consumer<Supplier<ARG>> handler) {
         this.handler = handler;
     }

@@ -89,9 +89,8 @@ import java.util.UUID;
  */
 public class HomeFragment extends H2CO3Fragment implements View.OnClickListener {
 
-    private final Handler handler = new Handler();
-
     private static final int MICROSOFT_LOGIN_REQUEST_CODE = 1001;
+    private final Handler handler = new Handler();
     private final Gson GLOBAL_GSON = new GsonBuilder().setPrettyPrinting().create();
     private final HomeLoginHandler loginHandler = new HomeLoginHandler(HomeFragment.this);
     public AlertDialog loginDialogAlert;
@@ -184,20 +183,6 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     };
 
-    private void findView() {
-        homeGamePlayButton = findViewById(view, R.id.home_game_play_button);
-        homeGamePlayButton.setOnClickListener(this);
-        homeUserName = findViewById(view, R.id.home_user_name);
-        homeUserState = findViewById(view, R.id.home_user_state);
-        homeUserIcon = findViewById(view, R.id.home_user_icon);
-        homeUserListButton = findViewById(view, R.id.home_user_open_list);
-        homeUserListButton.setOnClickListener(this);
-        homeUserListLayout = findViewById(view, R.id.home_user_list_layout);
-        recyclerView = findViewById(view, R.id.recycler_view_user_list);
-        homeNoticeTextView = findViewById(view, R.id.home_notice_text);
-        loadingNoticeProgress = findViewById(view, R.id.progressIndicator);
-    }
-
     @NotNull
     private static Servers.Server getServer(int selection, String data, String inputText) throws JSONException {
         Servers.Server server = new Servers.Server();
@@ -220,6 +205,20 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
 
         return server;
+    }
+
+    private void findView() {
+        homeGamePlayButton = findViewById(view, R.id.home_game_play_button);
+        homeGamePlayButton.setOnClickListener(this);
+        homeUserName = findViewById(view, R.id.home_user_name);
+        homeUserState = findViewById(view, R.id.home_user_state);
+        homeUserIcon = findViewById(view, R.id.home_user_icon);
+        homeUserListButton = findViewById(view, R.id.home_user_open_list);
+        homeUserListButton.setOnClickListener(this);
+        homeUserListLayout = findViewById(view, R.id.home_user_list_layout);
+        recyclerView = findViewById(view, R.id.recycler_view_user_list);
+        homeNoticeTextView = findViewById(view, R.id.home_notice_text);
+        loadingNoticeProgress = findViewById(view, R.id.progressIndicator);
     }
 
     @Override
@@ -558,7 +557,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 H2CO3Loader.getHead(requireActivity(), userSkinTexture, homeUserIcon);
                 break;
             case "2":
-                homeUserState.setText(new StringBuilder().append(OTHER_USER_STATE).append(apiUrl).toString());
+                homeUserState.setText(OTHER_USER_STATE + apiUrl);
                 homeUserIcon.setImageDrawable(ContextCompat.getDrawable(requireActivity(), org.koishi.launcher.h2co3.resources.R.drawable.ic_home_user));
                 break;
             default:

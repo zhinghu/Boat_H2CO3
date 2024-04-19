@@ -21,7 +21,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param destIndex starting position in destination array
      * @param length    length of portion to copy
      */
-    public void copyTo(int srcIndex, float[] dest, int destIndex, int length);
+    void copyTo(int srcIndex, float[] dest, int destIndex, int length);
 
     /**
      * Copies specified portion of array into {@code dest} observable array.
@@ -33,7 +33,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param destIndex starting position in destination observable array
      * @param length    length of portion to copy
      */
-    public void copyTo(int srcIndex, ObservableFloatArray dest, int destIndex, int length);
+    void copyTo(int srcIndex, ObservableFloatArray dest, int destIndex, int length);
 
     /**
      * Gets a single value of array. This is generally as fast as direct access
@@ -44,7 +44,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @throws ArrayIndexOutOfBoundsException if {@code index} is outside
      *                                        array bounds
      */
-    public float get(int index);
+    float get(int index);
 
     /**
      * Appends given {@code elements} to the end of this array. Capacity is increased
@@ -52,7 +52,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      *
      * @param elements elements to append
      */
-    public void addAll(float... elements);
+    void addAll(float... elements);
 
     /**
      * Appends content of a given observable array to the end of this array.
@@ -60,7 +60,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      *
      * @param src observable array with elements to append
      */
-    public void addAll(ObservableFloatArray src);
+    void addAll(ObservableFloatArray src);
 
     /**
      * Appends a portion of given array to the end of this array.
@@ -70,7 +70,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param srcIndex starting position in source array
      * @param length   length of portion to append
      */
-    public void addAll(float[] src, int srcIndex, int length);
+    void addAll(float[] src, int srcIndex, int length);
 
     /**
      * Appends a portion of given observable array to the end of this array.
@@ -80,7 +80,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param srcIndex starting position in source array
      * @param length   length of portion to append
      */
-    public void addAll(ObservableFloatArray src, int srcIndex, int length);
+    void addAll(ObservableFloatArray src, int srcIndex, int length);
 
     /**
      * Replaces this observable array content with given elements.
@@ -89,7 +89,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param elements elements to put into array content
      * @throws NullPointerException if {@code src} is null
      */
-    public void setAll(float... elements);
+    void setAll(float... elements);
 
     /**
      * Replaces this observable array content with a copy of portion of
@@ -101,7 +101,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param length   length of a portion to copy
      * @throws NullPointerException if {@code src} is null
      */
-    public void setAll(float[] src, int srcIndex, int length);
+    void setAll(float[] src, int srcIndex, int length);
 
     /**
      * Replaces this observable array content with a copy of given observable array.
@@ -110,7 +110,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param src source observable array to copy.
      * @throws NullPointerException if {@code src} is null
      */
-    public void setAll(ObservableFloatArray src);
+    void setAll(ObservableFloatArray src);
 
     /**
      * Replaces this observable array content with a portion of a given
@@ -122,7 +122,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param length   length of a portion to copy
      * @throws NullPointerException if {@code src} is null
      */
-    public void setAll(ObservableFloatArray src, int srcIndex, int length);
+    void setAll(ObservableFloatArray src, int srcIndex, int length);
 
     /**
      * Copies a portion of specified array into this observable array. Throws
@@ -134,7 +134,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param srcIndex  starting position in source array
      * @param length    length of portion to copy
      */
-    public void set(int destIndex, float[] src, int srcIndex, int length);
+    void set(int destIndex, float[] src, int srcIndex, int length);
 
     /**
      * Copies a portion of specified observable array into this observable array.
@@ -146,7 +146,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param srcIndex  starting position in source array
      * @param length    length of portion to copy
      */
-    public void set(int destIndex, ObservableFloatArray src, int srcIndex, int length);
+    void set(int destIndex, ObservableFloatArray src, int srcIndex, int length);
 
     /**
      * Sets a single value in the array. Avoid using this method if many values
@@ -158,7 +158,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @throws ArrayIndexOutOfBoundsException if {@code index} is outside
      *                                        array bounds
      */
-    public void set(int index, float value);
+    void set(int index, float value);
 
     /**
      * Returns an array containing copy of the observable array.
@@ -170,7 +170,7 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      *             Ignored, if null.
      * @return a float array containing the copy of the observable array
      */
-    public float[] toArray(float[] dest);
+    float[] toArray(float[] dest);
 
     /**
      * Returns an array containing copy of specified portion of the observable array.
@@ -185,6 +185,6 @@ public interface ObservableFloatArray extends ObservableArray<ObservableFloatArr
      * @param length   length of portion to copy
      * @return a float array containing the copy of specified portion the observable array
      */
-    public float[] toArray(int srcIndex, float[] dest, int length);
+    float[] toArray(int srcIndex, float[] dest, int length);
 
 }

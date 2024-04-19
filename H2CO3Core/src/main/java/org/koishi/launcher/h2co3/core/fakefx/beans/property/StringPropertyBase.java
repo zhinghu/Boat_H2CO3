@@ -8,6 +8,7 @@ import org.koishi.launcher.h2co3.core.fakefx.beans.value.ObservableValue;
 import org.koishi.launcher.h2co3.core.fakefx.binding.ExpressionHelper;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 /**
  * The class {@code StringPropertyBase} is the base class for a property
@@ -103,7 +104,7 @@ public abstract class StringPropertyBase extends StringProperty {
             throw new RuntimeException((getBean() != null && getName() != null ?
                     getBean().getClass().getSimpleName() + "." + getName() + " : " : "") + "A bound value cannot be set.");
         }
-        if ((value == null) ? newValue != null : !value.equals(newValue)) {
+        if (!Objects.equals(value, newValue)) {
             value = newValue;
             markInvalid();
         }

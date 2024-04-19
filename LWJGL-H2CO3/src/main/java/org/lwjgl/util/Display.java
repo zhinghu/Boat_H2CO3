@@ -80,7 +80,7 @@ public final class Display {
 		ArrayList<DisplayMode> matches = new ArrayList<DisplayMode>(modes.length);
 
 		for (int i = 0; i < modes.length; i ++) {
-			assert modes[i] != null : "" + i + " " + modes.length;
+            assert modes[i] != null : i + " " + modes.length;
 			if (minWidth != -1 && modes[i].getWidth() < minWidth)
 				continue;
 			if (maxWidth != -1 && modes[i].getWidth() > maxWidth)
@@ -168,7 +168,7 @@ public final class Display {
 				for (int i = 0; i < accessors.length; i ++) {
 					int idx = param[i].indexOf('=');
 					if (idx > 0) {
-                        accessors[i] = new FieldAccessor(param[i].substring(0, idx), 0, Integer.parseInt(param[i].substring(idx + 1, param[i].length())), true);
+                        accessors[i] = new FieldAccessor(param[i].substring(0, idx), 0, Integer.parseInt(param[i].substring(idx + 1)), true);
 					} else if (param[i].charAt(0) == '-') {
 						accessors[i] = new FieldAccessor(param[i].substring(1), -1, 0, false);
 					} else {

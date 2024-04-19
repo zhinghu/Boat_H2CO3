@@ -5,10 +5,12 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callP;
+import static org.lwjgl.system.JNI.callPPPI;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.NativeType;
 
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/ARB/WGL_ARB_make_current_read.txt">WGL_ARB_make_current_read</a> extension.

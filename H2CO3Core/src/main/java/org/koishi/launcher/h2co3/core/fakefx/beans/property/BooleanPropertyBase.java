@@ -222,7 +222,7 @@ public abstract class BooleanPropertyBase extends BooleanProperty {
     }
 
     private class ValueWrapper extends BooleanBinding {
-        private ObservableValue<? extends Boolean> observable;
+        private final ObservableValue<? extends Boolean> observable;
 
         public ValueWrapper(ObservableValue<? extends Boolean> observable) {
             this.observable = observable;
@@ -232,7 +232,7 @@ public abstract class BooleanPropertyBase extends BooleanProperty {
         @Override
         protected boolean computeValue() {
             final Boolean value = observable.getValue();
-            return (value == null) ? false : value;
+            return value != null && value;
         }
 
         @Override

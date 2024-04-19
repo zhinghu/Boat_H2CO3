@@ -40,7 +40,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -110,7 +109,7 @@ public class LibraryDownloadTask extends Task<Void> {
         while (entry != null) {
             byte[] eData = IOUtils.readFullyWithoutClosing(jar);
             if (entry.getName().equals("checksums.sha1")) {
-                hashes = new String(eData, StandardCharsets.UTF_8).split("\n");
+                hashes = new String(eData, "UTF-8").split("\n");
             }
             if (!entry.isDirectory()) {
                 files.put(entry.getName(), DigestUtils.digestToString("SHA-1", eData));

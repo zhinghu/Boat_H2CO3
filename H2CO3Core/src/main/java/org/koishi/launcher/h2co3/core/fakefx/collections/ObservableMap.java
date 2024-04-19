@@ -10,7 +10,7 @@ public interface ObservableMap<K, V> extends Map<K, V>, Observable {
      *
      * @param listener the listener for listening to the list changes
      */
-    public void addListener(MapChangeListener<? super K, ? super V> listener);
+    void addListener(MapChangeListener<? super K, ? super V> listener);
 
     /**
      * Tries to removed a listener from this observable map. If the listener is not
@@ -18,5 +18,5 @@ public interface ObservableMap<K, V> extends Map<K, V>, Observable {
      *
      * @param listener a listener to remove
      */
-    public void removeListener(MapChangeListener<? super K, ? super V> listener);
+    void removeListener(MapChangeListener<? super K, ? super V> listener);
 }

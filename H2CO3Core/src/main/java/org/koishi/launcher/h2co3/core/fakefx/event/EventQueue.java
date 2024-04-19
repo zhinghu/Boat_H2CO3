@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public final class EventQueue {
-    private Queue<Event> queue = new ArrayDeque<Event>();
+    private final Queue<Event> queue = new ArrayDeque<Event>();
     private boolean inLoop;
 
     public void postEvent(Event event) {

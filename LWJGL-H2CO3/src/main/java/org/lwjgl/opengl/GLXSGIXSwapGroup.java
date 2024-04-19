@@ -5,10 +5,11 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.callPPPV;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
+import org.lwjgl.system.NativeType;
 
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/SGIX/GLX_SGIX_swap_group.txt">GLX_SGIX_swap_group</a> extension.

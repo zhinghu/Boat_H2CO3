@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Disposer implements Runnable {
     private static final ReferenceQueue queue = new ReferenceQueue();
     private static final Map<Object, Runnable> records = new ConcurrentHashMap<>();
-    private static Disposer disposerInstance;
+    private static final Disposer disposerInstance;
 
     static {
         disposerInstance = new Disposer();

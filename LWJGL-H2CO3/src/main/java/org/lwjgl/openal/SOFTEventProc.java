@@ -5,11 +5,11 @@
  */
 package org.lwjgl.openal;
 
-import javax.annotation.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * <h3>Type</h3>

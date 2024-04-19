@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
  */
 public final class JavaBeanObjectPropertyBuilder<T> {
 
-    private JavaBeanPropertyBuilderHelper helper = new JavaBeanPropertyBuilderHelper();
+    private final JavaBeanPropertyBuilderHelper helper = new JavaBeanPropertyBuilderHelper();
 
     private JavaBeanObjectPropertyBuilder() {
     }

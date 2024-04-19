@@ -4,14 +4,19 @@
  */
 package org.lwjgl.system;
 
-import org.lwjgl.*;
+import static org.lwjgl.system.APIUtil.apiLog;
+import static org.lwjgl.system.CheckIntrinsics.checkIndex;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import javax.annotation.*;
-import java.nio.*;
+import org.lwjgl.PointerBuffer;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.CheckIntrinsics.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+
+import javax.annotation.Nullable;
 
 /**
  * A class to check buffer boundaries in general. If there is insufficient space in the buffer when the call is made then a buffer overflow would otherwise

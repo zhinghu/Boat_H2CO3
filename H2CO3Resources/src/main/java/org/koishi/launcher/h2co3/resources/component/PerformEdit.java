@@ -23,12 +23,12 @@ public class PerformEdit {
     //操作序号(一次编辑可能对应多个操作，如替换文字，就是删除+插入)
     private int index;
     //撤销栈
-    private Deque<Action> history = new ArrayDeque<>();
+    private final Deque<Action> history = new ArrayDeque<>();
     //恢复栈
-    private Deque<Action> historyBack = new ArrayDeque<>();
+    private final Deque<Action> historyBack = new ArrayDeque<>();
 
     private Editable editable;
-    private EditText editText;
+    private final EditText editText;
     //自动操作标志，防止重复回调,导致无限撤销
     private boolean flag = false;
 

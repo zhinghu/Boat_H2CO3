@@ -228,7 +228,7 @@ public final class MethodUtil extends SecureClassLoader {
     public static Object invoke(Method m, Object obj, Object[] params)
             throws InvocationTargetException, IllegalAccessException {
         try {
-            return bounce.invoke(null, new Object[]{m, obj, params});
+            return bounce.invoke(null, m, obj, params);
         } catch (InvocationTargetException ie) {
             Throwable t = ie.getCause();
 

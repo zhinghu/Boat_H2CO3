@@ -106,7 +106,5 @@ public abstract class ReadOnlyDoubleProperty extends DoubleExpression implements
         };
     }
 
-    ;
-
 
 }

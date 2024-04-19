@@ -22,7 +22,6 @@ import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.CopyOption;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
@@ -39,7 +38,7 @@ public final class Unzipper {
     private boolean terminateIfSubDirectoryNotExists = false;
     private String subDirectory = "/";
     private FileFilter filter = null;
-    private Charset encoding = StandardCharsets.UTF_8;
+    private Charset encoding = Charset.forName("UTF-8");
 
     /**
      * Decompress the given zip file to a directory.

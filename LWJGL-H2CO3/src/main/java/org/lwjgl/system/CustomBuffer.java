@@ -4,10 +4,16 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import java.nio.*;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.nmemFree;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.nio.InvalidMarkException;
+import java.nio.ReadOnlyBufferException;
+
+import javax.annotation.Nullable;
 
 /** Base class of custom buffers with an API that mirrors {@code java.nio} for convenience. */
 public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> extends Pointer.Default {

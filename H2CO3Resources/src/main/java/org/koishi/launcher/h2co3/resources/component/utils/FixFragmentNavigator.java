@@ -112,8 +112,7 @@ public class FixFragmentNavigator extends FragmentNavigator {
             ft.addToBackStack(generateBackStackName(mBackStack.size() + 1, destId));
             isAdded = true;
         }
-        if (navigatorExtras instanceof Extras) {
-            Extras extras = (Extras) navigatorExtras;
+        if (navigatorExtras instanceof Extras extras) {
             for (Map.Entry<View, String> sharedElement : extras.getSharedElements().entrySet()) {
                 ft.addSharedElement(sharedElement.getKey(), sharedElement.getValue());
             }

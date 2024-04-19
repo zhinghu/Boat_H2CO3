@@ -4,15 +4,27 @@
  */
 package org.lwjgl.system.macosx;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.macosx.CoreFoundation.CFBundleCreate;
+import static org.lwjgl.system.macosx.CoreFoundation.CFBundleGetBundleWithIdentifier;
+import static org.lwjgl.system.macosx.CoreFoundation.CFBundleGetFunctionPointerForName;
+import static org.lwjgl.system.macosx.CoreFoundation.CFRelease;
+import static org.lwjgl.system.macosx.CoreFoundation.CFRetain;
+import static org.lwjgl.system.macosx.CoreFoundation.CFStringCreateWithCStringNoCopy;
+import static org.lwjgl.system.macosx.CoreFoundation.CFURLCreateWithFileSystemPath;
+import static org.lwjgl.system.macosx.CoreFoundation.kCFAllocatorNull;
+import static org.lwjgl.system.macosx.CoreFoundation.kCFStringEncodingASCII;
+import static org.lwjgl.system.macosx.CoreFoundation.kCFStringEncodingUTF8;
+import static org.lwjgl.system.macosx.CoreFoundation.kCFURLPOSIXPathStyle;
 
-import javax.annotation.*;
-import java.nio.*;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.SharedLibrary;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.macosx.CoreFoundation.*;
+import java.nio.ByteBuffer;
+
+import javax.annotation.Nullable;
 
 /** Implements a {@link SharedLibrary} on the macOS using {@code CFBundle}. */
 public class MacOSXLibraryBundle extends MacOSXLibrary {

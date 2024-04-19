@@ -4,8 +4,10 @@
  */
 package org.lwjgl.system;
 
-import javax.annotation.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
 
 /**
  * Stack-walking utilities.
@@ -50,11 +52,7 @@ final class StackWalkUtil {
         }
 
         // Kotlin T.use: kotlin.AutoCloseable::closeFinally
-        if ("closeFinally".equals(element.getMethodName()) && "AutoCloseable.kt".equals(element.getFileName())) {
-            return true;
-        }
-
-        return false;
+        return "closeFinally".equals(element.getMethodName()) && "AutoCloseable.kt".equals(element.getFileName());
     }
 
     @Nullable

@@ -91,5 +91,4 @@ public class ReadOnlyStringWrapper extends SimpleStringProperty {
         }
     }
 
-    ;
 }

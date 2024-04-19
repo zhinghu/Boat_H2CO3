@@ -5,16 +5,26 @@
  */
 package org.lwjgl.system.linux;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.checkGT;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
+import static org.lwjgl.system.MemoryUtil.memCopy;
+import static org.lwjgl.system.MemoryUtil.nmemAllocChecked;
+import static org.lwjgl.system.MemoryUtil.nmemCallocChecked;
 
-import java.nio.*;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.NativeResource;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.Struct;
+import org.lwjgl.system.StructBuffer;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import java.nio.ByteBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
+import javax.annotation.Nullable;
 
 /**
  * Structure describing a generic socket address.
@@ -235,7 +245,7 @@ public class Sockaddr extends Struct<Sockaddr> implements NativeResource {
     public static ByteBuffer nsa_data(long struct) { return memByteBuffer(struct + Sockaddr.SA_DATA, 14); }
     /** Unsafe version of {@link #sa_data(int) sa_data}. */
     public static byte nsa_data(long struct, int index) {
-        return UNSAFE.getByte(null, struct + Sockaddr.SA_DATA + check(index, 14) * 1);
+        return UNSAFE.getByte(null, struct + Sockaddr.SA_DATA + check(index, 14));
     }
 
     /** Unsafe version of {@link #sa_family(short) sa_family}. */
@@ -243,11 +253,11 @@ public class Sockaddr extends Struct<Sockaddr> implements NativeResource {
     /** Unsafe version of {@link #sa_data(ByteBuffer) sa_data}. */
     public static void nsa_data(long struct, ByteBuffer value) {
         if (CHECKS) { checkGT(value, 14); }
-        memCopy(memAddress(value), struct + Sockaddr.SA_DATA, value.remaining() * 1);
+        memCopy(memAddress(value), struct + Sockaddr.SA_DATA, value.remaining());
     }
     /** Unsafe version of {@link #sa_data(int, byte) sa_data}. */
     public static void nsa_data(long struct, int index, byte value) {
-        UNSAFE.putByte(null, struct + Sockaddr.SA_DATA + check(index, 14) * 1, value);
+        UNSAFE.putByte(null, struct + Sockaddr.SA_DATA + check(index, 14), value);
     }
 
     // -----------------------------------

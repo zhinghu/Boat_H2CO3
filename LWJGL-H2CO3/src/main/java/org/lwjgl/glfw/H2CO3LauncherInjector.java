@@ -92,10 +92,10 @@ public class H2CO3LauncherInjector {
     @Nullable
     @NativeType("H2CO3injectorfun")
     public static H2CO3LauncherInjectorCallback glfwSetH2CO3LauncherInjectorCallback(@Nullable @NativeType("H2CO3injectorfun") H2CO3LauncherInjectorCallbackI cbfun) {
-        return H2CO3LauncherInjectorCallback.createSafe(nglfwSetFCLInjectorCallback(memAddressSafe(cbfun)));
+        return H2CO3LauncherInjectorCallback.createSafe(nglfwSetH2CO3LauncherInjectorCallback(memAddressSafe(cbfun)));
     }
 
-    public static long nglfwSetFCLInjectorCallback(long cbfun) {
+    public static long nglfwSetH2CO3LauncherInjectorCallback(long cbfun) {
         return invokePP(cbfun, SetInjectorCallBack);
     }
 

@@ -95,13 +95,13 @@ public final class CompressingUtils {
     }
 
     public static Charset findSuitableEncoding(Path zipFile) throws IOException {
-        try (ZipFile zf = openZipFile(zipFile, StandardCharsets.UTF_8)) {
+        try (ZipFile zf = openZipFile(zipFile, Charset.forName("UTF-8"))) {
             return findSuitableEncoding(zf);
         }
     }
 
     public static Charset findSuitableEncoding(ZipFile zipFile) throws IOException {
-        if (testEncoding(zipFile, StandardCharsets.UTF_8)) return StandardCharsets.UTF_8;
+        if (testEncoding(zipFile, Charset.forName("UTF-8"))) return Charset.forName("UTF-8");
         if (OperatingSystem.NATIVE_CHARSET != StandardCharsets.UTF_8 && testEncoding(zipFile, OperatingSystem.NATIVE_CHARSET))
             return OperatingSystem.NATIVE_CHARSET;
 
@@ -269,7 +269,7 @@ public final class CompressingUtils {
         private final boolean create;
         private final Path zip;
         private boolean autoDetectEncoding = false;
-        private Charset encoding = StandardCharsets.UTF_8;
+        private Charset encoding = Charset.forName("UTF-8");
         private boolean useTempFile = false;
 
         public Builder(Path zip, boolean create) {

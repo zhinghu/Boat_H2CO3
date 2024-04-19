@@ -5,16 +5,19 @@
  */
 package org.lwjgl.system.libffi;
 
-import javax.annotation.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.Checks.remainingSafe;
+import static org.lwjgl.system.MemoryUtil.memAddress;
+import static org.lwjgl.system.MemoryUtil.memAddressSafe;
 
-import java.nio.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.Library;
+import org.lwjgl.system.NativeType;
 
-import org.lwjgl.*;
+import java.nio.ByteBuffer;
 
-import org.lwjgl.system.*;
-
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * Native bindings to the <a href="https://sourceware.org/libffi">libffi</a> library.

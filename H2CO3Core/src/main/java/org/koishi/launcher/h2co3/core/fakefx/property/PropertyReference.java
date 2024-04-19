@@ -5,13 +5,14 @@ import org.koishi.launcher.h2co3.core.fakefx.reflect.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 public final class PropertyReference<T> {
-    private String name;
+    private final String name;
     private Method getter;
     private Method setter;
     private Method propertyGetter;
-    private Class<?> clazz;
+    private final Class<?> clazz;
     private Class<?> type;
     private boolean reflected = false;
 
@@ -200,19 +201,13 @@ public final class PropertyReference<T> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof PropertyReference)) {
+        if (!(obj instanceof PropertyReference<?> other)) {
             return false;
         }
-        final PropertyReference<?> other = (PropertyReference<?>) obj;
-        if (this.name != other.name
-                && (this.name == null || !this.name.equals(other.name))) {
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
-        if (this.clazz != other.clazz
-                && (this.clazz == null || !this.clazz.equals(other.clazz))) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.clazz, other.clazz);
     }
 
     /**

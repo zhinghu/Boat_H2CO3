@@ -13,7 +13,7 @@ public abstract class TransformationList<E, F> extends ObservableListBase<E> imp
      * Contains the source list of this transformation list.
      * This is never null and should be used to directly access source list content
      */
-    private ObservableList<? extends F> source;
+    private final ObservableList<? extends F> source;
     /**
      * This field contains the result of expression "source instanceof {@link ObservableList}".
      * If this is true, it is possible to do transforms online.
@@ -110,8 +110,7 @@ public abstract class TransformationList<E, F> extends ObservableListBase<E> imp
         }
         List<?> currentSource = source;
         int idx = getSourceIndex(index);
-        while (currentSource != list && currentSource instanceof TransformationList) {
-            final TransformationList tSource = (TransformationList) currentSource;
+        while (currentSource != list && currentSource instanceof TransformationList tSource) {
             idx = tSource.getSourceIndex(idx);
             currentSource = tSource.source;
         }

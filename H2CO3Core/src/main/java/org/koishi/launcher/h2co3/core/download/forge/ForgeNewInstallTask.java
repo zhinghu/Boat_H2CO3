@@ -87,7 +87,7 @@ public class ForgeNewInstallTask extends Task<Version> {
     private List<ForgeNewInstallProfile.Processor> processors;
     private Version forgeVersion;
     private Path tempDir;
-    private AtomicInteger processorDoneCount = new AtomicInteger(0);
+    private final AtomicInteger processorDoneCount = new AtomicInteger(0);
 
     public ForgeNewInstallTask(DefaultDependencyManager dependencyManager, Version version, String selfVersion, Path installer) {
         this.dependencyManager = dependencyManager;
@@ -144,7 +144,7 @@ public class ForgeNewInstallTask extends Task<Version> {
     }
 
     private void runJVMProcess(ForgeNewInstallProfile.Processor processor, List<String> command, int java) throws Exception {
-        LOG.info("Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command).toString());
+        LOG.info("Executing external processor " + processor.getJar().toString() + ", command line: " + new CommandBuilder().addAll(command));
         int exitCode;
         boolean listen = true;
         while (listen) {
@@ -362,8 +362,8 @@ public class ForgeNewInstallTask extends Task<Version> {
 
     private class ProcessorTask extends Task<Void> {
 
-        private ForgeNewInstallProfile.Processor processor;
-        private Map<String, String> vars;
+        private final ForgeNewInstallProfile.Processor processor;
+        private final Map<String, String> vars;
 
         public ProcessorTask(@NotNull ForgeNewInstallProfile.Processor processor, @NotNull Map<String, String> vars) {
             this.processor = processor;

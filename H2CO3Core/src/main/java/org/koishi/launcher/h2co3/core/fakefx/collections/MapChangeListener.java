@@ -21,7 +21,7 @@ public interface MapChangeListener<K, V> {
      * @param <V> value type
      * @since JavaFX 2.0
      */
-    public static abstract class Change<K, V> {
+    abstract class Change<K, V> {
 
         private final ObservableMap<K, V> map;
 

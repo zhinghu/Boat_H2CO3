@@ -35,6 +35,235 @@ public class When {
         this.condition = condition;
     }
 
+    private static NumberBinding createNumberCondition(
+            final ObservableBooleanValue condition,
+            final ObservableNumberValue thenValue,
+            final ObservableNumberValue otherwiseValue) {
+        if ((thenValue instanceof ObservableDoubleValue) || (otherwiseValue instanceof ObservableDoubleValue)) {
+            return new DoubleBinding() {
+                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
+
+                {
+                    condition.addListener(observer);
+                    thenValue.addListener(observer);
+                    otherwiseValue.addListener(observer);
+                }
+
+                @Override
+                public void dispose() {
+                    condition.removeListener(observer);
+                    thenValue.removeListener(observer);
+                    otherwiseValue.removeListener(observer);
+                }
+
+                @Override
+                protected double computeValue() {
+                    final boolean conditionValue = condition.get();
+                    return conditionValue ? thenValue.doubleValue() : otherwiseValue.doubleValue();
+                }
+
+                @Override
+                public ObservableList<ObservableValue<?>> getDependencies() {
+                    return FXCollections.unmodifiableObservableList(
+                            FXCollections.observableArrayList(condition, thenValue, otherwiseValue));
+                }
+            };
+        } else if ((thenValue instanceof ObservableFloatValue) || (otherwiseValue instanceof ObservableFloatValue)) {
+            return new FloatBinding() {
+                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
+
+                {
+                    condition.addListener(observer);
+                    thenValue.addListener(observer);
+                    otherwiseValue.addListener(observer);
+                }
+
+                @Override
+                public void dispose() {
+                    condition.removeListener(observer);
+                    thenValue.removeListener(observer);
+                    otherwiseValue.removeListener(observer);
+                }
+
+                @Override
+                protected float computeValue() {
+                    final boolean conditionValue = condition.get();
+                    return conditionValue ? thenValue.floatValue() : otherwiseValue.floatValue();
+                }
+
+                @Override
+                public ObservableList<ObservableValue<?>> getDependencies() {
+                    return FXCollections.unmodifiableObservableList(
+                            FXCollections.observableArrayList(condition, thenValue, otherwiseValue));
+                }
+            };
+        } else if ((thenValue instanceof ObservableLongValue) || (otherwiseValue instanceof ObservableLongValue)) {
+            return new LongBinding() {
+                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
+
+                {
+                    condition.addListener(observer);
+                    thenValue.addListener(observer);
+                    otherwiseValue.addListener(observer);
+                }
+
+                @Override
+                public void dispose() {
+                    condition.removeListener(observer);
+                    thenValue.removeListener(observer);
+                    otherwiseValue.removeListener(observer);
+                }
+
+                @Override
+                protected long computeValue() {
+                    final boolean conditionValue = condition.get();
+                    return conditionValue ? thenValue.longValue() : otherwiseValue.longValue();
+                }
+
+                @Override
+                public ObservableList<ObservableValue<?>> getDependencies() {
+                    return FXCollections.unmodifiableObservableList(
+                            FXCollections.observableArrayList(condition, thenValue, otherwiseValue));
+                }
+            };
+        } else {
+            return new IntegerBinding() {
+                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
+
+                {
+                    condition.addListener(observer);
+                    thenValue.addListener(observer);
+                    otherwiseValue.addListener(observer);
+                }
+
+                @Override
+                public void dispose() {
+                    condition.removeListener(observer);
+                    thenValue.removeListener(observer);
+                    otherwiseValue.removeListener(observer);
+                }
+
+                @Override
+                protected int computeValue() {
+                    final boolean conditionValue = condition.get();
+                    return conditionValue ? thenValue.intValue() : otherwiseValue.intValue();
+                }
+
+                @Override
+                public ObservableList<ObservableValue<?>> getDependencies() {
+                    return FXCollections.unmodifiableObservableList(
+                            FXCollections.observableArrayList(condition, thenValue, otherwiseValue));
+                }
+            };
+        }
+    }
+
+    public NumberConditionBuilder then(final ObservableNumberValue thenValue) {
+        if (thenValue == null) {
+            throw new NullPointerException("Value needs to be specified");
+        }
+        return new NumberConditionBuilder(thenValue);
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public NumberConditionBuilder then(double thenValue) {
+        return new NumberConditionBuilder(DoubleConstant.valueOf(thenValue));
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public NumberConditionBuilder then(float thenValue) {
+        return new NumberConditionBuilder(FloatConstant.valueOf(thenValue));
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public NumberConditionBuilder then(long thenValue) {
+        return new NumberConditionBuilder(LongConstant.valueOf(thenValue));
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public NumberConditionBuilder then(int thenValue) {
+        return new NumberConditionBuilder(IntegerConstant.valueOf(thenValue));
+    }
+
+    public BooleanConditionBuilder then(final ObservableBooleanValue thenValue) {
+        if (thenValue == null) {
+            throw new NullPointerException("Value needs to be specified");
+        }
+        return new BooleanConditionBuilder(thenValue);
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public BooleanConditionBuilder then(final boolean thenValue) {
+        return new BooleanConditionBuilder(thenValue);
+    }
+
+    public StringConditionBuilder then(final ObservableStringValue thenValue) {
+        if (thenValue == null) {
+            throw new NullPointerException("Value needs to be specified");
+        }
+        return new StringConditionBuilder(thenValue);
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public StringConditionBuilder then(final String thenValue) {
+        return new StringConditionBuilder(thenValue);
+    }
+
+    public <T> ObjectConditionBuilder<T> then(final ObservableObjectValue<T> thenValue) {
+        if (thenValue == null) {
+            throw new NullPointerException("Value needs to be specified");
+        }
+        return new ObjectConditionBuilder<T>(thenValue);
+    }
+
+    /**
+     * Defines a constant value of the ternary expression, that is returned if
+     * the condition is {@code true}.
+     *
+     * @param <T>       the type of the intermediate result
+     * @param thenValue the value
+     * @return the intermediate result which still requires the otherwise-branch
+     */
+    public <T> ObjectConditionBuilder<T> then(final T thenValue) {
+        return new ObjectConditionBuilder<T>(thenValue);
+    }
+
     private static class WhenListener implements InvalidationListener {
 
         private final ObservableBooleanValue condition;
@@ -72,129 +301,6 @@ public class When {
 
     }
 
-    private static NumberBinding createNumberCondition(
-            final ObservableBooleanValue condition,
-            final ObservableNumberValue thenValue,
-            final ObservableNumberValue otherwiseValue) {
-        if ((thenValue instanceof ObservableDoubleValue) || (otherwiseValue instanceof ObservableDoubleValue)) {
-            return new DoubleBinding() {
-                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
-
-                {
-                    condition.addListener(observer);
-                    thenValue.addListener(observer);
-                    otherwiseValue.addListener(observer);
-                }
-
-                @Override
-                public void dispose() {
-                    condition.removeListener(observer);
-                    thenValue.removeListener(observer);
-                    otherwiseValue.removeListener(observer);
-                }
-
-                @Override
-                protected double computeValue() {
-                    final boolean conditionValue = condition.get();
-                    return conditionValue ? thenValue.doubleValue() : otherwiseValue.doubleValue();
-                }
-
-                @Override
-                public ObservableList<ObservableValue<?>> getDependencies() {
-                    return FXCollections.unmodifiableObservableList(
-                            FXCollections.<ObservableValue<?>>observableArrayList(condition, thenValue, otherwiseValue));
-                }
-            };
-        } else if ((thenValue instanceof ObservableFloatValue) || (otherwiseValue instanceof ObservableFloatValue)) {
-            return new FloatBinding() {
-                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
-
-                {
-                    condition.addListener(observer);
-                    thenValue.addListener(observer);
-                    otherwiseValue.addListener(observer);
-                }
-
-                @Override
-                public void dispose() {
-                    condition.removeListener(observer);
-                    thenValue.removeListener(observer);
-                    otherwiseValue.removeListener(observer);
-                }
-
-                @Override
-                protected float computeValue() {
-                    final boolean conditionValue = condition.get();
-                    return conditionValue ? thenValue.floatValue() : otherwiseValue.floatValue();
-                }
-
-                @Override
-                public ObservableList<ObservableValue<?>> getDependencies() {
-                    return FXCollections.unmodifiableObservableList(
-                            FXCollections.<ObservableValue<?>>observableArrayList(condition, thenValue, otherwiseValue));
-                }
-            };
-        } else if ((thenValue instanceof ObservableLongValue) || (otherwiseValue instanceof ObservableLongValue)) {
-            return new LongBinding() {
-                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
-
-                {
-                    condition.addListener(observer);
-                    thenValue.addListener(observer);
-                    otherwiseValue.addListener(observer);
-                }
-
-                @Override
-                public void dispose() {
-                    condition.removeListener(observer);
-                    thenValue.removeListener(observer);
-                    otherwiseValue.removeListener(observer);
-                }
-
-                @Override
-                protected long computeValue() {
-                    final boolean conditionValue = condition.get();
-                    return conditionValue ? thenValue.longValue() : otherwiseValue.longValue();
-                }
-
-                @Override
-                public ObservableList<ObservableValue<?>> getDependencies() {
-                    return FXCollections.unmodifiableObservableList(
-                            FXCollections.<ObservableValue<?>>observableArrayList(condition, thenValue, otherwiseValue));
-                }
-            };
-        } else {
-            return new IntegerBinding() {
-                final InvalidationListener observer = new WhenListener(this, condition, thenValue, otherwiseValue);
-
-                {
-                    condition.addListener(observer);
-                    thenValue.addListener(observer);
-                    otherwiseValue.addListener(observer);
-                }
-
-                @Override
-                public void dispose() {
-                    condition.removeListener(observer);
-                    thenValue.removeListener(observer);
-                    otherwiseValue.removeListener(observer);
-                }
-
-                @Override
-                protected int computeValue() {
-                    final boolean conditionValue = condition.get();
-                    return conditionValue ? thenValue.intValue() : otherwiseValue.intValue();
-                }
-
-                @Override
-                public ObservableList<ObservableValue<?>> getDependencies() {
-                    return FXCollections.unmodifiableObservableList(
-                            FXCollections.<ObservableValue<?>>observableArrayList(condition, thenValue, otherwiseValue));
-                }
-            };
-        }
-    }
-
     /**
      * If-then-else expression returning a number.
      *
@@ -202,7 +308,7 @@ public class When {
      */
     public class NumberConditionBuilder {
 
-        private ObservableNumberValue thenValue;
+        private final ObservableNumberValue thenValue;
 
         private NumberConditionBuilder(final ObservableNumberValue thenValue) {
             this.thenValue = thenValue;
@@ -258,57 +364,6 @@ public class When {
         public NumberBinding otherwise(int otherwiseValue) {
             return otherwise(IntegerConstant.valueOf(otherwiseValue));
         }
-    }
-
-    public NumberConditionBuilder then(final ObservableNumberValue thenValue) {
-        if (thenValue == null) {
-            throw new NullPointerException("Value needs to be specified");
-        }
-        return new NumberConditionBuilder(thenValue);
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public NumberConditionBuilder then(double thenValue) {
-        return new NumberConditionBuilder(DoubleConstant.valueOf(thenValue));
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public NumberConditionBuilder then(float thenValue) {
-        return new NumberConditionBuilder(FloatConstant.valueOf(thenValue));
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public NumberConditionBuilder then(long thenValue) {
-        return new NumberConditionBuilder(LongConstant.valueOf(thenValue));
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public NumberConditionBuilder then(int thenValue) {
-        return new NumberConditionBuilder(IntegerConstant.valueOf(thenValue));
     }
 
     /**
@@ -388,7 +443,7 @@ public class When {
         @Override
         public ObservableList<ObservableValue<?>> getDependencies() {
             assert condition != null;
-            final ObservableList<ObservableValue<?>> seq = FXCollections.<ObservableValue<?>>observableArrayList(condition);
+            final ObservableList<ObservableValue<?>> seq = FXCollections.observableArrayList(condition);
             if (trueResult != null) {
                 seq.add(trueResult);
             }
@@ -441,24 +496,6 @@ public class When {
             else
                 return new BooleanCondition(trueResultValue, otherwiseValue);
         }
-    }
-
-    public BooleanConditionBuilder then(final ObservableBooleanValue thenValue) {
-        if (thenValue == null) {
-            throw new NullPointerException("Value needs to be specified");
-        }
-        return new BooleanConditionBuilder(thenValue);
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public BooleanConditionBuilder then(final boolean thenValue) {
-        return new BooleanConditionBuilder(thenValue);
     }
 
     /**
@@ -540,7 +577,7 @@ public class When {
         @Override
         public ObservableList<ObservableValue<?>> getDependencies() {
             assert condition != null;
-            final ObservableList<ObservableValue<?>> seq = FXCollections.<ObservableValue<?>>observableArrayList(condition);
+            final ObservableList<ObservableValue<?>> seq = FXCollections.observableArrayList(condition);
             if (trueResult != null) {
                 seq.add(trueResult);
             }
@@ -590,24 +627,6 @@ public class When {
             else
                 return new StringCondition(trueResultValue, otherwiseValue);
         }
-    }
-
-    public StringConditionBuilder then(final ObservableStringValue thenValue) {
-        if (thenValue == null) {
-            throw new NullPointerException("Value needs to be specified");
-        }
-        return new StringConditionBuilder(thenValue);
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public StringConditionBuilder then(final String thenValue) {
-        return new StringConditionBuilder(thenValue);
     }
 
     /**
@@ -689,7 +708,7 @@ public class When {
         @Override
         public ObservableList<ObservableValue<?>> getDependencies() {
             assert condition != null;
-            final ObservableList<ObservableValue<?>> seq = FXCollections.<ObservableValue<?>>observableArrayList(condition);
+            final ObservableList<ObservableValue<?>> seq = FXCollections.observableArrayList(condition);
             if (trueResult != null) {
                 seq.add(trueResult);
             }
@@ -742,25 +761,6 @@ public class When {
             else
                 return new ObjectCondition<T>(trueResultValue, otherwiseValue);
         }
-    }
-
-    public <T> ObjectConditionBuilder<T> then(final ObservableObjectValue<T> thenValue) {
-        if (thenValue == null) {
-            throw new NullPointerException("Value needs to be specified");
-        }
-        return new ObjectConditionBuilder<T>(thenValue);
-    }
-
-    /**
-     * Defines a constant value of the ternary expression, that is returned if
-     * the condition is {@code true}.
-     *
-     * @param <T>       the type of the intermediate result
-     * @param thenValue the value
-     * @return the intermediate result which still requires the otherwise-branch
-     */
-    public <T> ObjectConditionBuilder<T> then(final T thenValue) {
-        return new ObjectConditionBuilder<T>(thenValue);
     }
 
 }

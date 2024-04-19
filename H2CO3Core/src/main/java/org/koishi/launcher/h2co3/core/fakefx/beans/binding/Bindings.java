@@ -38,6 +38,7 @@ import java.text.Format;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -2742,7 +2743,7 @@ public final class Bindings {
             protected boolean computeValue() {
                 final Object obj1 = op1.get();
                 final Object obj2 = op2.get();
-                return obj1 == null ? obj2 == null : obj1.equals(obj2);
+                return Objects.equals(obj1, obj2);
             }
 
             @Override
@@ -2786,7 +2787,7 @@ public final class Bindings {
             protected boolean computeValue() {
                 final Object obj1 = op1.get();
                 final Object obj2 = op2.get();
-                return obj1 == null ? obj2 != null : !obj1.equals(obj2);
+                return !Objects.equals(obj1, obj2);
             }
 
             @Override

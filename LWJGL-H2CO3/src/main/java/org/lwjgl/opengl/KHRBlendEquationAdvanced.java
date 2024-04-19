@@ -5,8 +5,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
-
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/KHR/KHR_blend_equation_advanced.txt">KHR_blend_equation_advanced</a> extension.
  * 

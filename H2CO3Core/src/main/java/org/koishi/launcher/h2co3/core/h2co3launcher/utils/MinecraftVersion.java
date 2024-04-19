@@ -6,7 +6,7 @@ import org.koishi.launcher.h2co3.core.H2CO3Settings;
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +36,8 @@ public class MinecraftVersion {
     private String inheritsFrom;
     private String minecraftPath;
 
-    public static MinecraftVersion fromDirectory(File file) {
-        String json = new String(FileTools.readFile(new File(file, file.getName() + ".json")), StandardCharsets.UTF_8);
+    public static MinecraftVersion fromDirectory(File file) throws UnsupportedEncodingException {
+        String json = new String(FileTools.readFile(new File(file, file.getName() + ".json")), "UTF-8");
         MinecraftVersion result = new Gson().fromJson(json, MinecraftVersion.class);
         result.minecraftPath = new File(file, file.getName() + ".jar").getAbsolutePath();
 

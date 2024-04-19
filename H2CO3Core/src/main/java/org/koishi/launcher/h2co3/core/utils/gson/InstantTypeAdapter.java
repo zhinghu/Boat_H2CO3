@@ -41,10 +41,6 @@ import java.util.Locale;
 
 public final class InstantTypeAdapter implements JsonSerializer<Instant>, JsonDeserializer<Instant> {
     public static final InstantTypeAdapter INSTANCE = new InstantTypeAdapter();
-
-    private InstantTypeAdapter() {
-    }
-
     private static final DateTimeFormatter EN_US_FORMAT = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM, FormatStyle.MEDIUM)
             .withLocale(Locale.US)
             .withZone(ZoneId.systemDefault());
@@ -55,6 +51,9 @@ public final class InstantTypeAdapter implements JsonSerializer<Instant>, JsonDe
             .optionalStart().appendOffset("+HH", "Z").optionalEnd()
             .optionalStart().appendOffsetId().optionalEnd()
             .toFormatter();
+
+    private InstantTypeAdapter() {
+    }
 
     public static Instant deserializeToInstant(String string) {
         try {

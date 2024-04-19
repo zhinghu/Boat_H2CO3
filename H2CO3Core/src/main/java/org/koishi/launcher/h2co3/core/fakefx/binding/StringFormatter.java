@@ -60,7 +60,7 @@ public abstract class StringFormatter extends StringBinding {
 
                 @Override
                 public ObservableList<ObservableValue<?>> getDependencies() {
-                    return FXCollections.<ObservableValue<?>>singletonObservableList(observableValue);
+                    return FXCollections.singletonObservableList(observableValue);
                 }
             };
         }

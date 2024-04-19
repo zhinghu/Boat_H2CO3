@@ -48,8 +48,8 @@ public interface FT_Realloc_FuncI extends CallbackI {
         long __result = invoke(
                 memGetAddress(memGetAddress(args)),
                 memGetCLong(memGetAddress(args + POINTER_SIZE)),
-                memGetCLong(memGetAddress(args + 2 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 3 * POINTER_SIZE))
+                memGetCLong(memGetAddress(args + 2L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 3L * POINTER_SIZE))
         );
         apiClosureRetP(ret, __result);
     }

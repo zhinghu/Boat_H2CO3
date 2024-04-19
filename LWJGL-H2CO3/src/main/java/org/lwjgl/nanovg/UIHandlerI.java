@@ -5,12 +5,17 @@
  */
 package org.lwjgl.nanovg;
 
-import org.lwjgl.system.*;
-import org.lwjgl.system.libffi.*;
+import static org.lwjgl.system.APIUtil.apiCreateCIF;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memGetInt;
+import static org.lwjgl.system.libffi.LibFFI.FFI_DEFAULT_ABI;
+import static org.lwjgl.system.libffi.LibFFI.ffi_type_sint32;
+import static org.lwjgl.system.libffi.LibFFI.ffi_type_uint32;
+import static org.lwjgl.system.libffi.LibFFI.ffi_type_void;
 
-import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.libffi.LibFFI.*;
+import org.lwjgl.system.CallbackI;
+import org.lwjgl.system.NativeType;
+import org.lwjgl.system.libffi.FFICIF;
 
 /**
  * Instances of this interface may be passed to the {@link OUI#uiSetHandler SetHandler} method.

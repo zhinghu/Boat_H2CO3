@@ -91,15 +91,13 @@ public final class SortedList<E> extends TransformationList<E, E> {
         }
     }
 
-    ;
-
     /**
      * The comparator that denotes the order of this SortedList.
      * Null for unordered SortedList.
      */
     private ObjectProperty<Comparator<? super E>> comparator;
 
-    public final ObjectProperty<Comparator<? super E>> comparatorProperty() {
+    public ObjectProperty<Comparator<? super E>> comparatorProperty() {
         if (comparator == null) {
             comparator = new ObjectPropertyBase<Comparator<? super E>>() {
 
@@ -125,11 +123,11 @@ public final class SortedList<E> extends TransformationList<E, E> {
         return comparator;
     }
 
-    public final Comparator<? super E> getComparator() {
+    public Comparator<? super E> getComparator() {
         return comparator == null ? null : comparator.get();
     }
 
-    public final void setComparator(Comparator<? super E> comparator) {
+    public void setComparator(Comparator<? super E> comparator) {
         comparatorProperty().set(comparator);
     }
 

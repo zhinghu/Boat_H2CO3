@@ -4,12 +4,15 @@
  */
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
-import org.lwjgl.system.macosx.*;
+import static org.lwjgl.system.JNI.invokePPP;
+import static org.lwjgl.system.JNI.invokePPZ;
+import static org.lwjgl.system.macosx.LibC.getpid;
+import static org.lwjgl.system.macosx.ObjCRuntime.objc_getClass;
+import static org.lwjgl.system.macosx.ObjCRuntime.sel_getUid;
 
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.macosx.LibC.*;
-import static org.lwjgl.system.macosx.ObjCRuntime.*;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.Platform;
+import org.lwjgl.system.macosx.ObjCRuntime;
 
 /**
  * Contains checks for the event loop issues on OS X.

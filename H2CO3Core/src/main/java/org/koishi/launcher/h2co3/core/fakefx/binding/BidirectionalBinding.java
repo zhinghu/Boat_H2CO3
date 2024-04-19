@@ -184,8 +184,7 @@ public abstract class BidirectionalBinding implements InvalidationListener, Weak
             return false;
         }
 
-        if (obj instanceof BidirectionalBinding) {
-            final BidirectionalBinding otherBinding = (BidirectionalBinding) obj;
+        if (obj instanceof BidirectionalBinding otherBinding) {
             final Object propertyB1 = otherBinding.getProperty1();
             final Object propertyB2 = otherBinding.getProperty2();
             if ((propertyB1 == null) || (propertyB2 == null)) {
@@ -195,9 +194,7 @@ public abstract class BidirectionalBinding implements InvalidationListener, Weak
             if (propertyA1 == propertyB1 && propertyA2 == propertyB2) {
                 return true;
             }
-            if (propertyA1 == propertyB2 && propertyA2 == propertyB1) {
-                return true;
-            }
+            return propertyA1 == propertyB2 && propertyA2 == propertyB1;
         }
         return false;
     }

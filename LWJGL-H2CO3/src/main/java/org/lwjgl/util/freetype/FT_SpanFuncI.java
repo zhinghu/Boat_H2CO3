@@ -48,8 +48,8 @@ public interface FT_SpanFuncI extends CallbackI {
         invoke(
                 memGetInt(memGetAddress(args)),
                 memGetInt(memGetAddress(args + POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 2 * POINTER_SIZE)),
-                memGetAddress(memGetAddress(args + 3 * POINTER_SIZE))
+                memGetAddress(memGetAddress(args + 2L * POINTER_SIZE)),
+                memGetAddress(memGetAddress(args + 3L * POINTER_SIZE))
         );
     }
 

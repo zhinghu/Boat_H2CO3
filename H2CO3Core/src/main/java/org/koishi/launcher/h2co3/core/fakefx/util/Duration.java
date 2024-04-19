@@ -34,6 +34,19 @@ public class Duration implements Comparable<Duration>, Serializable {
      * A Duration of some unknown amount of time.
      */
     public static final Duration UNKNOWN = new Duration(Double.NaN);
+    /**
+     * The value of this duration, in fractional milliseconds
+     */
+    private final double millis;
+
+    /**
+     * Creates a new Duration with potentially fractional millisecond resolution.
+     *
+     * @param millis The number of milliseconds
+     */
+    public Duration(@NamedArg("millis") double millis) {
+        this.millis = millis;
+    }
 
     /**
      * Factory method that returns a Duration instance for a specified
@@ -151,20 +164,6 @@ public class Duration implements Comparable<Duration>, Serializable {
         } else {
             return new Duration(h * (1000.0 * 60.0 * 60.0));
         }
-    }
-
-    /**
-     * The value of this duration, in fractional milliseconds
-     */
-    private final double millis;
-
-    /**
-     * Creates a new Duration with potentially fractional millisecond resolution.
-     *
-     * @param millis The number of milliseconds
-     */
-    public Duration(@NamedArg("millis") double millis) {
-        this.millis = millis;
     }
 
     /**

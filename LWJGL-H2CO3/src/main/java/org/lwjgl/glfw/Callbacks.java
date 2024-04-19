@@ -4,11 +4,13 @@
  */
 package org.lwjgl.glfw;
 
-import org.lwjgl.system.*;
+import static org.lwjgl.system.Checks.check;
+import static org.lwjgl.system.JNI.invokePPP;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.JNI.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.Checks;
+import org.lwjgl.system.NativeType;
 
 /** Utility class for GLFW callbacks. */
 public final class Callbacks {

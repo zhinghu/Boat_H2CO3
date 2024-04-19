@@ -228,7 +228,7 @@ public class TT_PCLT extends Struct<TT_PCLT> {
      * Unsafe version of {@link #TypeFace(int) TypeFace}.
      */
     public static byte nTypeFace(long struct, int index) {
-        return UNSAFE.getByte(null, struct + TT_PCLT.TYPEFACE + check(index, 16) * 1);
+        return UNSAFE.getByte(null, struct + TT_PCLT.TYPEFACE + check(index, 16));
     }
 
     /**
@@ -242,7 +242,7 @@ public class TT_PCLT extends Struct<TT_PCLT> {
      * Unsafe version of {@link #CharacterComplement(int) CharacterComplement}.
      */
     public static byte nCharacterComplement(long struct, int index) {
-        return UNSAFE.getByte(null, struct + TT_PCLT.CHARACTERCOMPLEMENT + check(index, 8) * 1);
+        return UNSAFE.getByte(null, struct + TT_PCLT.CHARACTERCOMPLEMENT + check(index, 8));
     }
 
     /**
@@ -256,7 +256,7 @@ public class TT_PCLT extends Struct<TT_PCLT> {
      * Unsafe version of {@link #FileName(int) FileName}.
      */
     public static byte nFileName(long struct, int index) {
-        return UNSAFE.getByte(null, struct + TT_PCLT.FILENAME + check(index, 6) * 1);
+        return UNSAFE.getByte(null, struct + TT_PCLT.FILENAME + check(index, 6));
     }
 
     /**

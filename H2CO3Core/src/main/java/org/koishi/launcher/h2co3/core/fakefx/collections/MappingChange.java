@@ -18,7 +18,7 @@ public final class MappingChange<E, F> extends Change<F> {
         }
     };
 
-    public static interface Map<E, F> {
+    public interface Map<E, F> {
         F map(E original);
     }
 

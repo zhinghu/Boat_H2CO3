@@ -63,6 +63,17 @@ public class DebugInfo implements Input, View.OnClickListener {
     }
 
     @Override
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+        if (enabled) {
+            mLogView.setVisibility(View.VISIBLE);
+        } else {
+            mLogView.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
     public boolean load(Context context, Controller controller, H2CO3LauncherBridge bridge) {
         this.mContext = context;
         this.mController = controller;
@@ -143,16 +154,5 @@ public class DebugInfo implements Input, View.OnClickListener {
         } else {
             FileTools.addStringLineToFile(log, logFile);
         }
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
-        if (enabled) {
-            mLogView.setVisibility(View.VISIBLE);
-        } else {
-            mLogView.setVisibility(View.GONE);
-        }
-
     }
 }

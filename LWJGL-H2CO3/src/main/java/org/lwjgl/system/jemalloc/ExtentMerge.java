@@ -5,11 +5,11 @@
  */
 package org.lwjgl.system.jemalloc;
 
-import javax.annotation.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import javax.annotation.Nullable;
 
 /**
  * Instances of this class may be set to the {@link ExtentHooks} struct.

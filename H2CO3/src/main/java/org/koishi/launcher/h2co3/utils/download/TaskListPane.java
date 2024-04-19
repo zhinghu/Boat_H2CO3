@@ -1,6 +1,5 @@
 package org.koishi.launcher.h2co3.utils.download;
 
-
 import static org.koishi.launcher.h2co3.core.utils.AndroidUtils.getLocalizedText;
 import static org.koishi.launcher.h2co3.core.utils.Lang.tryCast;
 
@@ -9,7 +8,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -45,6 +43,7 @@ import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
 import org.koishi.launcher.h2co3.core.utils.task.TaskListener;
+import org.koishi.launcher.h2co3.resources.component.H2CO3Adapter;
 import org.koishi.launcher.h2co3.resources.component.H2CO3LinearProgress;
 import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
@@ -54,60 +53,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class TaskListPane extends BaseAdapter {
+public final class TaskListPane extends H2CO3Adapter {
 
     private final TaskExecutor executor;
     private final Map<Task<?>, ProgressListNode> nodes = new HashMap<>();
     private final List<StageNode> stageNodes = new ArrayList<>();
     private final ArrayList<View> listBox = new ArrayList<>();
 
-    private final Context context;
-
     public TaskListPane(Context context, TaskExecutor taskExecutor) {
-        super();
-        this.context = context;
+        super(context);
         this.executor = taskExecutor;
         setExecutor(taskExecutor);
-    }
-
-    private static String getTaskName(Context context, Task<?> task) {
-        String taskName = task.getName();
-        if (task instanceof GameAssetDownloadTask) {
-            taskName = getLocalizedText(context, "assets_download_all");
-        } else if (task instanceof GameInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_game"));
-        } else if (task instanceof ForgeNewInstallTask || task instanceof ForgeOldInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_forge"));
-        } else if (task instanceof NeoForgeInstallTask || task instanceof NeoForgeOldInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_neoforge"));
-        } else if (task instanceof LiteLoaderInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_liteloader"));
-        } else if (task instanceof OptiFineInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_optifine"));
-        } else if (task instanceof FabricInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_fabric"));
-        } else if (task instanceof FabricAPIInstallTask) {
-            taskName = getLocalizedText(context, "install_installer_install", getLocalizedText(context, "install_installer_fabric_api"));
-        } else if (task instanceof CurseCompletionTask || task instanceof ModrinthCompletionTask || task instanceof ServerModpackCompletionTask || task instanceof McbbsModpackCompletionTask) {
-            taskName = getLocalizedText(context, "modpack_completion");
-        } else if (task instanceof ModpackInstallTask) {
-            taskName = getLocalizedText(context, "modpack_installing");
-        } else if (task instanceof ModpackUpdateTask) {
-            taskName = getLocalizedText(context, "modpack_update");
-        } else if (task instanceof CurseInstallTask) {
-            taskName = getLocalizedText(context, "modpack_install", getLocalizedText(context, "modpack_type_curse"));
-        } else if (task instanceof MultiMCModpackInstallTask) {
-            taskName = getLocalizedText(context, "modpack_install", getLocalizedText(context, "modpack_type_multimc"));
-        } else if (task instanceof ModrinthInstallTask) {
-            taskName = getLocalizedText(context, "modpack_install", getLocalizedText(context, "modpack_type_modrinth"));
-        } else if (task instanceof ServerModpackLocalInstallTask) {
-            taskName = getLocalizedText(context, "modpack_install", getLocalizedText(context, "modpack_type_server"));
-        } else if (task instanceof McbbsModpackExportTask || task instanceof MultiMCModpackExportTask || task instanceof ServerModpackExportTask) {
-            taskName = getLocalizedText(context, "modpack_export");
-        } else if (task instanceof MinecraftInstanceTask) {
-            taskName = getLocalizedText(context, "modpack_scan");
-        }
-        return taskName;
     }
 
     @Override
@@ -118,11 +74,6 @@ public final class TaskListPane extends BaseAdapter {
     @Override
     public Object getItem(int i) {
         return listBox.get(i);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
     }
 
     @Override
@@ -137,8 +88,10 @@ public final class TaskListPane extends BaseAdapter {
             public void onStart() {
                 Schedulers.androidUIThread().execute(() -> {
                     stageNodes.clear();
-                    stageNodes.addAll(stages.stream().map(it -> new StageNode(context, it)).collect(Collectors.toList()));
-                    stageNodes.forEach(stageNode -> listBox.add(stageNode.getView()));
+                    stageNodes.addAll(stages.stream().map(it -> new StageNode(getContext(), it)).collect(Collectors.toList()));
+                    for (StageNode stageNode : stageNodes) {
+                        listBox.add(stageNode.getView());
+                    }
                     notifyDataSetChanged();
                 });
             }
@@ -146,10 +99,7 @@ public final class TaskListPane extends BaseAdapter {
             @Override
             public void onReady(Task<?> task) {
                 if (task.getStage() != null) {
-                    Schedulers.androidUIThread().execute(() -> stageNodes.stream()
-                            .filter(x -> x.stage.equals(task.getStage()))
-                            .findAny()
-                            .ifPresent(StageNode::begin));
+                    Schedulers.androidUIThread().execute(() -> stageNodes.stream().filter(x -> x.stage.equals(task.getStage())).findAny().ifPresent(StageNode::begin));
                 }
             }
 
@@ -158,11 +108,45 @@ public final class TaskListPane extends BaseAdapter {
                 if (!task.getSignificance().shouldShow() || task.getName() == null)
                     return;
 
-                task.setName(getTaskName(context, task));
+                if (task instanceof GameAssetDownloadTask) {
+                    task.setName(getLocalizedText(getContext(), "assets_download_all"));
+                } else if (task instanceof GameInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_game")));
+                } else if (task instanceof ForgeNewInstallTask || task instanceof ForgeOldInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_forge")));
+                } else if (task instanceof NeoForgeInstallTask || task instanceof NeoForgeOldInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_neoforge")));
+                } else if (task instanceof LiteLoaderInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_liteloader")));
+                } else if (task instanceof OptiFineInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_optifine")));
+                } else if (task instanceof FabricInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_fabric")));
+                } else if (task instanceof FabricAPIInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "install_installer_install", getLocalizedText(getContext(), "install_installer_fabric_api")));
+                } else if (task instanceof CurseCompletionTask || task instanceof ModrinthCompletionTask || task instanceof ServerModpackCompletionTask || task instanceof McbbsModpackCompletionTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_completion"));
+                } else if (task instanceof ModpackInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_installing"));
+                } else if (task instanceof ModpackUpdateTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_update"));
+                } else if (task instanceof CurseInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_install", getLocalizedText(getContext(), "modpack_type_curse")));
+                } else if (task instanceof MultiMCModpackInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_install", getLocalizedText(getContext(), "modpack_type_multimc")));
+                } else if (task instanceof ModrinthInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_install", getLocalizedText(getContext(), "modpack_type_modrinth")));
+                } else if (task instanceof ServerModpackLocalInstallTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_install", getLocalizedText(getContext(), "modpack_type_server")));
+                } else if (task instanceof McbbsModpackExportTask || task instanceof MultiMCModpackExportTask || task instanceof ServerModpackExportTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_export"));
+                } else if (task instanceof MinecraftInstanceTask) {
+                    task.setName(getLocalizedText(getContext(), "modpack_scan"));
+                }
 
                 Schedulers.androidUIThread().execute(() -> {
                     StageNode stageNode = stageNodes.stream().filter(x -> x.stage.equals(task.getInheritedStage())).findAny().orElse(null);
-                    ProgressListNode node = new ProgressListNode(context, stageNode != null && stageNodes.contains(stageNode), task);
+                    ProgressListNode node = new ProgressListNode(getContext(), stageNode != null && stageNodes.contains(stageNode), task);
                     nodes.put(task, node);
                     listBox.add(stageNode == null || !stageNodes.contains(stageNode) ? 0 : listBox.indexOf(stageNode.getView()) + 1, node.getView());
                     notifyDataSetChanged();
@@ -225,12 +209,13 @@ public final class TaskListPane extends BaseAdapter {
         private final Context context;
         private final String stage;
         private final String message;
-        private final View parent;
-        private final H2CO3TextView title;
-        private final AppCompatImageView icon;
         private int count = 0;
         private int total = 0;
         private boolean started = false;
+
+        private final View parent;
+        private final H2CO3TextView title;
+        private final AppCompatImageView icon;
 
         public StageNode(Context context, String stage) {
             this.context = context;
@@ -261,7 +246,7 @@ public final class TaskListPane extends BaseAdapter {
             // @formatter:on
 
             title.setText(message);
-            icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_update));
+            icon.setImageDrawable(context.getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.ic_menu_custom));
         }
 
         public void begin() {

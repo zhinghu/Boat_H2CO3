@@ -14,6 +14,14 @@ import java.util.List;
 public interface ListChangeListener<E> {
 
     /**
+     * Called after a change has been made to an ObservableList.
+     *
+     * @param c an object representing the change that was done
+     * @see Change
+     */
+    void onChanged(Change<? extends E> c);
+
+    /**
      * Represents a report of changes done to an {@link ObservableList}. The change may consist of one or more actual
      * changes and must be iterated by calling the {@link #next()} method.
      * <p>
@@ -86,7 +94,7 @@ public interface ListChangeListener<E> {
      * @param <E> the list element type
      * @since JavaFX 2.0
      */
-    public abstract static class Change<E> {
+    abstract class Change<E> {
         private final ObservableList<E> list;
 
         /**
@@ -227,7 +235,7 @@ public interface ListChangeListener<E> {
          * @throws IllegalStateException if this Change instance is in initial state
          */
         public List<E> getAddedSubList() {
-            return wasAdded() ? getList().subList(getFrom(), getTo()) : Collections.<E>emptyList();
+            return wasAdded() ? getList().subList(getFrom(), getTo()) : Collections.emptyList();
         }
 
         /**
@@ -287,12 +295,4 @@ public interface ListChangeListener<E> {
         }
 
     }
-
-    /**
-     * Called after a change has been made to an ObservableList.
-     *
-     * @param c an object representing the change that was done
-     * @see Change
-     */
-    public void onChanged(Change<? extends E> c);
 }

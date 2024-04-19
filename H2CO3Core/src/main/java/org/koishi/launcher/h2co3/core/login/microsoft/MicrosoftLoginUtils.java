@@ -21,9 +21,9 @@ import org.koishi.launcher.h2co3.core.utils.io.ResponseCodeException;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -94,10 +94,10 @@ public class MicrosoftLoginUtils {
         return builder.build().getEncodedQuery();
     }
 
-    private static void setRequestProperties(HttpURLConnection conn, String contentType, String req) {
+    private static void setRequestProperties(HttpURLConnection conn, String contentType, String req) throws UnsupportedEncodingException {
         conn.setRequestProperty("Content-Type", contentType);
         conn.setRequestProperty("charset", "utf-8");
-        conn.setRequestProperty("Content-Length", String.valueOf(req.getBytes(StandardCharsets.UTF_8).length));
+        conn.setRequestProperty("Content-Length", String.valueOf(req.getBytes("UTF-8").length));
     }
 
     private static void setRequestOutput(HttpURLConnection conn, String req) throws IOException {
@@ -107,7 +107,7 @@ public class MicrosoftLoginUtils {
         conn.setDoOutput(true);
         conn.connect();
         try (OutputStream wr = conn.getOutputStream()) {
-            wr.write(req.getBytes(StandardCharsets.UTF_8));
+            wr.write(req.getBytes("UTF-8"));
         }
     }
 

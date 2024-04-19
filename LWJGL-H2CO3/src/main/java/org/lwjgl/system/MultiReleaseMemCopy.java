@@ -4,9 +4,10 @@
  */
 package org.lwjgl.system;
 
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.Pointer.*;
-import static org.lwjgl.system.libc.LibCString.*;
+import static org.lwjgl.system.MemoryUtil.UNSAFE;
+import static org.lwjgl.system.MemoryUtil.memCopyAligned64;
+import static org.lwjgl.system.Pointer.BITS64;
+import static org.lwjgl.system.libc.LibCString.nmemcpy;
 
 final class MultiReleaseMemCopy {
 

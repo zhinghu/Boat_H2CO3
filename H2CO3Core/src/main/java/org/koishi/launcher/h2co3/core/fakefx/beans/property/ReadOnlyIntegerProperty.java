@@ -107,6 +107,4 @@ public abstract class ReadOnlyIntegerProperty extends IntegerExpression
         };
     }
 
-    ;
-
 }

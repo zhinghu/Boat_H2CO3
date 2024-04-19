@@ -235,120 +235,6 @@ public class DirectoryFragment extends H2CO3Fragment {
         dialog.show();
     }
 
-    class VersionRecyclerAdapter extends RecyclerView.Adapter<VersionRecyclerAdapter.MyViewHolder> {
-        private final List<String> datas;
-        private final LayoutInflater inflater;
-
-        public VersionRecyclerAdapter(Context context, List<String> datas) {
-            inflater = LayoutInflater.from(context);
-            this.datas = datas;
-        }
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.item_version_local, null);
-            return new MyViewHolder(itemView);
-        }
-
-        @SuppressLint("UseCompatLoadingForDrawables")
-        @Override
-        public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-            holder.textview.setText(datas.get(position));
-            File f = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
-            String verF = H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position);
-            if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
-                holder.rl.setStrokeWidth(13);
-            } else {
-                holder.rl.setStrokeWidth(3);
-            }
-            if (f.isDirectory() && f.exists()) {
-            } else {
-                holder.rl.setEnabled(false);
-                holder.ic.setImageDrawable(getResources().getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
-            }
-            holder.rl.setOnClickListener(v -> {
-                holder.dirs = datas.get(position);
-                showExecDialog(holder.dirs);
-            });
-
-            if (holder.rl.getTag() == null) {
-                holder.rl.setTag(true);
-                holder.rl.setOnClickListener(v -> {
-                    if (f.exists() && f.isDirectory()) {
-                        verAdapter.notifyItemChanged(position);
-                        H2CO3GameHelper.setGameCurrentVersion(verF);
-                        verRecyclerView.setAdapter(verAdapter);
-                        if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
-                            holder.rl.setStrokeWidth(13);
-                        } else {
-                            holder.rl.setStrokeWidth(3);
-                        }
-                    }
-                });
-            }
-
-            holder.btn.setOnClickListener(v -> {
-                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
-                alertDialogBuilder.setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action));
-                alertDialogBuilder.setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del);
-                alertDialogBuilder.setPositiveButton("Yes Yes Yes", (dialogInterface, i) -> {
-                    holder.btn.setVisibility(View.INVISIBLE);
-                    holder.textview.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                    holder.rl.setEnabled(false);
-                    File f1 = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
-                    new Thread(() -> {
-                        if (f1.isDirectory()) {
-                            try {
-                                FileTools.deleteDirectory(f1);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        } else {
-                            deleteFile(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
-                        }
-                        handler.sendEmptyMessage(2);
-                    }).start();
-                });
-                alertDialogBuilder.setNegativeButton("No No No", (dialogInterface, i) -> {
-                });
-                AlertDialog alertDialog1 = alertDialogBuilder.create();
-                alertDialog1.show();
-            });
-        }
-
-        public void showExecDialog(String dir) {
-        }
-
-        @Override
-        public int getItemCount() {
-            return datas.size();
-        }
-
-        public void deleteFile(String filePath) {
-            File file = new File(filePath);
-            if (file.isFile() && file.exists()) {
-                file.delete();
-            }
-        }
-
-        class MyViewHolder extends RecyclerView.ViewHolder {
-            private final TextView textview;
-            private final MaterialButton btn;
-            private final ImageView ic;
-            private final MaterialCardView rl;
-            private String dirs;
-
-            public MyViewHolder(View itemView) {
-                super(itemView);
-                textview = itemView.findViewById(R.id.ver_name);
-                btn = itemView.findViewById(R.id.ver_remove);
-                rl = itemView.findViewById(R.id.ver_item);
-                ic = itemView.findViewById(R.id.ver_icon);
-            }
-        }
-    }
-
     public void newDir() {
         new Thread(() -> {
             try {
@@ -466,6 +352,120 @@ public class DirectoryFragment extends H2CO3Fragment {
             }
         }
         return false;
+    }
+
+    class VersionRecyclerAdapter extends RecyclerView.Adapter<VersionRecyclerAdapter.MyViewHolder> {
+        private final List<String> datas;
+        private final LayoutInflater inflater;
+
+        public VersionRecyclerAdapter(Context context, List<String> datas) {
+            inflater = LayoutInflater.from(context);
+            this.datas = datas;
+        }
+
+        @NonNull
+        @Override
+        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.item_version_local, null);
+            return new MyViewHolder(itemView);
+        }
+
+        @SuppressLint("UseCompatLoadingForDrawables")
+        @Override
+        public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+            holder.textview.setText(datas.get(position));
+            File f = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+            String verF = H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position);
+            if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
+                holder.rl.setStrokeWidth(13);
+            } else {
+                holder.rl.setStrokeWidth(3);
+            }
+            if (f.isDirectory() && f.exists()) {
+            } else {
+                holder.rl.setEnabled(false);
+                holder.ic.setImageDrawable(getResources().getDrawable(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
+            }
+            holder.rl.setOnClickListener(v -> {
+                holder.dirs = datas.get(position);
+                showExecDialog(holder.dirs);
+            });
+
+            if (holder.rl.getTag() == null) {
+                holder.rl.setTag(true);
+                holder.rl.setOnClickListener(v -> {
+                    if (f.exists() && f.isDirectory()) {
+                        verAdapter.notifyItemChanged(position);
+                        H2CO3GameHelper.setGameCurrentVersion(verF);
+                        verRecyclerView.setAdapter(verAdapter);
+                        if (verF.equals(H2CO3GameHelper.getGameCurrentVersion())) {
+                            holder.rl.setStrokeWidth(13);
+                        } else {
+                            holder.rl.setStrokeWidth(3);
+                        }
+                    }
+                });
+            }
+
+            holder.btn.setOnClickListener(v -> {
+                MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
+                alertDialogBuilder.setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.title_action));
+                alertDialogBuilder.setMessage(org.koishi.launcher.h2co3.resources.R.string.ver_if_del);
+                alertDialogBuilder.setPositiveButton("Yes Yes Yes", (dialogInterface, i) -> {
+                    holder.btn.setVisibility(View.INVISIBLE);
+                    holder.textview.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+                    holder.rl.setEnabled(false);
+                    File f1 = new File(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+                    new Thread(() -> {
+                        if (f1.isDirectory()) {
+                            try {
+                                FileTools.deleteDirectory(f1);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        } else {
+                            deleteFile(H2CO3GameHelper.getGameDirectory() + "/versions/" + datas.get(position));
+                        }
+                        handler.sendEmptyMessage(2);
+                    }).start();
+                });
+                alertDialogBuilder.setNegativeButton("No No No", (dialogInterface, i) -> {
+                });
+                AlertDialog alertDialog1 = alertDialogBuilder.create();
+                alertDialog1.show();
+            });
+        }
+
+        public void showExecDialog(String dir) {
+        }
+
+        @Override
+        public int getItemCount() {
+            return datas.size();
+        }
+
+        public void deleteFile(String filePath) {
+            File file = new File(filePath);
+            if (file.isFile() && file.exists()) {
+                file.delete();
+            }
+        }
+
+        class MyViewHolder extends RecyclerView.ViewHolder {
+            private final TextView textview;
+            private final MaterialButton btn;
+            private final ImageView ic;
+            private final MaterialCardView rl;
+            private String dirs;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                textview = itemView.findViewById(R.id.ver_name);
+                btn = itemView.findViewById(R.id.ver_remove);
+                rl = itemView.findViewById(R.id.ver_item);
+                ic = itemView.findViewById(R.id.ver_icon);
+            }
+        }
     }
 
     class DirectoryAdapter extends BaseRecycleAdapter<String> {

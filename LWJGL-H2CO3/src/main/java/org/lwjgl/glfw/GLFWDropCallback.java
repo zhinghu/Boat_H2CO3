@@ -5,13 +5,15 @@
  */
 package org.lwjgl.glfw;
 
-import javax.annotation.*;
+import static org.lwjgl.glfw.GLFW.glfwSetDropCallback;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.MemoryUtil.memGetAddress;
+import static org.lwjgl.system.MemoryUtil.memUTF8;
 
-import org.lwjgl.system.*;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.Pointer;
 
-import static org.lwjgl.system.MemoryUtil.*;
-
-import static org.lwjgl.glfw.GLFW.*;
+import javax.annotation.Nullable;
 
 /**
  * Instances of this class may be passed to the {@link GLFW#glfwSetDropCallback SetDropCallback} method.
@@ -73,7 +75,7 @@ public abstract class GLFWDropCallback extends Callback implements GLFWDropCallb
      * @return the name at the specified index as a String
      */
     public static String getName(long names, int index) {
-        return memUTF8(memGetAddress(names + Pointer.POINTER_SIZE * index));
+        return memUTF8(memGetAddress(names + (long) Pointer.POINTER_SIZE * index));
     }
 
     /** See {@link GLFW#glfwSetDropCallback SetDropCallback}. */

@@ -18,5 +18,5 @@ public @interface IDProperty {
     /**
      * The name of the ID property.
      */
-    public String value();
+    String value();
 }

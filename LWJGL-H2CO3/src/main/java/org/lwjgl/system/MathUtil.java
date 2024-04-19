@@ -4,7 +4,7 @@
  */
 package org.lwjgl.system;
 
-import java.math.*;
+import java.math.BigInteger;
 
 /**
  * Math utility class.

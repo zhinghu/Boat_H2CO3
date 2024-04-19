@@ -17,7 +17,7 @@
  */
 package org.koishi.launcher.h2co3.core.utils.task;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 import org.koishi.launcher.h2co3.core.utils.file.FileTools;
 
@@ -35,7 +35,7 @@ public final class GetTask extends FetchTask<String> {
     private final Charset charset;
 
     public GetTask(URL url) {
-        this(url, UTF_8);
+        this(url, Charset.forName("UTF-8"));
     }
 
     public GetTask(URL url, Charset charset) {
@@ -47,7 +47,7 @@ public final class GetTask extends FetchTask<String> {
     }
 
     public GetTask(List<URL> url) {
-        this(url, UTF_8, 3);
+        this(url, Charset.forName("UTF-8"), 3);
     }
 
     public GetTask(List<URL> urls, Charset charset, int retry) {
@@ -81,7 +81,7 @@ public final class GetTask extends FetchTask<String> {
             public void close() throws IOException {
                 if (!isSuccess()) return;
 
-                String result = baos.toString(charset.name());
+                String result = new String(baos.toByteArray(), charset);
                 setResult(result);
 
                 if (checkETag) {

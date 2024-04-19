@@ -78,8 +78,8 @@ public class H2CO3VirtualController extends BaseController implements View.OnCli
     public OnscreenInput onscreenTouchpad;
     public Input debugInfo;
     public H2CO3LauncherBridge h2co3LauncherBridge;
-    private VirtualControllerSetting settingDialog;
     public AlertDialog settingDialogAlert;
+    private VirtualControllerSetting settingDialog;
     private ImageButton buttonCustomizeKeyboard;
     private MaterialSwitch switchCustomizeKeyboard;
     private ImageButton buttonPEItembar;

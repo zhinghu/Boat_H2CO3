@@ -29,8 +29,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class ObservableHelper implements Observable, InvalidationListener {
 
-    private List<InvalidationListener> listeners = new CopyOnWriteArrayList<>();
-    private Observable source;
+    private final List<InvalidationListener> listeners = new CopyOnWriteArrayList<>();
+    private final Observable source;
 
     public ObservableHelper() {
         this.source = this;

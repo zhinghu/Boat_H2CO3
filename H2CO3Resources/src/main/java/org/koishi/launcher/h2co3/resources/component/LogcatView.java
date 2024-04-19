@@ -68,7 +68,7 @@ public class LogcatView extends RecyclerView {
 
     private class LogcatAdapter extends RecyclerView.Adapter<LogcatAdapter.LogViewHolder> {
 
-        private List<String> logs;
+        private final List<String> logs;
 
         public LogcatAdapter() {
             logs = new ArrayList<>();
@@ -107,7 +107,7 @@ public class LogcatView extends RecyclerView {
 
         private class LogViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
-            private TextView logTextView;
+            private final TextView logTextView;
 
             public LogViewHolder(@NonNull View itemView) {
                 super(itemView);

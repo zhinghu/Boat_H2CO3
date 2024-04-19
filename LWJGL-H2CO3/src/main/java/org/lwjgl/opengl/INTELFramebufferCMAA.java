@@ -5,8 +5,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.lwjgl.system.*;
-
 /**
  * Native bindings to the <a href="https://www.khronos.org/registry/OpenGL/extensions/INTEL/INTEL_framebuffer_CMAA.txt">INTEL_framebuffer_CMAA</a> extension.
  * 

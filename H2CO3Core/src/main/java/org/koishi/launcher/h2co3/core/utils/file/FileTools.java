@@ -12,7 +12,6 @@
 
 package org.koishi.launcher.h2co3.core.utils.file;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -46,9 +45,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
@@ -162,7 +161,7 @@ public final class FileTools {
     }
 
     public static String readText(File file) throws IOException {
-        return readText(file, UTF_8);
+        return readText(file, Charset.forName("UTF-8"));
     }
 
     public static String readText(File file, Charset charset) throws IOException {
@@ -170,7 +169,7 @@ public final class FileTools {
     }
 
     public static String readText(Path file) throws IOException {
-        return readText(file, UTF_8);
+        return readText(file, Charset.forName("UTF-8"));
     }
 
     public static String readText(Path file, Charset charset) throws IOException {
@@ -178,11 +177,11 @@ public final class FileTools {
     }
 
     public static void writeTextWithAppendMode(File file, String text) throws IOException {
-        writeBytesWithAppendMode(file.toPath(), text.getBytes(StandardCharsets.UTF_8));
+        writeBytesWithAppendMode(file.toPath(), text.getBytes("UTF-8"));
     }
 
     public static void writeTextWithAppendMode(Path file, String text) throws IOException {
-        writeBytesWithAppendMode(file, text.getBytes(StandardCharsets.UTF_8));
+        writeBytesWithAppendMode(file, text.getBytes("UTF-8"));
     }
 
     public static void writeBytesWithAppendMode(Path file, byte[] data) throws IOException {
@@ -202,7 +201,7 @@ public final class FileTools {
      * @throws IOException if an I/O error occurs
      */
     public static void writeText(File file, String text) throws IOException {
-        writeText(file, text, StandardCharsets.UTF_8);
+        writeText(file, text, Charset.forName("UTF-8"));
     }
 
     /**
@@ -217,7 +216,7 @@ public final class FileTools {
      * @throws IOException if an I/O error occurs
      */
     public static void writeText(Path file, String text) throws IOException {
-        writeText(file, text, StandardCharsets.UTF_8);
+        writeText(file, text, Charset.forName("UTF-8"));
     }
 
     /**
@@ -552,7 +551,7 @@ public final class FileTools {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 File file = new File(path);
                 try (FileOutputStream out = new FileOutputStream(file, false)) {
-                    out.write(fileData.getBytes(StandardCharsets.UTF_8));
+                    out.write(fileData.getBytes("UTF-8"));
                 }
             }
         } catch (Exception e) {
@@ -573,7 +572,7 @@ public final class FileTools {
                     //将文件指针移到文件尾
                     raf.seek(file.length());
                     //将数据写入到文件中
-                    raf.write(data.getBytes(StandardCharsets.UTF_8));
+                    raf.write(data.getBytes("UTF-8"));
                 }
             }
         } catch (Exception e) {
@@ -928,7 +927,7 @@ public final class FileTools {
         byte[] data = new byte[(int) file.length()];
         fileInputStream.read(data);
         fileInputStream.close();
-        return new String(data, StandardCharsets.UTF_8);
+        return new String(data, "UTF-8");
     }
 
     public static String readFileToString(File file) {
@@ -941,7 +940,7 @@ public final class FileTools {
             byte[] result = new byte[(int) file.length()];
             fis.read(result);
             fis.close();
-            return new String(result, StandardCharsets.UTF_8);
+            return new String(result, "UTF-8");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -988,7 +987,11 @@ public final class FileTools {
     public static boolean writeFile(File file, String str) {
 
         boolean retval;
-        retval = FileTools.writeFile(file, str.getBytes(StandardCharsets.UTF_8));
+        try {
+            retval = FileTools.writeFile(file, str.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         return retval;
     }
 

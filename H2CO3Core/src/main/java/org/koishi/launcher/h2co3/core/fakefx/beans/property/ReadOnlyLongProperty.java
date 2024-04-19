@@ -105,6 +105,4 @@ public abstract class ReadOnlyLongProperty extends LongExpression implements
         };
     }
 
-    ;
-
 }

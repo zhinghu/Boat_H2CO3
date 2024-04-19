@@ -27,7 +27,6 @@ public abstract class FloatPropertyBase extends FloatProperty {
 
     private float value;
     private ObservableFloatValue observable = null;
-    ;
     private InvalidationListener listener = null;
     private boolean valid = true;
     private ExpressionHelper<Number> helper = null;
@@ -142,8 +141,7 @@ public abstract class FloatPropertyBase extends FloatProperty {
         ObservableFloatValue newObservable;
         if (rawObservable instanceof ObservableFloatValue) {
             newObservable = (ObservableFloatValue) rawObservable;
-        } else if (rawObservable instanceof ObservableNumberValue) {
-            final ObservableNumberValue numberValue = (ObservableNumberValue) rawObservable;
+        } else if (rawObservable instanceof ObservableNumberValue numberValue) {
             newObservable = new ValueWrapper(rawObservable) {
 
                 @Override
@@ -245,7 +243,7 @@ public abstract class FloatPropertyBase extends FloatProperty {
 
     private abstract class ValueWrapper extends FloatBinding {
 
-        private ObservableValue<? extends Number> observable;
+        private final ObservableValue<? extends Number> observable;
 
         public ValueWrapper(ObservableValue<? extends Number> observable) {
             this.observable = observable;

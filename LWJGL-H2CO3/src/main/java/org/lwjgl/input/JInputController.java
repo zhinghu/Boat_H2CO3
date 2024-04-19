@@ -50,47 +50,47 @@ class JInputController implements Controller {
     /**
      * The JInput controller this class is wrapping
      */
-    private net.java.games.input.Controller target;
+    private final net.java.games.input.Controller target;
     /**
      * The index that has been assigned to this controller
      */
-    private int index;
+    private final int index;
     /**
      * The Buttons that have been detected on the JInput controller
      */
-    private ArrayList<Component> buttons = new ArrayList<Component>();
+    private final ArrayList<Component> buttons = new ArrayList<Component>();
     /**
      * The Axes that have been detected on the JInput controller
      */
-    private ArrayList<Component> axes = new ArrayList<Component>();
+    private final ArrayList<Component> axes = new ArrayList<Component>();
     /**
      * The POVs that have been detected on the JInput controller
      */
-    private ArrayList<Component> pov = new ArrayList<Component>();
+    private final ArrayList<Component> pov = new ArrayList<Component>();
     /**
      * The rumblers exposed by the controller
      */
-    private Rumbler[] rumblers;
+    private final Rumbler[] rumblers;
     /**
      * The state of the buttons last check
      */
-    private boolean[] buttonState;
+    private final boolean[] buttonState;
     /**
      * The values that were read from the pov last check
      */
-    private float[] povValues;
+    private final float[] povValues;
     /**
      * The values that were read from the axes last check
      */
-    private float[] axesValue;
+    private final float[] axesValue;
     /**
      * The maximum values read for each axis
      */
-    private float[] axesMax;
+    private final float[] axesMax;
     /**
      * The dead zones for each axis
      */
-    private float[] deadZones;
+    private final float[] deadZones;
     /**
      * The index of the X axis or -1 if no X axis is defined
      */

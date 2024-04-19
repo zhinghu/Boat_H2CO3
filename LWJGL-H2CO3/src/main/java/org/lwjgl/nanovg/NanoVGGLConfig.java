@@ -4,12 +4,12 @@
  */
 package org.lwjgl.nanovg;
 
-import org.lwjgl.*;
-import org.lwjgl.system.*;
+import static org.lwjgl.system.MemoryUtil.memPointerBuffer;
 
-import java.lang.reflect.*;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.FunctionProvider;
 
-import static org.lwjgl.system.MemoryUtil.*;
+import java.lang.reflect.Method;
 
 final class NanoVGGLConfig {
 

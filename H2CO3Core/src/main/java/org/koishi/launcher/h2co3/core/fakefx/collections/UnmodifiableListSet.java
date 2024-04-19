@@ -14,7 +14,7 @@ import java.util.List;
  * but want to present an unmodifiable Set in the public API.
  */
 public final class UnmodifiableListSet<E> extends AbstractSet<E> {
-    private List<E> backingList;
+    private final List<E> backingList;
 
     public UnmodifiableListSet(List<E> backingList) {
         if (backingList == null) throw new NullPointerException();

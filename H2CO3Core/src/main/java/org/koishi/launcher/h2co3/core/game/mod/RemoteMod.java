@@ -24,6 +24,7 @@ public class RemoteMod {
     private final String pageUrl;
     private final String iconUrl;
     private final IMod data;
+
     public RemoteMod(String slug, String author, String title, String description, List<String> categories, String pageUrl, String iconUrl, IMod data) {
         this.slug = slug;
         this.author = author;

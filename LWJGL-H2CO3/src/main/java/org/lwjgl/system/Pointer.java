@@ -4,13 +4,14 @@
  */
 package org.lwjgl.system;
 
-import org.lwjgl.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import javax.annotation.*;
-import java.nio.*;
+import org.lwjgl.PointerBuffer;
 
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import java.nio.LongBuffer;
+
+import javax.annotation.Nullable;
 
 /**
  * Pointer interface.

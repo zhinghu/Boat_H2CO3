@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
  */
 public final class JavaBeanFloatPropertyBuilder {
 
-    private JavaBeanPropertyBuilderHelper helper = new JavaBeanPropertyBuilderHelper();
+    private final JavaBeanPropertyBuilderHelper helper = new JavaBeanPropertyBuilderHelper();
 
     private JavaBeanFloatPropertyBuilder() {
     }

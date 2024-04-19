@@ -6,6 +6,7 @@ import org.koishi.launcher.h2co3.core.fakefx.collections.ObservableList;
 
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 public abstract class ReadOnlyListProperty<E> extends ListExpression<E>
         implements ReadOnlyProperty<ObservableList<E>> {
@@ -76,10 +77,9 @@ public abstract class ReadOnlyListProperty<E> extends ListExpression<E>
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof List)) {
+        if (!(obj instanceof List list)) {
             return false;
         }
-        final List list = (List) obj;
 
         if (size() != list.size()) {
             return false;
@@ -90,7 +90,7 @@ public abstract class ReadOnlyListProperty<E> extends ListExpression<E>
         while (e1.hasNext() && e2.hasNext()) {
             E o1 = e1.next();
             Object o2 = e2.next();
-            if (!(o1 == null ? o2 == null : o1.equals(o2)))
+            if (!(Objects.equals(o1, o2)))
                 return false;
         }
         return true;

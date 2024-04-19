@@ -6,7 +6,8 @@
 package org.lwjgl.system;
 
 
-import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.Checks.CHECKS;
+import static org.lwjgl.system.Checks.check;
 
 /** Memory access utilities. */
 final class MemoryAccessJNI {

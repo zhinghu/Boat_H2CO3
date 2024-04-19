@@ -57,39 +57,39 @@ class ControllerEvent {
     /**
      * The controller generating the event
      */
-    private Controller source;
+    private final Controller source;
     /**
      * The index of the input (axis or button) that generated the event
      */
-    private int index;
+    private final int index;
     /**
      * Type of control that generated the event
      */
-    private int type;
+    private final int type;
     /**
      * True when a button is pressed, if this event was caused by the button
      */
-    private boolean buttonState;
+    private final boolean buttonState;
     /**
      * True if this event was caused by the x axis
      */
-    private boolean xaxis;
+    private final boolean xaxis;
     /**
      * True if this event was caused by the y axis
      */
-    private boolean yaxis;
+    private final boolean yaxis;
     /**
      * The time stamp of this event
      */
-    private long timeStamp;
+    private final long timeStamp;
     /**
      * The value on a specified axis, if this event was caused by the x-axis
      */
-    private float xaxisValue;
+    private final float xaxisValue;
     /**
      * The value on a specified axis, if this event was caused by the y-axis
      */
-    private float yaxisValue;
+    private final float yaxisValue;
 
     /**
      * Create a new event

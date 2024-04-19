@@ -62,7 +62,7 @@ public abstract class BooleanExpression implements ObservableBooleanValue {
             @Override
             protected boolean computeValue() {
                 final Boolean val = value.getValue();
-                return val == null ? false : val;
+                return val != null && val;
             }
 
             @Override

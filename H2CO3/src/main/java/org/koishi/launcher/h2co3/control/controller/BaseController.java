@@ -26,12 +26,12 @@ public abstract class BaseController implements Controller {
     private final static String TAG = "BaseController";
     private final static int DEFAULT_INTERVAL_TIME = 5000;
     public final H2CO3ControlClient h2CO3ControlClient;
-    private H2CO3LauncherBridge h2CO3LauncherBridge;
     public final Context context;
     private final int internalTime;
     private final Config mConfig;
     private final boolean isTimerEnable;
     public ArrayList<Input> inputs;
+    private H2CO3LauncherBridge h2CO3LauncherBridge;
     private Timer mTimer;
 
     public BaseController(H2CO3ControlClient h2CO3ControlClient, int intervalTime, boolean enableTimer) {

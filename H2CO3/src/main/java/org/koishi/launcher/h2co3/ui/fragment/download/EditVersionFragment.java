@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
@@ -140,10 +141,8 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
             Task<?> task = builder.buildAsync();
 
-            TaskCancellationAction taskCancellationAction = new TaskCancellationAction(TaskDialog::dismiss);
-            TaskDialog pane = new TaskDialog(requireContext(), taskCancellationAction);
-            AlertDialog paneAlert = pane.create();
-            paneAlert.setTitle("Installing...");
+            TaskDialog pane = new TaskDialog(requireContext(), new TaskCancellationAction(AppCompatDialog::dismiss));
+            pane.setTitle("Installing...");
 
             Schedulers.androidUIThread().execute(() -> {
                 TaskExecutor executor = task.executor(new TaskListener() {
@@ -156,14 +155,14 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                                 if (executor.getException() == null) {
                                     return;
                                 }
-                                paneAlert.dismiss();
+                                pane.dismiss();
                                 H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
                             }
                         });
                     }
                 });
                 pane.setExecutor(executor);
-                paneAlert.show();
+                pane.show();
                 executor.start();
             });
         });

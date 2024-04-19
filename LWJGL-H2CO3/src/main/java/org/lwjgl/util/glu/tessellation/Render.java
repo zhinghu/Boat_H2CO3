@@ -139,8 +139,6 @@ class Render {
         }
     }
 
-    ;
-
     private interface renderCallBack {
         void render(GLUtessellatorImpl tess, GLUhalfEdge e, long size);
     }

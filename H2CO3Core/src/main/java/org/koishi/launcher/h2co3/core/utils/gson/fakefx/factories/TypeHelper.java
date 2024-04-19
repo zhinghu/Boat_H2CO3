@@ -39,11 +39,11 @@ final class TypeHelper {
 
     private static class CustomParameterizedType implements ParameterizedType {
 
-        private Type rawType;
+        private final Type rawType;
 
-        private Type ownerType;
+        private final Type ownerType;
 
-        private Type[] typeArguments;
+        private final Type[] typeArguments;
 
         private CustomParameterizedType(@NotNull Type rawType, @Nullable Type ownerType, @NotNull Type... typeArgs) {
             this.rawType = rawType;

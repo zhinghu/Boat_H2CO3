@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,7 +43,7 @@ public final class Zipper implements Closeable {
     private final byte[] buffer = new byte[IOUtils.DEFAULT_BUFFER_SIZE];
 
     public Zipper(Path zipFile) throws IOException {
-        this(zipFile, StandardCharsets.UTF_8);
+        this(zipFile, Charset.forName("UTF-8"));
     }
 
     public Zipper(Path zipFile, Charset encoding) throws IOException {
@@ -158,7 +157,7 @@ public final class Zipper implements Closeable {
     }
 
     public void putTextFile(String text, String path) throws IOException {
-        putTextFile(text, StandardCharsets.UTF_8, path);
+        putTextFile(text, Charset.forName("UTF-8"), path);
     }
 
     public void putTextFile(String text, Charset encoding, String path) throws IOException {

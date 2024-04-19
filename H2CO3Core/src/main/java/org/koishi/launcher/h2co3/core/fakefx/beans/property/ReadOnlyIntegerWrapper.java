@@ -90,5 +90,4 @@ public class ReadOnlyIntegerWrapper extends SimpleIntegerProperty {
         }
     }
 
-    ;
 }
