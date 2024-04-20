@@ -9,7 +9,7 @@ A Minecraft launcher based on the Boat App as the core.
 
 #### This project and its derivatives are based on [BoatAPP](https://github.com/AOF-Dev/Boat), please follow the [GPL-3](https://www.gnu.org/licenses/gpl-3.0.html) license for all related modifications.
 
-<h1 align="left">Status</h1>
+<h1 align="left">State</h1>
 
 [![Android CI](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml/badge.svg)](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml)
 ![Downloads](https://img.shields.io/github/downloads/Boat-H2CO3/Boat_H2CO3/total?color=green&style=for-the-badge)
