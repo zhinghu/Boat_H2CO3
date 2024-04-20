@@ -10,9 +10,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-
 public class H2CO3CustomViewDialog extends H2CO3MaterialDialog {
     private View customView;
 
@@ -28,14 +25,6 @@ public class H2CO3CustomViewDialog extends H2CO3MaterialDialog {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         customView = inflater.inflate(layoutResId, null);
         setView(customView);
-    }
-
-    @NonNull
-    @Override
-    public AlertDialog create() {
-        AlertDialog dialog = super.create();
-        //Window window = dialog.getWindow();
-        return dialog;
     }
 
     /**

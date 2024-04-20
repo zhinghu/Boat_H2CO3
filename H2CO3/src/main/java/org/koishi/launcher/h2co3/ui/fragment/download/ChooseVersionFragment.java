@@ -124,7 +124,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                 List<Version> versionList = new ArrayList<>();
                 H2CO3DownloadUtils.H2CO3DownloaderFeedback monitor = (current, total) -> {
                 };
-                H2CO3DownloadUtils.downloadFileMonitored(apiUrl, new File(H2CO3Tools.APP_DATA_PATH + "/out.json"), null, monitor);
+                H2CO3DownloadUtils.downloadFileMonitored(apiUrl, new File(H2CO3Tools.CACHE_DIR + "/out.json"), null, monitor);
 
                 String jsonData = H2CO3DownloadUtils.downloadString(apiUrl);
                 JSONObject jsonObject = new JSONObject(jsonData);
@@ -146,10 +146,8 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                     progressIndicator.hide();
                 });
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | JSONException e) {
+                H2CO3Tools.showError(requireContext(), e.getMessage());
             }
         });
     }

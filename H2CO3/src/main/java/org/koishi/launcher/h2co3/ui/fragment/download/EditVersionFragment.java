@@ -5,16 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -47,7 +46,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class EditVersionFragment extends H2CO3Fragment implements View.OnClickListener {
+public class EditVersionFragment extends H2CO3Fragment {
 
     private final Map<String, RemoteVersion> map = new HashMap<>();
     public H2CO3CustomViewDialog chooseInstallerVersionDialog;
@@ -60,9 +59,11 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
     private String gameVersion;
     private boolean isChooseInstallerVersionDialogShowing;
     private RemoteVersionListAdapter.OnRemoteVersionSelectListener listener;
-    private ListView installerVersionListView;
+    private RecyclerView installerVersionListView;
     private VersionList<?> currentVersionList;
     private DownloadProviders downloadProviders;
+    private TaskDialog pane;
+    private AlertDialog paneAlert;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,7 +104,9 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                 if (library.incompatibleLibraryName.get() == null) {
 
                     currentVersionList = downloadProviders.getDownloadProvider().getVersionListById(libraryId);
-                    showChooseInstallerVersionDialog(libraryId);
+                    if (!isChooseInstallerVersionDialogShowing) {
+                        showChooseInstallerVersionDialog(libraryId);
+                    }
                     listener = remoteVersion -> {
                         map.put(libraryId, remoteVersion);
                         System.out.println(map);
@@ -141,7 +144,16 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
             Task<?> task = builder.buildAsync();
 
-            TaskDialog pane = new TaskDialog(requireContext(), new TaskCancellationAction(AppCompatDialog::dismiss));
+
+            pane = new TaskDialog(requireContext());
+            paneAlert = pane.create();
+            pane.setAlertDialog(paneAlert);
+            pane.setCancel(new TaskCancellationAction(new Runnable() {
+                @Override
+                public void run() {
+                    paneAlert.dismiss();
+                }
+            }));
             pane.setTitle("Installing...");
 
             Schedulers.androidUIThread().execute(() -> {
@@ -155,14 +167,14 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                                 if (executor.getException() == null) {
                                     return;
                                 }
-                                pane.dismiss();
+                                paneAlert.dismiss();
                                 H2CO3Tools.showError(requireContext(), String.valueOf(executor.getException()));
                             }
                         });
                     }
                 });
                 pane.setExecutor(executor);
-                pane.show();
+                paneAlert.show();
                 executor.start();
             });
         });
@@ -180,9 +192,10 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
     }
 
     private void showCompletionDialog(Context context) {
-        H2CO3CustomViewDialog builder1 = new H2CO3CustomViewDialog(context);
-        builder1.setMessage("完成");
-        builder1.create().show();
+        new H2CO3CustomViewDialog(context)
+                .setMessage("完成")
+                .create()
+                .show();
     }
 
     private void showChooseInstallerVersionDialog(String libId) {
@@ -202,8 +215,11 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
 
     private List<RemoteVersion> loadVersions(String libraryId) {
-        return downloadProviders.getDownloadProvider().getVersionListById(libraryId).getVersions(gameVersion).stream()
-                .sorted().collect(Collectors.toList());
+        return downloadProviders.getDownloadProvider().getVersionListById(libraryId)
+                .getVersions(gameVersion)
+                .stream()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     public void refreshList(String libraryId) {
@@ -214,11 +230,13 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
 
                 Schedulers.androidUIThread().execute(() -> {
                     if (currentVersionList.getVersions(gameVersion).isEmpty()) {
-                        Toast.makeText(getContext(), "null", Toast.LENGTH_SHORT).show();
+                        H2CO3Tools.showError(requireContext(), "Null");
+                        chooseInstallerVersionDialogAlert.dismiss();
                         installerVersionListView.setVisibility(View.GONE);
                     } else {
                         if (!items.isEmpty()) {
                             RemoteVersionListAdapter adapter = new RemoteVersionListAdapter(getContext(), new ArrayList<>(items), listener);
+                            installerVersionListView.setLayoutManager(new LinearLayoutManager(getContext()));
                             installerVersionListView.setAdapter(adapter);
                         }
                         installerVersionListView.setVisibility(View.VISIBLE);
@@ -244,19 +262,6 @@ public class EditVersionFragment extends H2CO3Fragment implements View.OnClickLi
                 library.libraryVersion.set(null);
                 library.removable.set(false);
             }
-        }
-    }
-
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param view The view that was clicked.
-     */
-    @Override
-    public void onClick(View view) {
-        if (view == downloadButton) {
-
         }
     }
 }

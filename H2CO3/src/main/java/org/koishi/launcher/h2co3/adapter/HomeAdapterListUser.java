@@ -8,7 +8,6 @@ package org.koishi.launcher.h2co3.adapter;
 
 import static org.koishi.launcher.h2co3.core.H2CO3Auth.setUserState;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -68,73 +67,24 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
 
     @Override
     public int getItemViewType(int position) {
-        if (position < list.size()) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return position < list.size() ? 0 : 1;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView;
-        if (viewType == 0) {
-            itemView = inflater.inflate(R.layout.item_user_list, parent, false);
-        } else {
-            itemView = inflater.inflate(R.layout.item_user_add, parent, false);
-        }
+        View itemView = inflater.inflate(viewType == 0 ? R.layout.item_user_list : R.layout.item_user_add, parent, false);
         return new ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int viewType = holder.getItemViewType();
         if (viewType == 0) {
-            UserBean user = list.get(position);
-            if (user.isSelected()) {
-                selectedPosition = position;
-                updateUserState(user);
-                holder.selectorCardView.setStrokeWidth(13);
-                holder.selectorCardView.setClickable(false);
-                holder.selectorCardView.setOnClickListener(null);
-            } else {
-                holder.selectorCardView.setStrokeWidth(3);
-                holder.selectorCardView.setClickable(true);
-                holder.selectorCardView.setOnClickListener(null);
-                holder.selectorCardView.setOnClickListener(v -> {
-                    selectedPosition = holder.getBindingAdapterPosition();
-                    try {
-                        updateSelectedUser(selectedPosition);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                    updateUserState(user);
-                    try {
-                        fragment.reLoadUser();
-                    } catch (JSONException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-            holder.nameTextView.setText(user.getUserName());
-            holder.stateTextView.setText(getUserStateText(user));
-
-            if (user.getUserIcon() == null) {
-                Drawable userIcon = getUserIcon(user);
-                user.setUserIcon(userIcon);
-            }
-            holder.userIcon.setImageDrawable(user.getUserIcon());
-
-            holder.removeImageButton.setOnClickListener(v -> {
-                if (!isRemoveUserDialogShowing) {
-                    isRemoveUserDialogShowing = true;
-                    showRemoveUserDialog(holder.getBindingAdapterPosition());
-                }
-            });
+            bindUserViewHolder(holder, position);
         } else {
-            holder.addCardView.setOnClickListener(v -> fragment.showLoginDialog());
+            bindAddViewHolder(holder);
         }
     }
 
@@ -222,12 +172,8 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
             }
             isRemoveUserDialogShowing = false;
         });
-        dialog.setNegativeButton("取消", (dialogInterface, which) -> {
-            isRemoveUserDialogShowing = false;
-        });
-        dialog.setOnDismissListener(dialogInterface -> {
-            isRemoveUserDialogShowing = false;
-        });
+        dialog.setNegativeButton("取消", (dialogInterface, which) -> isRemoveUserDialogShowing = false);
+        dialog.setOnDismissListener(dialogInterface -> isRemoveUserDialogShowing = false);
         dialog.show();
     }
 
@@ -247,5 +193,48 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
             removeImageButton = itemView.findViewById(R.id.item_listview_user_remove);
             addCardView = itemView.findViewById(R.id.login_user_add);
         }
+    }
+
+    private void bindUserViewHolder(ViewHolder holder, int position) {
+        UserBean user = list.get(position);
+        if (user.isSelected()) {
+            selectedPosition = position;
+            updateUserState(user);
+            holder.selectorCardView.setStrokeWidth(13);
+            holder.selectorCardView.setClickable(false);
+            holder.selectorCardView.setOnClickListener(null);
+        } else {
+            holder.selectorCardView.setStrokeWidth(3);
+            holder.selectorCardView.setClickable(true);
+            holder.selectorCardView.setOnClickListener(null);
+            holder.selectorCardView.setOnClickListener(v -> {
+                selectedPosition = holder.getBindingAdapterPosition();
+                try {
+                    updateSelectedUser(selectedPosition);
+                    fragment.reLoadUser();
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+        holder.nameTextView.setText(user.getUserName());
+        holder.stateTextView.setText(getUserStateText(user));
+
+        if (user.getUserIcon() == null) {
+            Drawable userIcon = getUserIcon(user);
+            user.setUserIcon(userIcon);
+        }
+        holder.userIcon.setImageDrawable(user.getUserIcon());
+
+        holder.removeImageButton.setOnClickListener(v -> {
+            if (!isRemoveUserDialogShowing) {
+                isRemoveUserDialogShowing = true;
+                showRemoveUserDialog(holder.getBindingAdapterPosition());
+            }
+        });
+    }
+
+    private void bindAddViewHolder(ViewHolder holder) {
+        holder.addCardView.setOnClickListener(v -> fragment.showLoginDialog());
     }
 }

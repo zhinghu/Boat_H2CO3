@@ -68,6 +68,7 @@ public class H2CO3DownloadUtils {
         }
 
         HttpURLConnection conn = (HttpURLConnection) new URL(urlInput).openConnection();
+
         try (InputStream is = conn.getInputStream();
              FileOutputStream fos = new FileOutputStream(outputFile)) {
             int cur;
