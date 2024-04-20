@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.widget.NestedScrollView;
 import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,10 +81,7 @@ public class EditVersionFragment extends H2CO3Fragment {
         installerScrollView.addView(group.getView());
         NavController navController = Navigation.findNavController(requireParentFragment().requireView());
         backButton.setOnClickListener(v -> {
-            NavOptions navOptions = new NavOptions.Builder()
-                    .setPopUpTo(R.id.action_editVersionFragment_to_chooseVersionFragment, false)
-                    .build();
-            navController.navigate(R.id.action_editVersionFragment_to_chooseVersionFragment, null, navOptions);
+            navController.navigate(R.id.action_editVersionFragment_to_chooseVersionFragment);
         });
         for (InstallerItem library : group.getLibraries()) {
             String libraryId = library.getLibraryId();
