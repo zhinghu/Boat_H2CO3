@@ -11,6 +11,7 @@
 <h1 align="left">状态</h1>
 
 [![Android CI](https://github.com/bilicainiaohh/Boat_H2CO3NewUI/actions/workflows/android.yml/badge.svg)](https://github.com/bilicainiaohh/Boat_H2CO3NewUI/actions/workflows/android.yml)
+[测试版下载](https://nightly.link/Boat-H2CO3/Boat_H2CO3/workflows/android/H2CO3_main/H2CO3-debug.zip)
 
 <h1 align="left">使用的第三方库</h1>
 
