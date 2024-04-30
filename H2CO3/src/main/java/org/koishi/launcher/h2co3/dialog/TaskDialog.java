@@ -182,14 +182,17 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
             List<String> stages = Lang.removingDuplicates(executor.getStages());
             executor.addTaskListener(new TaskListener() {
                 @Override
+
                 public void onStart() {
                     Schedulers.androidUIThread().execute(() -> {
                         stageNodes.clear();
-                        stageNodes.addAll(stages.stream().map(it -> new StageNode(getContext(), it)).collect(Collectors.toList()));
+                        listBox.clear();
+                        List<StageNode> newNodes = stages.stream().map(it -> new StageNode(getContext(), it)).collect(Collectors.toList());
+                        stageNodes.addAll(newNodes);
                         for (StageNode stageNode : stageNodes) {
                             listBox.add(stageNode.getView());
+                            notifyItemInserted(listBox.size() - 1);
                         }
-                        notifyDataSetChanged();
                     });
                 }
 
@@ -197,11 +200,15 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
                 public void onReady(Task<?> task) {
                     if (task.getStage() != null) {
                         Schedulers.androidUIThread().execute(() -> {
-                            stageNodes.stream().filter(x -> x.stage.equals(task.getStage())).findAny().ifPresent(StageNode::begin);
-                            notifyDataSetChanged();
+                            for (int i = 0; i < stageNodes.size(); i++) {
+                                if (stageNodes.get(i).stage.equals(task.getStage())) {
+                                    stageNodes.get(i).begin();
+                                    notifyItemChanged(i);
+                                    break;
+                                }
+                            }
                         });
                     }
-
                 }
 
                 @Override
@@ -250,19 +257,28 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
                 public void onFinished(Task<?> task) {
                     if (task.getStage() != null) {
                         Schedulers.androidUIThread().execute(() -> {
-                            stageNodes.stream().filter(x -> x.stage.equals(task.getStage())).findAny().ifPresent(StageNode::succeed);
-                            notifyDataSetChanged();
+                            for (int i = 0; i < stageNodes.size(); i++) {
+                                if (stageNodes.get(i).stage.equals(task.getStage())) {
+                                    stageNodes.get(i).succeed();
+                                    notifyItemChanged(i);
+                                    break;
+                                }
+                            }
                         });
                     }
-
                 }
 
                 @Override
                 public void onFailed(Task<?> task, Throwable throwable) {
                     if (task.getStage() != null) {
                         Schedulers.androidUIThread().execute(() -> {
-                            stageNodes.stream().filter(x -> x.stage.equals(task.getStage())).findAny().ifPresent(StageNode::fail);
-                            notifyDataSetChanged();
+                            for (int i = 0; i < stageNodes.size(); i++) {
+                                if (stageNodes.get(i).stage.equals(task.getStage())) {
+                                    stageNodes.get(i).fail();
+                                    notifyItemChanged(i);
+                                    break;
+                                }
+                            }
                         });
                     }
                 }
@@ -298,6 +314,9 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
 
             void bindView(View view) {
                 LinearLayoutCompat container = (LinearLayoutCompat) itemView;
+                if (view.getParent() != null) {
+                    ((ViewGroup) view.getParent()).removeView(view);
+                }
                 container.removeAllViews();
                 container.addView(view);
             }
