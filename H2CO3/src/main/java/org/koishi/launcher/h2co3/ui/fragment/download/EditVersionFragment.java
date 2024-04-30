@@ -18,15 +18,17 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.adapter.RemoteVersionListAdapter;
-import org.koishi.launcher.h2co3.core.ConfigurationManager;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.Profile;
+import org.koishi.launcher.h2co3.core.download.CacheRepository;
 import org.koishi.launcher.h2co3.core.download.DefaultDependencyManager;
 import org.koishi.launcher.h2co3.core.download.DownloadProviders;
 import org.koishi.launcher.h2co3.core.download.GameBuilder;
+import org.koishi.launcher.h2co3.core.download.H2CO3GameRepository;
 import org.koishi.launcher.h2co3.core.download.LibraryAnalyzer;
 import org.koishi.launcher.h2co3.core.download.RemoteVersion;
 import org.koishi.launcher.h2co3.core.download.VersionList;
+import org.koishi.launcher.h2co3.core.game.H2CO3CacheRepository;
+import org.koishi.launcher.h2co3.core.h2co3launcher.utils.H2CO3GameHelper;
 import org.koishi.launcher.h2co3.core.utils.task.Schedulers;
 import org.koishi.launcher.h2co3.core.utils.task.Task;
 import org.koishi.launcher.h2co3.core.utils.task.TaskExecutor;
@@ -38,6 +40,7 @@ import org.koishi.launcher.h2co3.resources.component.dialog.H2CO3MessageDialog;
 import org.koishi.launcher.h2co3.utils.download.InstallerItem;
 import org.koishi.launcher.h2co3.utils.download.TaskCancellationAction;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,11 +123,13 @@ public class EditVersionFragment extends H2CO3Fragment {
 
         downloadButton.setOnClickListener(v -> {
             String versionName = versionNameEditText.getText() != null ? versionNameEditText.getText().toString() : "";
-            Profile profile = new Profile(versionName);
-            ConfigurationManager.addConfiguration(profile);
-            ConfigurationManager.setSelectedConfiguration(profile);
+            DownloadProviders downloadProviders = new DownloadProviders();
+            H2CO3CacheRepository cacheRepository = H2CO3CacheRepository.REPOSITORY;
+            CacheRepository.setInstance(cacheRepository);
+            cacheRepository.setDirectory(H2CO3Tools.CACHE_DIR);
+            System.out.println(cacheRepository.getDirectory());
 
-            DefaultDependencyManager dependencyManager = ConfigurationManager.getSelectedConfiguration().getDependency();
+            DefaultDependencyManager dependencyManager = new DefaultDependencyManager(new H2CO3GameRepository(new File(H2CO3GameHelper.getGameDirectory())), downloadProviders.getDownloadProvider(), cacheRepository);
             GameBuilder builder = dependencyManager.gameBuilder();
 
             builder.name(versionName);
@@ -200,7 +205,7 @@ public class EditVersionFragment extends H2CO3Fragment {
         chooseInstallerVersionDialog = new H2CO3CustomViewDialog(requireActivity());
         chooseInstallerVersionDialog.setCustomView(R.layout.dialog_installer_version);
         chooseInstallerVersionDialog.setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.title_activity_login));
-        installerVersionListView = chooseInstallerVersionDialog.findViewById(R.id.list);
+        installerVersionListView = chooseInstallerVersionDialog.findViewById(R.id.list_left);
 
         chooseInstallerVersionDialogAlert = chooseInstallerVersionDialog.create();
         chooseInstallerVersionDialogAlert.show();

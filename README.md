@@ -2,17 +2,15 @@
 <h1 align="left" >Boat_H2CO3</h1>
 
 A Minecraft launcher based on the Boat App as the core.
+[![Android CI](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml/badge.svg)](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml)
+![Downloads](https://img.shields.io/github/downloads/Boat-H2CO3/Boat_H2CO3/total?color=green&style=for-the-badge)
+[Download](https://nightly.link/Boat-H2CO3/Boat_H2CO3/workflows/android/H2CO3_main/H2CO3-debug.zip)
 
 <h1 align="left">Repository Description</h1>
 
 **The original project has been discontinued, and this project is a derivative of it.**
 
 #### This project and its derivatives are based on [BoatAPP](https://github.com/AOF-Dev/Boat), please follow the [GPL-3](https://www.gnu.org/licenses/gpl-3.0.html) license for all related modifications.
-
-<h1 align="left">State</h1>
-
-[![Android CI](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml/badge.svg)](https://github.com/Boat-H2CO3/Boat_H2CO3/actions/workflows/android.yml)
-![Downloads](https://img.shields.io/github/downloads/Boat-H2CO3/Boat_H2CO3/total?color=green&style=for-the-badge)
 
 <h1 align="left">Third-Party Libraries Used</h1>
 
