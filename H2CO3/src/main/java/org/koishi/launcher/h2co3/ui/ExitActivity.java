@@ -16,11 +16,20 @@ public class ExitActivity extends H2CO3Activity {
     private static final String EXTRA_CODE = "code";
 
     public static void showExitMessage(Context ctx, int code) {
-        Intent i = new Intent(ctx, ExitActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.putExtra(EXTRA_CODE, code);
-        ctx.startActivity(i);
+        if (code == 0) {
+            Intent i = new Intent(ctx, H2CO3MainActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra(EXTRA_CODE, code);
+            ctx.startActivity(i);
+        } else {
+            Intent i = new Intent(ctx, ExitActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra(EXTRA_CODE, code);
+            ctx.startActivity(i);
+        }
+
     }
 
     @Override

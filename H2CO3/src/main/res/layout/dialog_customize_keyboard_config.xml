@@ -178,16 +178,6 @@
                         android:textAlignment="center" />
 
                     <Button
-                        android:id="@+id/input_customize_keyboard_dialog_button_load"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="2"
-                        android:text="@string/title_import"
-                        android:textSize="@dimen/text_small" />
-
-                    <Button
                         android:id="@+id/input_customize_keyboard_dialog_button_delete"
                         style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="0dp"

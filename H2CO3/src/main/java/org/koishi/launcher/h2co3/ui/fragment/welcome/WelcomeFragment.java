@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -35,6 +36,7 @@ public class WelcomeFragment extends Fragment {
     private LinearProgressIndicator progressIndicator;
     private FloatingActionButton nextButton;
     private NavController navController;
+    private ConstraintLayout bottomLayout;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
     private boolean java11 = false;
@@ -65,6 +67,7 @@ public class WelcomeFragment extends Fragment {
         progressIndicator = view.findViewById(R.id.linearProgressIndicator);
         nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(v -> navController.navigate(R.id.action_welcomeFragment_to_eulaFragment));
+        bottomLayout = view.findViewById(R.id.bottom_layout);
     }
 
     private void checkFirstLaunch() {
@@ -81,8 +84,7 @@ public class WelcomeFragment extends Fragment {
     private void showWelcomeUI() {
         title.setVisibility(View.VISIBLE);
         description.setVisibility(View.VISIBLE);
-        progressIndicator.show();
-        nextButton.show();
+        bottomLayout.setVisibility(View.VISIBLE);
     }
 
     private void checkPermission() {

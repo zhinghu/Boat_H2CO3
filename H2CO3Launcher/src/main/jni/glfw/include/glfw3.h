@@ -6133,7 +6133,6 @@ GLFWAPI VkResult glfwCreateWindowSurface(VkInstance instance, GLFWwindow* window
  * defined by some gl.h variants (OpenBSD) so define it after if needed.
  */
 #ifndef GLAPIENTRY
-#define GLAPIENTRY APIENTRY
 #endif
 
 /* -------------------- END SYSTEM/COMPILER SPECIFIC --------------------- */

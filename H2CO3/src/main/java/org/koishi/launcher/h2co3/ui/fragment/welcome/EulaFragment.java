@@ -43,7 +43,7 @@ public class EulaFragment extends H2CO3Fragment implements View.OnClickListener 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_welcome_eula, container, false);
-        progressBar = findViewById(view, R.id.loadingProgress);
+        progressBar = findViewById(view, R.id.loading_progress);
         eula = findViewById(view, R.id.eulaText);
 
         return view;

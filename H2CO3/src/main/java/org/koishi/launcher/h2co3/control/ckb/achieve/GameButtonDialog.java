@@ -615,14 +615,14 @@ public class GameButtonDialog extends Dialog implements View.OnClickListener, Se
             @Override
             public void runWhenColorSelected(int[] colors) {
                 if (colors.length >= 1) {
-                    et.setText(ColorUtils.int2Hex(colors[0]));
+                    et.setText(ColorUtils.intToHex(colors[0]));
                     v.setBackgroundColor(colors[0]);
                     switch (type) {
                         case COLOR_TYPE_BACK:
-                            mGameButton.setBackColor(ColorUtils.int2Hex(colors[0]));
+                            mGameButton.setBackColor(ColorUtils.intToHex(colors[0]));
                             break;
                         case COLOR_TYPE_TEXT:
-                            mGameButton.setTextColor(ColorUtils.int2Hex(colors[0]));
+                            mGameButton.setTextColor(ColorUtils.intToHex(colors[0]));
                             break;
                     }
                 }

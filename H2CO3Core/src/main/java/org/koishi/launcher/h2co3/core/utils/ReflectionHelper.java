@@ -2,6 +2,8 @@ package org.koishi.launcher.h2co3.core.utils;
 
 import androidx.core.util.Predicate;
 
+import org.apache.commons.lang3.ClassUtils;
+
 public final class ReflectionHelper {
     private ReflectionHelper() {
     }
@@ -18,11 +20,13 @@ public final class ReflectionHelper {
         // element[1] is ReflectionHelper.getCaller(packageFilter)
         // so element[2] is caller of this method.
         StackTraceElement caller = elements[2];
+        String callerPackage = ClassUtils.getPackageName(caller.getClassName());
         for (int i = 3; i < elements.length; ++i) {
-            if (packageFilter.test(StringUtils.substringBeforeLast(elements[i].getClassName(), '.')) &&
-                    !caller.getClassName().equals(elements[i].getClassName()))
+            String elementPackage = ClassUtils.getPackageName(elements[i].getClassName());
+            if (packageFilter.test(elementPackage) && !callerPackage.equals(elementPackage))
                 return elements[i];
         }
         return caller;
     }
+
 }

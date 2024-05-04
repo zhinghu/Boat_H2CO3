@@ -1,9 +1,5 @@
 package org.koishi.launcher.h2co3.core.utils;
 
-import static android.content.Context.CLIPBOARD_SERVICE;
-import static android.content.Context.MODE_PRIVATE;
-import static android.os.Build.VERSION.SDK_INT;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
@@ -27,6 +23,10 @@ import java.util.Objects;
 @SuppressLint("DiscouragedApi")
 public class AndroidUtils {
 
+    private static final String WEBVIEW_CACHE_DIR = "webview";
+    private static final String THEME_SHARED_PREFS = "theme";
+    private static final String FULLSCREEN_KEY = "fullscreen";
+
     public static void openLink(Context context, String link) {
         Uri uri = Uri.parse(link);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -34,13 +34,13 @@ public class AndroidUtils {
     }
 
     public static void copyText(Context context, String text) {
-        ClipboardManager clip = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+        ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData data = ClipData.newPlainText(null, text);
         clip.setPrimaryClip(data);
     }
 
     public static void clearWebViewCache(Context context) {
-        File cache = context.getDir("webview", 0);
+        File cache = context.getDir(WEBVIEW_CACHE_DIR, Context.MODE_PRIVATE);
         FileTools.deleteDirectoryQuietly(cache);
         CookieManager.getInstance().removeAllCookies(null);
     }
@@ -63,7 +63,6 @@ public class AndroidUtils {
         return resId != 0;
     }
 
-
     public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
@@ -72,18 +71,17 @@ public class AndroidUtils {
     }
 
     public static int getScreenWidth(Activity context) {
-        SharedPreferences sharedPreferences;
-        sharedPreferences = context.getSharedPreferences("theme", MODE_PRIVATE);
-        boolean fullscreen = sharedPreferences.getBoolean("fullscreen", false);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(THEME_SHARED_PREFS, Context.MODE_PRIVATE);
+        boolean fullscreen = sharedPreferences.getBoolean(FULLSCREEN_KEY, false);
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point point = new Point();
         wm.getDefaultDisplay().getRealSize(point);
-        if (fullscreen || SDK_INT < Build.VERSION_CODES.P) {
+        if (fullscreen) {
             return point.x;
         } else {
             try {
                 Rect notchRect;
-                if (SDK_INT >= Build.VERSION_CODES.S) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     notchRect = Objects.requireNonNull(wm.getCurrentWindowMetrics().getWindowInsets().getDisplayCutout()).getBoundingRects().get(0);
                 } else {
                     notchRect = Objects.requireNonNull(context.getWindow().getDecorView().getRootWindowInsets().getDisplayCutout()).getBoundingRects().get(0);
@@ -95,19 +93,13 @@ public class AndroidUtils {
         }
     }
 
-    @SuppressWarnings("resource")
     public static String getMimeType(String filePath) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         String mime = "*/*";
         if (filePath != null) {
-            try {
-                mmr.setDataSource(filePath);
-                mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
-            } catch (RuntimeException e) {
-                return mime;
-            }
+            mmr.setDataSource(filePath);
+            mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
         }
         return mime;
     }
-
 }

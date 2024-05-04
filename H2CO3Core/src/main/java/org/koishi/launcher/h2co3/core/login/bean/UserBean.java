@@ -17,10 +17,9 @@ public class UserBean {
     private String userInfo;
     private boolean isOffline;
     private boolean isSelected;
-    private Drawable userIcon; // 添加用户头像字段
+    private Drawable userIcon;
 
     public UserBean() {
-        // 构造方法
     }
 
     public String getUserName() {
@@ -139,7 +138,6 @@ public class UserBean {
         return userIcon;
     }
 
-    // 设置和获取用户头像的方法
     public void setUserIcon(Drawable userIcon) {
         this.userIcon = userIcon;
     }

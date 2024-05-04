@@ -86,6 +86,8 @@ STBDDEF void stb_compress_bc5_block(unsigned char *dest, const unsigned char *sr
 
 #if !defined(STBD_FABS)
 #include <math.h>
+#include <string.h>
+
 #endif
 
 #ifndef STBD_FABS

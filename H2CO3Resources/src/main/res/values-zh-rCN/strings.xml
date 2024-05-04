@@ -130,7 +130,7 @@
     <string name="tips_please_change_file_name">请更改文件名称!</string>
     <string name="tips_are_you_sure_to_auto_config_layout">你确定要自动配置布局吗？此操作将更改您的控制器，并自动计算可能合适的布局位置。</string>
     <string name="tips_try_to_convert_keyboard_layout">是否尝试转换这个键盘文件？</string>
-    <string name="tips_successed_to_convert_keyboard_file">转换成功，新的文件名为: %s</string>
+    <string name="tips_successed_to_convert_keyboard_file">转换成功，文件名为: %s</string>
     <string name="tips_failed_to_convert_keyboard_file">键盘文件转换失败.</string>
     <string name="ver_not_dir">这不是一个目录</string>
     <string name="ver_already_exists">这个目录已经添加了</string>

@@ -9,13 +9,12 @@ import android.renderscript.ScriptIntrinsicBlur;
 
 public class PicUtils {
 
-    // 高斯模糊
     public static Bitmap blur(Context context, int radius, final Bitmap bitmap) {
         RenderScript rs = RenderScript.create(context);
-        Bitmap blurredBitmap = bitmap.copy(bitmap.getConfig(), true);
+        Bitmap blurredBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
 
-        Allocation input = Allocation.createFromBitmap(rs, blurredBitmap);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        Allocation input = Allocation.createFromBitmap(rs, bitmap);
+        Allocation output = Allocation.createFromBitmap(rs, blurredBitmap);
 
         ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
         blur.setInput(input);

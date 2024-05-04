@@ -37,6 +37,7 @@ public class H2CO3Activity extends MaterialActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //EdgeToEdge.enable(this);
         if (Build.VERSION.SDK_INT >= 31) {
             boolean spIsAuth = H2CO3Tools.getH2CO3Value("enable_monet", true, Boolean.class);
             if (spIsAuth) {

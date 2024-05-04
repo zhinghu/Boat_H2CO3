@@ -277,9 +277,9 @@ public class MicrosoftLoginUtils {
         @SerializedName("name")
         String name;
         @SerializedName("skins")
-        List<MinecraftProfileResponseSkin> skins;
+        List<MinecraftProfileResponseSkin> skins = Collections.emptyList();
         @SerializedName("capes")
-        List<MinecraftProfileResponseCape> capes;
+        List<MinecraftProfileResponseCape> capes = Collections.emptyList();
 
         @Override
         public void validate() throws JsonParseException, TolerableValidationException {

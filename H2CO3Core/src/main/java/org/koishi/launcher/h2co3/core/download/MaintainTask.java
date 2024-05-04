@@ -84,7 +84,7 @@ public class MaintainTask extends Task<Version> {
         }
 
         List<Library> libraries = version.getLibraries();
-        if (libraries.size() > 0) {
+        if (!libraries.isEmpty()) {
             Library library = libraries.get(0);
             if ("org.glavo".equals(library.getGroupId())
                     && ("log4j-patch".equals(library.getArtifactId()) || "log4j-patch-beta9".equals(library.getArtifactId()))

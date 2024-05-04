@@ -1,20 +1,3 @@
-/*
- * Hello Minecraft! Launcher
- * Copyright (C) 2020  huangyuhui <huanghongxun2008@126.com> and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
 package org.koishi.launcher.h2co3.core.utils.task;
 
 import static org.koishi.launcher.h2co3.core.utils.DigestUtils.getDigest;
@@ -43,9 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 
-/**
- * A task that can download a file online.
- */
 public class FileDownloadTask extends FetchTask<Void> {
 
     public static final IntegrityCheckHandler ZIP_INTEGRITY_CHECK_HANDLER = (filePath, destinationPath) -> {
@@ -61,62 +41,26 @@ public class FileDownloadTask extends FetchTask<Void> {
     private final ArrayList<IntegrityCheckHandler> integrityCheckHandlers = new ArrayList<>();
     private Path candidate;
 
-    /**
-     * @param url  the URL of remote file.
-     * @param file the location that download to.
-     */
     public FileDownloadTask(URL url, File file) {
         this(url, file, null);
     }
 
-    /**
-     * @param url            the URL of remote file.
-     * @param file           the location that download to.
-     * @param integrityCheck the integrity check to perform, null if no integrity check is to be performed
-     */
     public FileDownloadTask(URL url, File file, IntegrityCheck integrityCheck) {
         this(Collections.singletonList(url), file, integrityCheck);
     }
 
-    /**
-     * @param url            the URL of remote file.
-     * @param file           the location that download to.
-     * @param integrityCheck the integrity check to perform, null if no integrity check is to be performed
-     * @param retry          the times for retrying if downloading fails.
-     */
     public FileDownloadTask(URL url, File file, IntegrityCheck integrityCheck, int retry) {
         this(Collections.singletonList(url), file, integrityCheck, retry);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param urls urls of remote file, will be attempted in order.
-     * @param file the location that download to.
-     */
     public FileDownloadTask(List<URL> urls, File file) {
         this(urls, file, null);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param urls           urls of remote file, will be attempted in order.
-     * @param file           the location that download to.
-     * @param integrityCheck the integrity check to perform, null if no integrity check is to be performed
-     */
     public FileDownloadTask(List<URL> urls, File file, IntegrityCheck integrityCheck) {
         this(urls, file, integrityCheck, 3);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param urls           urls of remote file, will be attempted in order.
-     * @param file           the location that download to.
-     * @param integrityCheck the integrity check to perform, null if no integrity check is to be performed
-     * @param retry          the times for retrying if downloading fails.
-     */
     public FileDownloadTask(List<URL> urls, File file, IntegrityCheck integrityCheck, int retry) {
         super(urls, retry);
         this.file = file;
@@ -140,9 +84,8 @@ public class FileDownloadTask extends FetchTask<Void> {
 
     @Override
     protected EnumCheckETag shouldCheckETag() {
-        // Check cache
         if (integrityCheck != null && caching) {
-            Optional<Path> cache = repository.checkExistentFile(candidate, integrityCheck.getAlgorithm(), integrityCheck.getChecksum());
+            Optional<Path> cache = repository.checkExistentFile(candidate, integrityCheck.algorithm(), integrityCheck.checksum());
             if (cache.isPresent()) {
                 try {
                     FileTools.copyFile(cache.get().toFile(), file);
@@ -215,14 +158,13 @@ public class FileDownloadTask extends FetchTask<Void> {
                     throw new IOException("Unable to move temp file from " + temp + " to " + file, e);
                 }
 
-                // Integrity check
                 if (integrityCheck != null) {
                     integrityCheck.performCheck(digest);
                 }
 
                 if (caching && integrityCheck != null) {
                     try {
-                        repository.cacheFile(file.toPath(), integrityCheck.getAlgorithm(), integrityCheck.getChecksum());
+                        repository.cacheFile(file.toPath(), integrityCheck.algorithm(), integrityCheck.checksum());
                     } catch (IOException e) {
                         Logging.LOG.log(Level.WARNING, "Failed to cache file", e);
                     }
@@ -236,20 +178,10 @@ public class FileDownloadTask extends FetchTask<Void> {
     }
 
     public interface IntegrityCheckHandler {
-        /**
-         * Check whether the file is corrupted or not.
-         *
-         * @param filePath        the file locates in (maybe in temp directory)
-         * @param destinationPath for real file name
-         * @throws IOException if the file is corrupted
-         */
         void checkIntegrity(Path filePath, Path destinationPath) throws IOException;
     }
 
-    public static class IntegrityCheck {
-        private final String algorithm;
-        private final String checksum;
-
+    public record IntegrityCheck(String algorithm, String checksum) {
         public IntegrityCheck(String algorithm, String checksum) {
             this.algorithm = requireNonNull(algorithm);
             this.checksum = requireNonNull(checksum);
@@ -258,14 +190,6 @@ public class FileDownloadTask extends FetchTask<Void> {
         public static IntegrityCheck of(String algorithm, String checksum) {
             if (checksum == null) return null;
             else return new IntegrityCheck(algorithm, checksum);
-        }
-
-        public String getAlgorithm() {
-            return algorithm;
-        }
-
-        public String getChecksum() {
-            return checksum;
         }
 
         public MessageDigest createDigest() {

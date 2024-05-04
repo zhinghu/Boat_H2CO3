@@ -33,12 +33,9 @@ public class H2CO3DownloadUtils {
     }
 
     public static String downloadString(String url) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             download(url, bos);
             return bos.toString("UTF-8");
-        } finally {
-            bos.close();
         }
     }
 

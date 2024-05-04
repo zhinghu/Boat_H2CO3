@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,8 +33,6 @@ import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSuppor
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class CkbManagerDialog implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, Dialog.OnCancelListener {
 
@@ -47,7 +46,6 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
     private Button buttonAdd;
     private Spinner spinnerSelected;
     private EditText editFileName;
-    private Button buttonLoad;
     private Button buttonExport;
     private Button buttonOK;
     private Button buttonDel;
@@ -55,13 +53,14 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
     private Button buttonDefault;
     private KeyboardFileListener fileListener;
     private ArrayList<String> data;
-    private Timer mTimer;
+    private Handler mHandler = new Handler();
 
     public CkbManagerDialog(@NonNull Context context, CkbManager manager) {
         H2CO3Tools.loadPaths(context);
         this.mContext = context;
         this.mManager = manager;
         initUI();
+        start();
     }
 
     private void initUI() {
@@ -77,7 +76,6 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         buttonAdd = view.findViewById(R.id.input_customize_keyboard_dialog_button_add);
         spinnerSelected = view.findViewById(R.id.input_customize_keyboard_dialog_spinner_select);
         editFileName = view.findViewById(R.id.input_customize_keyboard_dialog_edit_filename);
-        buttonLoad = view.findViewById(R.id.input_customize_keyboard_dialog_button_load);
         buttonExport = view.findViewById(R.id.input_customize_keyboard_dialog_button_export);
         buttonOK = view.findViewById(R.id.input_customize_keyboard_dialog_button_ok);
         buttonDel = view.findViewById(R.id.input_customize_keyboard_dialog_button_delete);
@@ -85,7 +83,6 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         buttonDefault = view.findViewById(R.id.input_customize_keyboard_dialog_button_default);
 
         buttonAdd.setOnClickListener(this);
-        buttonLoad.setOnClickListener(this);
         buttonExport.setOnClickListener(this);
         buttonOK.setOnClickListener(this);
         buttonDel.setOnClickListener(this);
@@ -98,6 +95,20 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         dialog.setOnCancelListener(this);
 
         radioGame.setChecked(mManager.getController() != null);
+    }
+
+    private void start() {
+        spinnerSelected.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadSelectedFile();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
     }
 
     public void dismiss() {
@@ -129,7 +140,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (!mManager.loadKeyboard(fileName)) {
             DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_error), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_failed_to_import_keyboard_layout), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), null);
         } else {
-            Toast.makeText(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_import_keyboard_layout), Toast.LENGTH_SHORT).show();
+            H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_import_keyboard_layout));
         }
     }
 
@@ -144,11 +155,11 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
         if (v == buttonExport) {
             String fn = editFileName.getText().toString();
             if (fn.isEmpty()) {
-                Toast.makeText(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_filename_can_not_be_void), Toast.LENGTH_SHORT).show();
+                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_filename_can_not_be_void));
                 return;
             }
             if (fn.equals(CkbManager.LAST_KEYBOARD_LAYOUT_NAME)) {
-                Toast.makeText(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_please_change_file_name), Toast.LENGTH_SHORT).show();
+                H2CO3Tools.showError(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_please_change_file_name));
                 return;
             }
 
@@ -176,18 +187,6 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
                     @Override
                     public void runWhenPositive() {
                         removeSelectedFile();
-                    }
-                });
-            }
-        }
-
-        if (v == buttonLoad) {
-            String str = spinnerSelected.getSelectedItem().toString();
-            if (!str.isEmpty()) {
-                DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_warn), String.format(mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_are_you_sure_to_import_keyboard_layout), str), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_import), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
-                    @Override
-                    public void runWhenPositive() {
-                        loadSelectedFile();
                     }
                 });
             }
@@ -244,17 +243,14 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
 
     public void setCountsRefresh(boolean able) {
         if (able) {
-            mTimer = new Timer();
-            mTimer.schedule(new TimerTask() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     setButtonCounts(mManager.getButtonCount());
                 }
-            }, 500, 500);
+            }, 500);
         } else {
-            if (mTimer != null) {
-                mTimer.cancel();
-            }
+            mHandler.removeCallbacksAndMessages(null);
         }
     }
 

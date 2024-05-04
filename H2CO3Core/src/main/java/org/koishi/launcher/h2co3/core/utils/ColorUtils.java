@@ -40,7 +40,7 @@ public class ColorUtils {
                 intToHex(Color.blue(colorInt));
     }
 
-    private static String intToHex(int n) {
+    public static String intToHex(int n) {
         StringBuffer s = new StringBuffer();
         String a;
         char[] b = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};

@@ -22,12 +22,12 @@ import org.koishi.launcher.h2co3.resources.component.dialog.support.DialogSuppor
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class CkbManager {
 
@@ -47,7 +47,6 @@ public class CkbManager {
     private int displayHeight;
 
     public CkbManager(@NonNull Context context, @NonNull CallCustomizeKeyboard call, Controller controller) {
-        super();
         H2CO3Tools.loadPaths(context);
         this.mContext = context;
         this.mCall = call;
@@ -58,19 +57,11 @@ public class CkbManager {
     public static void outputFile(KeyboardRecorder kr, String fileName) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String jsonString = gson.toJson(kr);
-        try {
-            File dir = new File(H2CO3Tools.H2CO3_CONTROL_DIR);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            File file = new File(dir, fileName + ".json");
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileWriter jsonWriter = new FileWriter(file);
-            BufferedWriter out = new BufferedWriter(jsonWriter);
+        File dir = new File(H2CO3Tools.H2CO3_CONTROL_DIR);
+        dir.mkdirs();
+        File file = new File(dir, fileName + ".json");
+        try (BufferedWriter out = Files.newBufferedWriter(file.toPath(), StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
             out.write(jsonString);
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,15 +83,14 @@ public class CkbManager {
     }
 
     public void addGameButton(GameButton button) {
-        if (containGameButton(button) || buttonList.size() >= MAX_KEYBOARD_SIZE) {
-            button.unsetFirstAdded();
-        } else {
-            if (button == null) {
-                button = new GameButton(mContext, mCall, mController, this).setButtonMode(buttonMode).setFirstAdded();
-                (new GameButtonDialog(mContext, button, this)).show();
-            }
+        if (button == null) {
+            button = new GameButton(mContext, mCall, mController, this).setButtonMode(buttonMode).setFirstAdded();
+            (new GameButtonDialog(mContext, button, this)).show();
+        } else if (!containGameButton(button) && buttonList.size() < MAX_KEYBOARD_SIZE) {
             buttonList.add(button);
             addView(button);
+        } else {
+            button.unsetFirstAdded();
         }
     }
 
@@ -187,32 +177,52 @@ public class CkbManager {
     }
 
     public boolean loadKeyboard(File file) {
-        if (!file.exists()) {
+        if (file == null || !file.exists()) {
             return false;
         }
-        KeyboardRecorder kr;
-        try {
-            InputStream inputStream = Files.newInputStream(file.toPath());
-            Reader reader = new InputStreamReader(inputStream);
+        try (InputStream inputStream = Files.newInputStream(file.toPath());
+             Reader reader = new InputStreamReader(inputStream)) {
             Gson gson = new Gson();
-            kr = gson.fromJson(reader, KeyboardRecorder.class);
-        } catch (Exception e) {
+            KeyboardRecorder kr = gson.fromJson(reader, KeyboardRecorder.class);
+            loadKeyboard(kr);
+            return true;
+        } catch (IOException e) {
             e.printStackTrace();
-            DialogUtils.createBothChoicesDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_try_to_convert_keyboard_layout), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel), new DialogSupports() {
-                @Override
-                public void runWhenPositive() {
-                    super.runWhenPositive();
-                    if (new GameButtonConverter(mContext).convertAndOutput(file)) {
-                        DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note), String.format(mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_convert_keyboard_file), file.getName() + "-new.json"), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), null);
-                    } else {
-                        DialogUtils.createSingleChoiceDialog(mContext, mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_failed_to_convert_keyboard_file), mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok), null);
-                    }
-                }
-            });
+            handleLoadError(file);
             return false;
         }
-        loadKeyboard(kr);
-        return true;
+    }
+
+    private void handleLoadError(File file) {
+        DialogUtils.createBothChoicesDialog(mContext,
+                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
+                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_try_to_convert_keyboard_layout),
+                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
+                mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_cancel),
+                new DialogSupports() {
+                    @Override
+                    public void runWhenPositive() {
+                        super.runWhenPositive();
+                        handleConversionResult(file);
+                    }
+                });
+    }
+
+    private void handleConversionResult(File file) {
+        GameButtonConverter converter = new GameButtonConverter(mContext);
+        if (converter.convertAndOutput(file)) {
+            DialogUtils.createSingleChoiceDialog(mContext,
+                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
+                    String.format(mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_successed_to_convert_keyboard_file), file.getName()),
+                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
+                    null);
+        } else {
+            DialogUtils.createSingleChoiceDialog(mContext,
+                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_note),
+                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.tips_failed_to_convert_keyboard_file),
+                    mContext.getString(org.koishi.launcher.h2co3.resources.R.string.title_ok),
+                    null);
+        }
     }
 
     public boolean loadKeyboard(String fileName) {
@@ -221,12 +231,11 @@ public class CkbManager {
     }
 
     public void loadKeyboard(KeyboardRecorder kr) {
-        GameButtonRecorder[] gbr;
-        if (kr != null) {
-            gbr = kr.getRecorderDatas();
-        } else {
+        if (kr == null) {
             return;
         }
+
+        GameButtonRecorder[] gbr = kr.getRecorderDatas();
 
         if (kr.getVersionCode() == KeyboardRecorder.VERSION_UNKNOWN) {
             for (GameButtonRecorder tgbr : gbr) {
@@ -234,6 +243,7 @@ public class CkbManager {
                 tgbr.keyPos[1] = DisplayUtils.getDpFromPx(mContext, tgbr.keyPos[1]);
             }
         }
+
         clearKeyboard();
         for (GameButtonRecorder tgbr : gbr) {
             addGameButton(tgbr.recoverData(mContext, mCall, mController, this));
@@ -248,23 +258,16 @@ public class CkbManager {
     }
 
     public void showOrHideGameButtons(int i) {
-        switch (i) {
-            case SHOW_BUTTON:
-                if (hasHide) {
-                    for (GameButton button : buttonList) {
-                        addView(button);
-                    }
-                    hasHide = false;
+        boolean shouldShow = (i == SHOW_BUTTON && hasHide) || (i == HIDE_BUTTON && !hasHide);
+        if (shouldShow) {
+            for (GameButton button : buttonList) {
+                if (i == SHOW_BUTTON) {
+                    addView(button);
+                } else {
+                    removeView(button);
                 }
-                break;
-            case HIDE_BUTTON:
-                if (!hasHide) {
-                    for (GameButton button : buttonList) {
-                        removeView(button);
-                    }
-                    hasHide = true;
-                }
-                break;
+            }
+            hasHide = (i == HIDE_BUTTON);
         }
     }
 }

@@ -650,7 +650,6 @@ typedef double GLclampd;    /* double precision float in [0,1] */
 /* Utility */
 #define GL_VENDOR                0x1F00
 #define GL_RENDERER                0x1F01
-#define GL_VERSION                0x1F02
 #define GL_EXTENSIONS                0x1F03
 
 /* Errors */

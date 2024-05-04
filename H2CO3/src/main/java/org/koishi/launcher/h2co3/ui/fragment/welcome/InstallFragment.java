@@ -14,6 +14,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.core.utils.LocaleUtils;
@@ -29,10 +31,11 @@ import java.util.Locale;
 public class InstallFragment extends H2CO3Fragment implements View.OnClickListener {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    View view;
-    ProgressBar h2co3LauncherProgress, java8Progress, java11Progress, java17Progress, java21Progress;
-    AppCompatImageView h2co3LauncherIcon, java8Icon, java11Icon, java17Icon, java21Icon;
-    NavController navController;
+    private View view;
+    private ProgressBar h2co3LauncherProgress, java8Progress, java11Progress, java17Progress, java21Progress;
+    private AppCompatImageView h2co3LauncherIcon, java8Icon, java11Icon, java17Icon, java21Icon;
+    private FloatingActionButton nextButton;
+    private NavController navController;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
     private boolean java11 = false;
@@ -54,7 +57,19 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
         java17Icon = findViewById(view, R.id.java17_task_icon);
         java21Progress = findViewById(view, R.id.java21_task_progress);
         java21Icon = findViewById(view, R.id.java21_task_icon);
-        view.findViewById(R.id.nextButton).setOnClickListener(v -> install());
+        nextButton = view.findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                install();
+            }
+        });
         start();
         return view;
     }
@@ -185,7 +200,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
         if (installing) {
             return;
         }
-
+        nextButton.setEnabled(false);
         installing = true;
         if (!h2co3Launcher) {
             new Thread(() -> {

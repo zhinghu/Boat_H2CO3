@@ -73,7 +73,8 @@ public class LoginUtils {
                     return res;
                 }
             }
-        } catch (Exception ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -83,5 +84,4 @@ public class LoginUtils {
 
         void onFailed(String error);
     }
-
 }
