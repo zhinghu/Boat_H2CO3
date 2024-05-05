@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     compileSdk 34
@@ -28,6 +29,9 @@ android {
         ndkBuild {
             path file('src/main/jni/Android.mk')
         }
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
 }
 
@@ -88,4 +92,5 @@ dependencies {
 
     implementation 'org.apache.commons:commons-compress:1.26.1'
     implementation 'com.jaredrummler:android-device-names:2.1.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
 }

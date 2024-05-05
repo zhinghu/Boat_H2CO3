@@ -87,6 +87,99 @@ endif
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
+
+LOCAL_MODULE := gl4es_114
+
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/gl4es_114/include
+
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_C_INCLUDES) -DBCMHOST
+
+LOCAL_SRC_FILES := \
+	gl4es_114/gl/arbconverter.c \
+	gl4es_114/gl/arbgenerator.c \
+	gl4es_114/gl/arbhelper.c \
+	gl4es_114/gl/arbparser.c \
+	gl4es_114/gl/array.c \
+	gl4es_114/gl/blend.c \
+	gl4es_114/gl/blit.c \
+	gl4es_114/gl/buffers.c \
+	gl4es_114/gl/build_info.c \
+	gl4es_114/gl/debug.c \
+	gl4es_114/gl/decompress.c \
+	gl4es_114/gl/depth.c \
+	gl4es_114/gl/directstate.c \
+	gl4es_114/gl/drawing.c \
+	gl4es_114/gl/enable.c \
+	gl4es_114/gl/envvars.c \
+	gl4es_114/gl/eval.c \
+	gl4es_114/gl/face.c \
+	gl4es_114/gl/fog.c \
+	gl4es_114/gl/fpe.c \
+	gl4es_114/gl/fpe_cache.c \
+	gl4es_114/gl/fpe_shader.c \
+	gl4es_114/gl/framebuffers.c \
+	gl4es_114/gl/gl_lookup.c \
+	gl4es_114/gl/getter.c \
+	gl4es_114/gl/gl4es.c \
+	gl4es_114/gl/glstate.c \
+	gl4es_114/gl/hint.c \
+	gl4es_114/gl/init.c \
+	gl4es_114/gl/light.c \
+	gl4es_114/gl/line.c \
+	gl4es_114/gl/list.c \
+	gl4es_114/gl/listdraw.c \
+	gl4es_114/gl/listrl.c \
+	gl4es_114/gl/loader.c \
+	gl4es_114/gl/logs.c \
+	gl4es_114/gl/matrix.c \
+	gl4es_114/gl/matvec.c \
+	gl4es_114/gl/oldprogram.c \
+	gl4es_114/gl/pixel.c \
+	gl4es_114/gl/planes.c \
+	gl4es_114/gl/pointsprite.c \
+	gl4es_114/gl/preproc.c \
+	gl4es_114/gl/program.c \
+	gl4es_114/gl/queries.c \
+	gl4es_114/gl/raster.c \
+	gl4es_114/gl/render.c \
+	gl4es_114/gl/shader.c \
+	gl4es_114/gl/shaderconv.c \
+	gl4es_114/gl/shader_hacks.c \
+	gl4es_114/gl/stack.c \
+	gl4es_114/gl/stencil.c \
+	gl4es_114/gl/string_utils.c \
+	gl4es_114/gl/stubs.c \
+	gl4es_114/gl/texenv.c \
+	gl4es_114/gl/texgen.c \
+	gl4es_114/gl/texture.c \
+	gl4es_114/gl/texture_compressed.c \
+	gl4es_114/gl/texture_params.c \
+	gl4es_114/gl/texture_read.c \
+	gl4es_114/gl/texture_3d.c \
+	gl4es_114/gl/uniform.c \
+	gl4es_114/gl/vertexattrib.c \
+	gl4es_114/gl/wrap/gl4eswraps.c \
+	gl4es_114/gl/wrap/gles.c \
+	gl4es_114/gl/wrap/glstub.c \
+	gl4es_114/gl/math/matheval.c \
+	gl4es_114/glx/hardext.c \
+	gl4es_114/glx/glx.c \
+	gl4es_114/glx/lookup.c \
+	gl4es_114/glx/gbm.c \
+	gl4es_114/glx/streaming.c \
+	gl4es_114/gl/vgpu/shaderconv.c
+
+LOCAL_CFLAGS += -g -std=gnu99 -funwind-tables -O3 -fvisibility=hidden -include gl4es_114/include/android_debug.h
+LOCAL_CFLAGS += -DNOX11
+LOCAL_CFLAGS += -DNO_GBM
+LOCAL_CFLAGS += -Wimplicit-function-declaration
+
+LOCAL_LDLIBS := -ldl -llog
+#building as a static lib
+
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
 LOCAL_MODULE            := angle_gles2
 LOCAL_SRC_FILES         := tinywrapper/angle-gles/$(TARGET_ARCH_ABI)/libGLESv2_angle.so
 include $(PREBUILT_SHARED_LIBRARY)
