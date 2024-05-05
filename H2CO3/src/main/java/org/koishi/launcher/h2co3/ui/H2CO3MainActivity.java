@@ -46,7 +46,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         navigationView.setOnItemSelectedListener(this);
         navigationView.setOnItemReselectedListener(null);
         navigationView.setSelectedItemId(R.id.navigation_home);
-        getSupportActionBar().setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.title_home));
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
         initFragment(homeFragment);
         setNavigationItemChecked(0);
 
@@ -112,7 +112,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_item_home) {
             setNavigationItemChecked(0);
-            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.title_home);
+            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.app_name);
         } else if (item.getItemId() == R.id.action_item_setting) {
             setNavigationItemChecked(3);
             switchFragment(manageFragment, org.koishi.launcher.h2co3.resources.R.string.title_manage);
@@ -148,7 +148,7 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         menuItem.setChecked(true);
 
         if (itemId == R.id.navigation_home) {
-            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.title_home);
+            switchFragment(homeFragment, org.koishi.launcher.h2co3.resources.R.string.app_name);
         } else if (itemId == R.id.navigation_directory) {
             switchFragment(directoryFragment, org.koishi.launcher.h2co3.resources.R.string.title_directory);
         } else if (itemId == R.id.navigation_manage) {

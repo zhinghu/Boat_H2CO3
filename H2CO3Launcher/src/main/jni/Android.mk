@@ -174,9 +174,6 @@ LOCAL_CFLAGS += -DNOX11
 LOCAL_CFLAGS += -DNO_GBM
 LOCAL_CFLAGS += -Wimplicit-function-declaration
 
-LOCAL_LDLIBS := -ldl -llog
-#building as a static lib
-
 include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)

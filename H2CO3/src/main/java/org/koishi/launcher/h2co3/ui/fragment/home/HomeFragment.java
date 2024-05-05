@@ -19,7 +19,6 @@ import static org.koishi.launcher.h2co3.ui.H2CO3LauncherClientActivity.attachCon
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
@@ -81,8 +80,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author caini
@@ -263,7 +265,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         H2CO3CardView userAdd = contentView1.findViewById(R.id.login_user_add);
         userAdd.setOnClickListener(v1 -> showLoginDialog());
 
-        AsyncTask.execute(() -> {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
             try {
                 URL url = new URL("https://gitee.com/cainiaohanhanyai/cnhhfile/raw/master/Documents/Notification.txt");
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -275,16 +278,20 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     while ((temp = bfr.readLine()) != null) {
                         str.append(temp).append("\n");
                     }
-                    message = str.toString();
+                    final String message = str.toString();
+                    handler.post(() -> {
+                        homeNoticeTextView.setVisibility(View.VISIBLE);
+                        loadingNoticeProgress.hide();
+                        homeNoticeTextView.setText(message);
+                    });
                 }
-                handler.post(() -> homeNoticeTextView.setVisibility(View.VISIBLE));
-                handler.post(() -> loadingNoticeProgress.hide());
-                handler.post(() -> homeNoticeTextView.setText(message));
             } catch (IOException e) {
-                message = e.getMessage();
-                handler.post(() -> homeNoticeTextView.setVisibility(View.VISIBLE));
-                handler.post(() -> loadingNoticeProgress.hide());
-                handler.post(() -> homeNoticeTextView.setText(message));
+                final String errorMessage = e.getMessage();
+                handler.post(() -> {
+                    homeNoticeTextView.setVisibility(View.VISIBLE);
+                    loadingNoticeProgress.hide();
+                    homeNoticeTextView.setText(errorMessage);
+                });
             }
         });
 
@@ -399,8 +406,8 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private void performLogin() {
         progressDialog.showWithProgress();
         H2CO3Application.sExecutorService.execute(() -> {
-            String user = loginName.getText().toString();
-            String pass = loginPassword.getText().toString();
+            String user = Objects.requireNonNull(loginName.getText()).toString();
+            String pass = Objects.requireNonNull(loginPassword.getText()).toString();
             if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(pass)) {
                 try {
                     LoginUtils.getINSTANCE().setBaseUrl(currentBaseUrl);
@@ -410,9 +417,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                     });
                 }
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    progressDialog.dismiss();
-                });
+                requireActivity().runOnUiThread(() -> progressDialog.dismiss());
             }
         });
     }
@@ -426,9 +431,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private void showServerTypeDialog() {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         alertDialogBuilder.setTitle("请选择认证服务器类型");
-        alertDialogBuilder.setItems(new String[]{"外置登录", "统一通行证"}, (dialog, which) -> {
-            showInputDialog(which);
-        });
+        alertDialogBuilder.setItems(new String[]{"外置登录", "统一通行证"}, (dialog, which) -> showInputDialog(which));
         alertDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
         alertDialogBuilder.show();
     }
@@ -440,9 +443,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         MaterialAlertDialogBuilder inputDialogBuilder = new MaterialAlertDialogBuilder(requireActivity());
         inputDialogBuilder.setTitle("提示");
         inputDialogBuilder.setView(editText);
-        inputDialogBuilder.setPositiveButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_ok), (dialogInterface, i) -> {
-            handleServerSelection(selection, editText.getText().toString());
-        });
+        inputDialogBuilder.setPositiveButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_ok), (dialogInterface, i) -> handleServerSelection(selection, editText.getText().toString()));
         inputDialogBuilder.setNegativeButton(this.getString(org.koishi.launcher.h2co3.resources.R.string.button_cancel), null);
         inputDialogBuilder.show();
     }
@@ -453,18 +454,10 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
 
         progressDialog.showWithProgress();
-        H2CO3Application.sExecutorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                String baseUrl = selection == 0 ? inputText : "https://auth.mc-user.com:233/" + inputText;
-                String data = LoginUtils.getINSTANCE().getServeInfo(baseUrl);
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleServerResponse(selection, data, inputText);
-                    }
-                });
-            }
+        H2CO3Application.sExecutorService.execute(() -> {
+            String baseUrl = selection == 0 ? inputText : "https://auth.mc-user.com:233/" + inputText;
+            String data = LoginUtils.getINSTANCE().getServeInfo(baseUrl);
+            requireActivity().runOnUiThread(() -> handleServerResponse(selection, data, inputText));
         });
     }
 
@@ -541,6 +534,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void setUserStateFromJson() {
         String apiUrl = H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_API_URL, H2CO3Tools.LOGIN_ERROR, String.class);
         homeUserName.setText(H2CO3Tools.getH2CO3Value(H2CO3Tools.LOGIN_AUTH_PLAYER_NAME, "", String.class));
