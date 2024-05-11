@@ -1,6 +1,7 @@
 name: Android CI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - 'H2CO3_main'
@@ -10,32 +11,24 @@ on:
 
 jobs:
   build:
-    if: github.event_name != 'pull_request'
 
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          java-version: '21'
+          distribution: 'dragonwell'
+          cache: gradle
 
       - name: Build Debug .apk
-        run: ./gradlew assembleDebug
+        run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: H2CO3-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: H2CO3/build/outputs/apk/debug/*.apk
