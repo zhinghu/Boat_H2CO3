@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
             android:id="@+id/recycler_view_user_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

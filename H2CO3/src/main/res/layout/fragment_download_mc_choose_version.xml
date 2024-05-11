@@ -63,7 +63,7 @@
 
         </RadioGroup>
 
-        <me.zhanghai.android.fastscroll.FixOnItemTouchListenerRecyclerView
+        <org.koishi.launcher.h2co3.resources.component.NestedRecyclerView
             android:id="@+id/loadingversionFileListView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
