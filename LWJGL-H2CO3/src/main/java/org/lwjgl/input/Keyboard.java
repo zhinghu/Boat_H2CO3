@@ -332,7 +332,7 @@ public class Keyboard {
 	public static void create() throws LWJGLException {
 		if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
-        create((InputImplementation) GLFWInputImplementation.singleton);
+        create(GLFWInputImplementation.singleton);
 	}
 
 	private static void reset() {

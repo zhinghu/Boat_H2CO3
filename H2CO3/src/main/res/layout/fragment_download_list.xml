@@ -57,9 +57,8 @@
             android:id="@+id/nav"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:menu="@menu/download_list_menu"
-            app:menuGravity="center" />
+            android:background="@color/transparent"
+            app:menu="@menu/download_list_menu" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

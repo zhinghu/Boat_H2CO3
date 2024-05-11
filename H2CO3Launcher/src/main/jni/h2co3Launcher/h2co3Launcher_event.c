@@ -31,6 +31,7 @@ void EventQueue_add(EventQueue *queue, H2CO3LauncherEvent *event) {
     memcpy(&queue->tail->event, event, sizeof(H2CO3LauncherEvent));
 }
 
+
 int EventQueue_take(EventQueue *queue, H2CO3LauncherEvent *event) {
     if (queue == NULL || queue->count == 0) {
         return 0;
@@ -117,10 +118,10 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_getP
 
 JNIEXPORT void JNICALL
 Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_pushEvent(JNIEnv *env,
-                                                                            jclass clazz,
-                                                                            jlong time,
-                                                                            jint type, jint p1,
-                                                                            jint p2) {
+                                                                                      jclass clazz,
+                                                                                      jlong time,
+                                                                                      jint type, jint p1,
+                                                                                      jint p2) {
     if (!h2co3Launcher->has_event_pipe) {
         return;
     }
@@ -175,17 +176,12 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_push
         H2CO3_INTERNAL_LOG(
                 "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_pushEvent:Failed to release mutex");
     }
-
-    if (write(h2co3Launcher->event_pipe_fd[1], "E", 1) != 1) {
-        H2CO3_INTERNAL_LOG(
-                "Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_pushEvent:Failed to write to event pipe");
-    }
 }
 
 JNIEXPORT void JNICALL
 Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_setEventPipe(
         JNIEnv *env,
-                                                                               jclass clazz) {
+        jclass clazz) {
     if (pipe(h2co3Launcher->event_pipe_fd) == -1) {
         H2CO3_INTERNAL_LOG(
                 "Java_org_koishi_launcher_h2co3_core_h2co3launcher_H2CO3LauncherLib_setEventPipe:Failed to create event pipe : %s",

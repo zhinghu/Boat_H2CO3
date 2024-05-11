@@ -9,8 +9,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigationrail.NavigationRailView;
+import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.koishi.launcher.h2co3.R;
@@ -24,10 +23,10 @@ import org.koishi.launcher.h2co3.ui.fragment.manage.ManageFragment;
 
 import java.util.Objects;
 
-public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener, NavigationBarView.OnItemSelectedListener {
+public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private H2CO3ToolBar toolbar;
-    private NavigationRailView navigationView;
+    private NavigationView navigationView;
     private H2CO3Fragment currentFragment;
 
     private HomeFragment homeFragment;
@@ -43,9 +42,8 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         toolbar.inflateMenu(R.menu.home_toolbar);
         setSupportActionBar(toolbar);
 
-        navigationView.setOnItemSelectedListener(this);
-        navigationView.setOnItemReselectedListener(null);
-        navigationView.setSelectedItemId(R.id.navigation_home);
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.navigation_home);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.app_name));
         initFragment(homeFragment);
         setNavigationItemChecked(0);

@@ -3,9 +3,9 @@
 
 #include "gles.h"
 
-const char* PrintEnum(GLenum what);
+const char *PrintEnum(GLenum what);
 
-const char* PrintEGLError(int onlyerror);
+const char *PrintEGLError(int onlyerror);
 
 void CheckGLError(int fwd);
 

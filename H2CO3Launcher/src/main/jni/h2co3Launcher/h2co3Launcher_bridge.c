@@ -1,7 +1,3 @@
-//
-// Created by Tungsten on 2022/10/11.
-//
-
 #include "h2co3Launcher_internal.h"
 
 #include <android/native_window_jni.h>
@@ -9,39 +5,34 @@
 #include <android/log.h>
 #include <assert.h>
 
-struct H2CO3LauncherInternal *h2co3Launcher;
-
-static int env_initialized = 0;
+struct H2CO3LauncherInternal *h2co3Launcher = NULL;
 
 __attribute__((constructor)) void env_init() {
-    if (env_initialized) {
-        return;
-    }
     char *strptr_env = getenv("H2CO3LAUNCHER_ENVIRON");
     if (strptr_env == NULL) {
         __android_log_print(ANDROID_LOG_INFO, "Environ", "No environ found, creating...");
-        h2co3Launcher = malloc(sizeof(struct H2CO3LauncherInternal));
-        assert(h2co3Launcher);
-        memset(h2co3Launcher, 0, sizeof(struct H2CO3LauncherInternal));
-        char *str_h2co3Launcher = NULL;
-        if (asprintf(&str_h2co3Launcher, "%p", h2co3Launcher) == -1) {
-            free(h2co3Launcher);
+        h2co3Launcher = (struct H2CO3LauncherInternal *)malloc(sizeof(struct H2CO3LauncherInternal));
+        if (h2co3Launcher == NULL) {
             abort();
         }
+        memset(h2co3Launcher, 0, sizeof(struct H2CO3LauncherInternal));
+        char str_h2co3Launcher[20];
+        sprintf(str_h2co3Launcher, "%p", h2co3Launcher);
         setenv("H2CO3LAUNCHER_ENVIRON", str_h2co3Launcher, 1);
-        free(str_h2co3Launcher);
     } else {
         __android_log_print(ANDROID_LOG_INFO, "Environ", "Found existing environ: %s", strptr_env);
-        h2co3Launcher = (struct H2CO3LauncherInternal *) strtoull(strptr_env, NULL, 16);
+        h2co3Launcher = (struct H2CO3LauncherInternal *)strtoull(strptr_env, NULL, 16);
     }
     __android_log_print(ANDROID_LOG_INFO, "Environ", "%p", h2co3Launcher);
-
-    env_initialized = 1;
 }
 
 ANativeWindow *h2co3LauncherGetNativeWindow() {
+    if (h2co3Launcher == NULL) {
+        return NULL;
+    }
     return h2co3Launcher->window;
 }
+
 
 void h2co3LauncherSetPrimaryClipString(const char *string) {
     PrepareH2CO3LauncherBridgeJNI();

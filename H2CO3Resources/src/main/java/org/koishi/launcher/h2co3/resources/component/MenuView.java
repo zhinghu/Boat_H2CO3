@@ -105,7 +105,7 @@ public class MenuView extends View {
         canvas.drawCircle(getMeasuredWidth() >> 1, getMeasuredHeight() >> 1, (getMeasuredWidth() >> 1) - 1, strokePaint);
         canvas.drawCircle(getMeasuredWidth() >> 1, getMeasuredHeight() >> 1, (getMeasuredWidth() >> 1) - 2, areaPaint);
 
-        int iconSize = (int) Math.min(getMeasuredWidth(), getMeasuredHeight() / ICON_SIZE_RATIO);
+        int iconSize = Math.min(getMeasuredWidth(), getMeasuredHeight() / ICON_SIZE_RATIO);
         int iconLeft = (getMeasuredWidth() - iconSize) / 2;
         int iconTop = (getMeasuredHeight() - iconSize) / 2;
         int iconRight = iconLeft + iconSize;

@@ -22,36 +22,36 @@ bool pixel_convert(const GLvoid *src, GLvoid **dst,
                    GLenum dst_format, GLenum dst_type, GLuint stride, GLuint align);
 
 bool pixel_transform(const GLvoid *src, GLvoid **dst,
-                   GLuint width, GLuint height,
-                   GLenum src_format, GLenum src_type,
-                   const GLfloat *scale, const GLfloat *bias);
+                     GLuint width, GLuint height,
+                     GLenum src_format, GLenum src_type,
+                     const GLfloat *scale, const GLfloat *bias);
 
 bool pixel_scale(const GLvoid *src, GLvoid **dst,
-                  GLuint width, GLuint height,
-                  GLuint new_width, GLuint new_height,
-                  GLenum format, GLenum type);
+                 GLuint width, GLuint height,
+                 GLuint new_width, GLuint new_height,
+                 GLenum format, GLenum type);
 
 bool pixel_halfscale(const GLvoid *src, GLvoid **dst,
-                  GLuint width, GLuint height,
-                  GLenum format, GLenum type);
+                     GLuint width, GLuint height,
+                     GLenum format, GLenum type);
 
 bool pixel_thirdscale(const GLvoid *src, GLvoid **dst,
-                  GLuint width, GLuint height,
-                  GLenum format, GLenum type);
+                      GLuint width, GLuint height,
+                      GLenum format, GLenum type);
 
 bool pixel_quarterscale(const GLvoid *src, GLvoid **dst,
-                  GLuint width, GLuint height,
-                  GLenum format, GLenum type);
+                        GLuint width, GLuint height,
+                        GLenum format, GLenum type);
 
 bool pixel_doublescale(const GLvoid *src, GLvoid **dst,
-                  GLuint width, GLuint height,
-                  GLenum format, GLenum type);
+                       GLuint width, GLuint height,
+                       GLenum format, GLenum type);
 
 bool pixel_to_ppm(const GLvoid *pixels,
                   GLuint width, GLuint height,
                   GLenum format, GLenum type, GLuint name, GLuint align);
 
 // sRGB ->RGB colorspace conversion, for RGBA data...
-void pixel_srgb_inplace(GLvoid* pixels, GLuint width, GLuint height);
+void pixel_srgb_inplace(GLvoid *pixels, GLuint width, GLuint height);
 
 #endif // _GL4ES_PIXEL_H_

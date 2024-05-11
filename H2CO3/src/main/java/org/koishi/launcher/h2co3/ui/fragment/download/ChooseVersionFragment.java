@@ -6,7 +6,6 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,7 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,17 +23,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
-import org.koishi.launcher.h2co3.core.utils.H2CO3DownloadUtils;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -53,7 +54,16 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     private List<Version> filteredList;
     private LinearProgressIndicator progressIndicator;
     private NavController navController;
-    private ChooseVersionViewModel viewModel;
+    private final Handler handler = new Handler();
+    private boolean run = false;
+    private final Runnable task = new Runnable() {
+        @Override
+        public void run() {
+            if (run) {
+                handler.postDelayed(this, 1000);
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,22 +71,13 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         navController = Navigation.findNavController(requireParentFragment().requireView());
         initView(view);
         initListeners();
-        viewModel = new ViewModelProvider(this).get(ChooseVersionViewModel.class);
         versionList = new ArrayList<>();
         filteredList = new ArrayList<>();
+        fetchVersionsFromApi();
         versionAdapter = new VersionAdapter(filteredList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
-
-        if (viewModel.getVersionList().isEmpty()) {
-            fetchVersionsFromApi();
-        } else {
-            versionList = viewModel.getVersionList();
-            filteredList = viewModel.getFilteredList();
-            versionAdapter = new VersionAdapter(filteredList);
-            recyclerView.setAdapter(versionAdapter);
-        }
 
 
         return view;
@@ -96,12 +97,8 @@ public class ChooseVersionFragment extends H2CO3Fragment {
 
     private void fetchVersionsFromApi() {
         recyclerView.setAdapter(null);
-        String apiUrl = "https://launchermeta.mojang.com/mc/game/version_manifest_v2.json";
-        if (apiUrl != null && !apiUrl.isEmpty()) {
-            fetchVersions(apiUrl);
-        } else {
-            Context context = getContext();
-        }
+        String apiUrl = "https://bmclapi2.bangbang93.com/mc/game/version_manifest_v2.json";
+        fetchVersions(apiUrl);
     }
 
     private void filterVersions(int checkedId) {
@@ -121,35 +118,52 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     public void fetchVersions(String apiUrl) {
         executor.execute(() -> {
             try {
-                List<Version> versionList = new ArrayList<>();
-                H2CO3DownloadUtils.H2CO3DownloaderFeedback monitor = (current, total) -> {
-                };
-                H2CO3DownloadUtils.downloadFileMonitored(apiUrl, new File(H2CO3Tools.CACHE_DIR + "/out.json"), null, monitor);
-
-                String jsonData = H2CO3DownloadUtils.downloadString(apiUrl);
-                JSONObject jsonObject = new JSONObject(jsonData);
-                JSONArray versionsArray = jsonObject.getJSONArray("versions");
-                for (int i = 0; i < versionsArray.length(); i++) {
-                    JSONObject versionObject = versionsArray.getJSONObject(i);
-                    String versionName = versionObject.getString("id");
-                    String versionType = versionObject.getString("type");
-                    String versionUrl = versionObject.getString("url");
-                    String versionSha1 = versionObject.getString("sha1");
-                    Version version = new Version(versionName, versionType, versionUrl, versionSha1);
-                    versionList.add(version);
+                URL url = new URL(apiUrl);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setConnectTimeout(5000);
+                try (InputStream in = con.getInputStream();
+                     BufferedReader bfr = new BufferedReader(new InputStreamReader(in))) {
+                    StringBuilder str = new StringBuilder();
+                    String temp;
+                    while ((temp = bfr.readLine()) != null) {
+                        str.append(temp).append("\n");
+                    }
+                    List<Version> versionList = getVersionList(str);
+                    uiHandler.post(() -> {
+                        this.versionList.clear();
+                        this.versionList.addAll(versionList);
+                        filterVersions(typeRadioGroup.getCheckedRadioButtonId());
+                        progressIndicator.hide();
+                    });
                 }
-
+            } catch (Exception e) {
                 uiHandler.post(() -> {
-                    ChooseVersionFragment.this.versionList.clear();
-                    ChooseVersionFragment.this.versionList.addAll(versionList);
-                    filterVersions(typeRadioGroup.getCheckedRadioButtonId());
-                    progressIndicator.hide();
+                    H2CO3Tools.showError(requireContext(), e.getMessage());
                 });
-
-            } catch (IOException | JSONException e) {
-                H2CO3Tools.showError(requireContext(), e.getMessage());
             }
         });
+
+        run = true;
+        handler.postDelayed(task, 1000);
+    }
+
+
+    @NotNull
+    private List<Version> getVersionList(StringBuilder str) throws JSONException {
+        final String message = str.toString();
+        JSONObject jsonObject = new JSONObject(message);
+        JSONArray versionsArray = jsonObject.getJSONArray("versions");
+        List<Version> versionList = new ArrayList<>();
+        for (int i = 0; i < versionsArray.length(); i++) {
+            JSONObject versionObject = versionsArray.getJSONObject(i);
+            String versionName = versionObject.getString("id");
+            String versionType = versionObject.getString("type");
+            String versionUrl = versionObject.getString("url");
+            String versionSha1 = versionObject.getString("sha1");
+            Version version = new Version(versionName, versionType, versionUrl, versionSha1);
+            versionList.add(version);
+        }
+        return versionList;
     }
 
     class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
@@ -203,15 +217,11 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                 int position = getBindingAdapterPosition();
                 if (position != RecyclerView.NO_POSITION) {
                     Version version = versionList.get(position);
-                    String baseUrl = "https://piston-meta.mojang.com/v1/packages/";
-                    String url = baseUrl + version.getVersionSha1() + "/" + version.getVersionName() + ".json";
 
                     Bundle bundle = new Bundle();
                     bundle.putString("versionName", version.getVersionName());
 
                     navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
-                    viewModel.setVersionList(versionList);
-                    viewModel.setFilteredList(filteredList);
                 }
 
                 isHandlingClick.set(false);

@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUser.ViewHolder> {
+public class HomeListUserAdapter extends RecyclerView.Adapter<HomeListUserAdapter.ViewHolder> {
 
     private final Context context;
     private final List<UserBean> list;
@@ -47,7 +47,7 @@ public class HomeAdapterListUser extends RecyclerView.Adapter<HomeAdapterListUse
     private int selectedPosition;
     private boolean isRemoveUserDialogShowing = false;
 
-    public HomeAdapterListUser(HomeFragment fragment, List<UserBean> list) {
+    public HomeListUserAdapter(HomeFragment fragment, List<UserBean> list) {
         this.context = fragment.requireActivity();
         this.fragment = fragment;
         this.list = list;

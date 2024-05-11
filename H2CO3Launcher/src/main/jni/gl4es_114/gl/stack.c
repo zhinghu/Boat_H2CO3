@@ -26,12 +26,13 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         } else gl4es_flush();
 
     if (glstate->stack == NULL) {
-        glstate->stack = (glstack_t *)malloc(STACK_SIZE * sizeof(glstack_t));
+        glstate->stack = (glstack_t *) malloc(STACK_SIZE * sizeof(glstack_t));
         glstate->stack->len = 0;
         glstate->stack->cap = STACK_SIZE;
     } else if (glstate->stack->len == glstate->stack->cap) {
         glstate->stack->cap += STACK_SIZE;
-        glstate->stack = (glstack_t *)realloc(glstate->stack, glstate->stack->cap * sizeof(glstack_t));
+        glstate->stack = (glstack_t *) realloc(glstate->stack,
+                                               glstate->stack->cap * sizeof(glstack_t));
     }
 
     glstack_t *cur = glstate->stack + glstate->stack->len;
@@ -81,8 +82,8 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         cur->alpha_test = gl4es_glIsEnabled(GL_ALPHA_TEST);
         cur->autonormal = gl4es_glIsEnabled(GL_AUTO_NORMAL);
         cur->blend = gl4es_glIsEnabled(GL_BLEND);
-        
-        cur->clip_planes_enabled = (GLboolean *)malloc(hardext.maxplanes * sizeof(GLboolean));
+
+        cur->clip_planes_enabled = (GLboolean *) malloc(hardext.maxplanes * sizeof(GLboolean));
         for (i = 0; i < hardext.maxplanes; i++) {
             *(cur->clip_planes_enabled + i) = gl4es_glIsEnabled(GL_CLIP_PLANE0 + i);
         }
@@ -93,7 +94,7 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         cur->dither = gl4es_glIsEnabled(GL_DITHER);
         cur->fog = gl4es_glIsEnabled(GL_FOG);
 
-        cur->lights_enabled = (GLboolean *)malloc(hardext.maxlights * sizeof(GLboolean));
+        cur->lights_enabled = (GLboolean *) malloc(hardext.maxlights * sizeof(GLboolean));
         for (i = 0; i < hardext.maxlights; i++) {
             *(cur->lights_enabled + i) = gl4es_glIsEnabled(GL_LIGHT0 + i);
         }
@@ -119,7 +120,7 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         cur->scissor_test = gl4es_glIsEnabled(GL_SCISSOR_TEST);
         cur->stencil_test = gl4es_glIsEnabled(GL_STENCIL_TEST);
         int a;
-        for (a=0; a<hardext.maxtex; a++) {
+        for (a = 0; a < hardext.maxtex; a++) {
             cur->tex_enabled[a] = glstate->enable.texture[a];
             cur->texgen_s[a] = glstate->enable.texgen_s[a];
             cur->texgen_r[a] = glstate->enable.texgen_r[a];
@@ -146,8 +147,8 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         gl4es_glGetIntegerv(GL_LINE_SMOOTH_HINT, &cur->line_smooth_hint);
         gl4es_glGetIntegerv(GL_FOG_HINT, &cur->fog_hint);
         gl4es_glGetIntegerv(GL_GENERATE_MIPMAP_HINT, &cur->mipmap_hint);
-        for (int i=GL4ES_HINT_FIRST; i<GL4ES_HINT_LAST; i++)
-            gl4es_glGetIntegerv(i, &cur->gles4_hint[i-GL4ES_HINT_FIRST]);
+        for (int i = GL4ES_HINT_FIRST; i < GL4ES_HINT_LAST; i++)
+            gl4es_glGetIntegerv(i, &cur->gles4_hint[i - GL4ES_HINT_FIRST]);
     }
 
     if (mask & GL_LIGHTING_BIT) {
@@ -156,30 +157,34 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         gl4es_glGetIntegerv(GL_LIGHT_MODEL_TWO_SIDE, &cur->light_model_two_side);
 
         int i;
-        int j=0;
-        cur->lights_enabled = (GLboolean *)malloc(hardext.maxlights * sizeof(GLboolean));
-        cur->lights = (GLfloat *)malloc(hardext.maxlights * sizeof(GLfloat)*(10*4));
+        int j = 0;
+        cur->lights_enabled = (GLboolean *) malloc(hardext.maxlights * sizeof(GLboolean));
+        cur->lights = (GLfloat *) malloc(hardext.maxlights * sizeof(GLfloat) * (10 * 4));
         for (i = 0; i < hardext.maxlights; i++) {
             *(cur->lights_enabled + i) = gl4es_glIsEnabled(GL_LIGHT0 + i);
-            #define L(A) gl4es_glGetLightfv(GL_LIGHT0 + i, A, cur->lights+j); j+=4
+#define L(A) gl4es_glGetLightfv(GL_LIGHT0 + i, A, cur->lights+j); j+=4
             L(GL_AMBIENT);
             L(GL_DIFFUSE);
             L(GL_SPECULAR);
-            L(GL_POSITION); 
+            L(GL_POSITION);
             L(GL_SPOT_CUTOFF);
             L(GL_SPOT_DIRECTION);
             L(GL_SPOT_EXPONENT);
             L(GL_CONSTANT_ATTENUATION);
             L(GL_LINEAR_ATTENUATION);
             L(GL_QUADRATIC_ATTENUATION);
-            #undef L
+#undef L
         }
-        j=0;
-        cur->materials = (GLfloat *)malloc(2 * sizeof(GLfloat)*(5*4));
-        memset(cur->materials, 0, 2 * sizeof(GLfloat)*(5*4));
-        #define M(A) gl4es_glGetMaterialfv(GL_BACK, A, cur->materials+j); j+=4; gl4es_glGetMaterialfv(GL_FRONT, A, cur->materials+j); j+=4
-        M(GL_AMBIENT); M(GL_DIFFUSE); M(GL_SPECULAR); M(GL_EMISSION); M(GL_SHININESS);  // handle both face at some point?
-        #undef M
+        j = 0;
+        cur->materials = (GLfloat *) malloc(2 * sizeof(GLfloat) * (5 * 4));
+        memset(cur->materials, 0, 2 * sizeof(GLfloat) * (5 * 4));
+#define M(A) gl4es_glGetMaterialfv(GL_BACK, A, cur->materials+j); j+=4; gl4es_glGetMaterialfv(GL_FRONT, A, cur->materials+j); j+=4
+        M(GL_AMBIENT);
+        M(GL_DIFFUSE);
+        M(GL_SPECULAR);
+        M(GL_EMISSION);
+        M(GL_SHININESS);  // handle both face at some point?
+#undef M
         gl4es_glGetIntegerv(GL_SHADE_MODEL, &cur->shade_model);
     }
 
@@ -189,7 +194,7 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         gl4es_glGetFloatv(GL_LINE_WIDTH, &cur->line_width);
     }
 
-	// GL_LIST_BIT
+    // GL_LIST_BIT
     if (mask & GL_LIST_BIT) {
         cur->list_base = glstate->list.base;
     }
@@ -202,25 +207,26 @@ void gl4es_glPushAttrib(GLbitfield mask) {
     }
 
     // GL_PIXEL_MODE_BIT
-	if (mask & GL_PIXEL_MODE_BIT) {
-		GLenum pixel_name[] = {GL_RED_BIAS, GL_RED_SCALE, GL_GREEN_BIAS, GL_GREEN_SCALE, GL_BLUE_BIAS, GL_BLUE_SCALE, GL_ALPHA_BIAS, GL_ALPHA_SCALE};
-		int i;
-		for (i=0; i<8; i++) 
-			gl4es_glGetFloatv(pixel_name[i], &cur->pixel_scale_bias[i]);
+    if (mask & GL_PIXEL_MODE_BIT) {
+        GLenum pixel_name[] = {GL_RED_BIAS, GL_RED_SCALE, GL_GREEN_BIAS, GL_GREEN_SCALE,
+                               GL_BLUE_BIAS, GL_BLUE_SCALE, GL_ALPHA_BIAS, GL_ALPHA_SCALE};
+        int i;
+        for (i = 0; i < 8; i++)
+            gl4es_glGetFloatv(pixel_name[i], &cur->pixel_scale_bias[i]);
         //TODO: GL_DEPTH_BIAS & GL_DEPTH_SCALE (probably difficult)
         //TODO: GL_INDEX_OFFEST & GL_INDEX_SHIFT
         //TODO: GL_MAP_COLOR & GL_MAP_STENCIL (probably difficult too)
-		gl4es_glGetFloatv(GL_ZOOM_X, &cur->pixel_zoomx);
-		gl4es_glGetFloatv(GL_ZOOM_Y, &cur->pixel_zoomy);
-	}
-	
+        gl4es_glGetFloatv(GL_ZOOM_X, &cur->pixel_zoomx);
+        gl4es_glGetFloatv(GL_ZOOM_Y, &cur->pixel_zoomy);
+    }
+
     if (mask & GL_POINT_BIT) {
         cur->point_smooth = gl4es_glIsEnabled(GL_POINT_SMOOTH);
         gl4es_glGetFloatv(GL_POINT_SIZE, &cur->point_size);
-        if(hardext.pointsprite) {
+        if (hardext.pointsprite) {
             cur->pointsprite = gl4es_glIsEnabled(GL_POINT_SPRITE);
             int a;
-            for (a=0; a<hardext.maxtex; a++) {
+            for (a = 0; a < hardext.maxtex; a++) {
                 cur->pscoordreplace[a] = glstate->texture.pscoordreplace[a];
             }
         }
@@ -241,7 +247,7 @@ void gl4es_glPushAttrib(GLbitfield mask) {
         gl4es_glGetIntegerv(GL_STENCIL_VALUE_MASK, &cur->stencil_mask);
         gl4es_glGetIntegerv(GL_STENCIL_REF, &cur->stencil_ref);
         //TODO: glStencilFuncSeperate
-        
+
         //TODO: Stencil value mask
         gl4es_glGetIntegerv(GL_STENCIL_FAIL, &cur->stencil_sfail);
         gl4es_glGetIntegerv(GL_STENCIL_PASS_DEPTH_FAIL, &cur->stencil_dpfail);
@@ -253,39 +259,39 @@ void gl4es_glPushAttrib(GLbitfield mask) {
     }
     // GL_TEXTURE_BIT - TODO: incomplete
     if (mask & GL_TEXTURE_BIT) {
-        cur->active=glstate->texture.active;
+        cur->active = glstate->texture.active;
         int a;
-        for (a=0; a<hardext.maxtex; a++) {
+        for (a = 0; a < hardext.maxtex; a++) {
             cur->texgen_r[a] = glstate->enable.texgen_r[a];
             cur->texgen_s[a] = glstate->enable.texgen_s[a];
             cur->texgen_t[a] = glstate->enable.texgen_t[a];
             cur->texgen_q[a] = glstate->enable.texgen_q[a];
             cur->texgen[a] = glstate->texgen[a];   // all mode and planes per texture in 1 line
-            for (int j=0; j<ENABLED_TEXTURE_LAST; j++)
-	            cur->texture[a][j] = glstate->texture.bound[a][j]->texture;
+            for (int j = 0; j < ENABLED_TEXTURE_LAST; j++)
+                cur->texture[a][j] = glstate->texture.bound[a][j]->texture;
         }
         //glActiveTexture(GL_TEXTURE0+cur->active);
     }
 
     // GL_TRANSFORM_BIT
     if (mask & GL_TRANSFORM_BIT) {
-		if (!(mask & GL_ENABLE_BIT)) {
-			int i;
-			cur->clip_planes_enabled = (GLboolean *)malloc(hardext.maxplanes * sizeof(GLboolean));
-			for (i = 0; i < hardext.maxplanes; i++) {
-				*(cur->clip_planes_enabled + i) = gl4es_glIsEnabled(GL_CLIP_PLANE0 + i);
-			}
-		}
-		gl4es_glGetIntegerv(GL_MATRIX_MODE, &cur->matrix_mode);
-		cur->rescale_normal_flag = gl4es_glIsEnabled(GL_RESCALE_NORMAL);
-		cur->normalize_flag = gl4es_glIsEnabled(GL_NORMALIZE);
-	}
+        if (!(mask & GL_ENABLE_BIT)) {
+            int i;
+            cur->clip_planes_enabled = (GLboolean *) malloc(hardext.maxplanes * sizeof(GLboolean));
+            for (i = 0; i < hardext.maxplanes; i++) {
+                *(cur->clip_planes_enabled + i) = gl4es_glIsEnabled(GL_CLIP_PLANE0 + i);
+            }
+        }
+        gl4es_glGetIntegerv(GL_MATRIX_MODE, &cur->matrix_mode);
+        cur->rescale_normal_flag = gl4es_glIsEnabled(GL_RESCALE_NORMAL);
+        cur->normalize_flag = gl4es_glIsEnabled(GL_NORMALIZE);
+    }
     // GL_VIEWPORT_BIT
     if (mask & GL_VIEWPORT_BIT) {
-		gl4es_glGetIntegerv(GL_VIEWPORT, cur->viewport_size);
-		gl4es_glGetFloatv(GL_DEPTH_RANGE, cur->depth_range);
-	}
-		
+        gl4es_glGetIntegerv(GL_VIEWPORT, cur->viewport_size);
+        gl4es_glGetFloatv(GL_DEPTH_RANGE, cur->depth_range);
+    }
+
     glstate->stack->len++;
 }
 
@@ -293,12 +299,14 @@ void gl4es_glPushClientAttrib(GLbitfield mask) {
     DBG(printf("glPushClientAttrib(0x%04X)\n", mask);)
     noerrorShim();
     if (glstate->clientStack == NULL) {
-        glstate->clientStack = (glclientstack_t *)malloc(STACK_SIZE * sizeof(glclientstack_t));
+        glstate->clientStack = (glclientstack_t *) malloc(STACK_SIZE * sizeof(glclientstack_t));
         glstate->clientStack->len = 0;
         glstate->clientStack->cap = STACK_SIZE;
     } else if (glstate->clientStack->len == glstate->clientStack->cap) {
         glstate->clientStack->cap += STACK_SIZE;
-        glstate->clientStack = (glclientstack_t *)realloc(glstate->clientStack, glstate->clientStack->cap * sizeof(glclientstack_t));
+        glstate->clientStack = (glclientstack_t *) realloc(glstate->clientStack,
+                                                           glstate->clientStack->cap *
+                                                           sizeof(glclientstack_t));
     }
 
     glclientstack_t *cur = glstate->clientStack + glstate->clientStack->len;
@@ -335,13 +343,13 @@ void gl4es_glPushClientAttrib(GLbitfield mask) {
 #define v4(c) v3(c), c[3]
 
 void gl4es_glPopAttrib() {
-DBG(printf("glPopAttrib()\n");)
+    DBG(printf("glPopAttrib()\n");)
     noerrorShim();
     if (glstate->list.active)
         if (glstate->list.compiling) {
             NewStage(glstate->list.active, STAGE_POP);
-		    glstate->list.active->popattribute = true;
-		    return;
+            glstate->list.active->popattribute = true;
+            return;
         } else gl4es_flush();
 
     if (glstate->stack == NULL || glstate->stack->len == 0) {
@@ -349,7 +357,7 @@ DBG(printf("glPopAttrib()\n");)
         return;
     }
 
-    glstack_t *cur = glstate->stack + glstate->stack->len-1;
+    glstack_t *cur = glstate->stack + glstate->stack->len - 1;
 
     if (cur->mask & GL_COLOR_BUFFER_BIT) {
         enable_disable(GL_ALPHA_TEST, cur->alpha_test);
@@ -424,14 +432,14 @@ DBG(printf("glPopAttrib()\n");)
         enable_disable(GL_POINT_SPRITE, cur->pointsprite);
         int a;
         int old_tex = glstate->texture.active;
-        for (a=0; a<hardext.maxtex; a++) {
-            if(glstate->enable.texture[a] != cur->tex_enabled[a]) {
-                for (int j=0; j<ENABLED_TEXTURE_LAST; j++) {
-                    const GLuint t = cur->tex_enabled[a] & (1<<j);
-                    if ((glstate->enable.texture[a] & (1<<j)) != t) {
-                        if(glstate->texture.active!=a)
-                            gl4es_glActiveTexture(GL_TEXTURE0+a);
-                        enable_disable(to_target(j), t); 
+        for (a = 0; a < hardext.maxtex; a++) {
+            if (glstate->enable.texture[a] != cur->tex_enabled[a]) {
+                for (int j = 0; j < ENABLED_TEXTURE_LAST; j++) {
+                    const GLuint t = cur->tex_enabled[a] & (1 << j);
+                    if ((glstate->enable.texture[a] & (1 << j)) != t) {
+                        if (glstate->texture.active != a)
+                            gl4es_glActiveTexture(GL_TEXTURE0 + a);
+                        enable_disable(to_target(j), t);
                     }
                 }
             }
@@ -440,7 +448,7 @@ DBG(printf("glPopAttrib()\n");)
             glstate->enable.texgen_t[a] = cur->texgen_t[a];
             glstate->enable.texgen_q[a] = cur->texgen_q[a];
         }
-        if (glstate->texture.active != old_tex) gl4es_glActiveTexture(GL_TEXTURE0+old_tex);
+        if (glstate->texture.active != old_tex) gl4es_glActiveTexture(GL_TEXTURE0 + old_tex);
     }
 
     if (cur->mask & GL_FOG_BIT) {
@@ -458,8 +466,8 @@ DBG(printf("glPopAttrib()\n");)
         gl4es_glHint(GL_LINE_SMOOTH_HINT, cur->line_smooth_hint);
         gl4es_glHint(GL_FOG_HINT, cur->fog_hint);
         gl4es_glHint(GL_GENERATE_MIPMAP_HINT, cur->mipmap_hint);
-        for (int i=GL4ES_HINT_FIRST; i<GL4ES_HINT_LAST; i++)
-            gl4es_glHint(i, cur->gles4_hint[i-GL4ES_HINT_FIRST]);
+        for (int i = GL4ES_HINT_FIRST; i < GL4ES_HINT_LAST; i++)
+            gl4es_glHint(i, cur->gles4_hint[i - GL4ES_HINT_FIRST]);
     }
 
     if (cur->mask & GL_LIGHTING_BIT) {
@@ -468,46 +476,50 @@ DBG(printf("glPopAttrib()\n");)
         gl4es_glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, cur->light_model_two_side);
 
         int i;
-        int j=0;
+        int j = 0;
         int old_matrixmode = glstate->matrix_mode;
         // Light position / direction is transformed. So load identity in modelview to restore correct stuff
         int identity = is_identity(getMVMat());
-        if(!identity) {
-            if(old_matrixmode != GL_MODELVIEW) gl4es_glMatrixMode(GL_MODELVIEW);
+        if (!identity) {
+            if (old_matrixmode != GL_MODELVIEW) gl4es_glMatrixMode(GL_MODELVIEW);
             gl4es_glPushMatrix();
             gl4es_glLoadIdentity();
         }
         for (i = 0; i < hardext.maxlights; i++) {
             enable_disable(GL_LIGHT0 + i, *(cur->lights_enabled + i));
-            #define L(A) gl4es_glLightfv(GL_LIGHT0 + i, A, cur->lights+j); j+=4
+#define L(A) gl4es_glLightfv(GL_LIGHT0 + i, A, cur->lights+j); j+=4
             L(GL_AMBIENT);
             L(GL_DIFFUSE);
             L(GL_SPECULAR);
-            L(GL_POSITION); 
+            L(GL_POSITION);
             L(GL_SPOT_CUTOFF);
             L(GL_SPOT_DIRECTION);
             L(GL_SPOT_EXPONENT);
             L(GL_CONSTANT_ATTENUATION);
             L(GL_LINEAR_ATTENUATION);
             L(GL_QUADRATIC_ATTENUATION);
-            #undef L
+#undef L
         }
-        if(!identity) {
+        if (!identity) {
             gl4es_glPopMatrix();
-            if(old_matrixmode != GL_MODELVIEW) gl4es_glMatrixMode(old_matrixmode);
+            if (old_matrixmode != GL_MODELVIEW) gl4es_glMatrixMode(old_matrixmode);
         }
-        j=0;
-        #define M(A) if(memcmp(cur->materials+j, cur->materials+j+4, 4*sizeof(GLfloat))==0) \
+        j = 0;
+#define M(A) if(memcmp(cur->materials+j, cur->materials+j+4, 4*sizeof(GLfloat))==0) \
             {gl4es_glMaterialfv(GL_FRONT_AND_BACK, A, cur->materials+j); j+=8;} \
             else \
             {gl4es_glMaterialfv(GL_BACK, A, cur->materials+j); j+=4; gl4es_glMaterialfv(GL_FRONT, A, cur->materials+j); j+=4;}
-        M(GL_AMBIENT); M(GL_DIFFUSE); M(GL_SPECULAR); M(GL_EMISSION); M(GL_SHININESS);  // handle both face at some point?
-        #undef M
+        M(GL_AMBIENT);
+        M(GL_DIFFUSE);
+        M(GL_SPECULAR);
+        M(GL_EMISSION);
+        M(GL_SHININESS);  // handle both face at some point?
+#undef M
 
         gl4es_glShadeModel(cur->shade_model);
     }
 
-	// GL_LIST_BIT
+    // GL_LIST_BIT
     if (cur->mask & GL_LIST_BIT) {
         gl4es_glListBase(cur->list_base);
     }
@@ -528,18 +540,18 @@ DBG(printf("glPopAttrib()\n");)
     if (cur->mask & GL_POINT_BIT) {
         enable_disable(GL_POINT_SMOOTH, cur->point_smooth);
         gl4es_glPointSize(cur->point_size);
-        if(hardext.pointsprite) {
+        if (hardext.pointsprite) {
             enable_disable(GL_POINT_SPRITE, cur->pointsprite);
             int old_tex = glstate->texture.active;
             int a;
-            for (a=0; a<hardext.maxtex; a++) {
-                if(glstate->texture.pscoordreplace[a]!=cur->pscoordreplace[a]) {
-                    if(glstate->texture.active!=a)
-                        gl4es_glActiveTexture(GL_TEXTURE0+a);
+            for (a = 0; a < hardext.maxtex; a++) {
+                if (glstate->texture.pscoordreplace[a] != cur->pscoordreplace[a]) {
+                    if (glstate->texture.active != a)
+                        gl4es_glActiveTexture(GL_TEXTURE0 + a);
                     gl4es_glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, cur->pscoordreplace[a]);
                 }
             }
-            if (glstate->texture.active!= old_tex) gl4es_glActiveTexture(GL_TEXTURE0+old_tex);
+            if (glstate->texture.active != old_tex) gl4es_glActiveTexture(GL_TEXTURE0 + old_tex);
         }
     }
 
@@ -561,50 +573,52 @@ DBG(printf("glPopAttrib()\n");)
         int old_tex = glstate->texture.active;
         int a;
         //TODO: Enable bit for the 4 texture coordinates
-        for (a=0; a<hardext.maxtex; a++) {
+        for (a = 0; a < hardext.maxtex; a++) {
             glstate->enable.texgen_r[a] = cur->texgen_r[a];
             glstate->enable.texgen_s[a] = cur->texgen_s[a];
             glstate->enable.texgen_t[a] = cur->texgen_t[a];
             glstate->enable.texgen_q[a] = cur->texgen_q[a];
             glstate->texgen[a] = cur->texgen[a];   // all mode and planes per texture in 1 line
-            for (int j=0; j<ENABLED_TEXTURE_LAST; j++)
+            for (int j = 0; j < ENABLED_TEXTURE_LAST; j++)
                 if (cur->texture[a][j] != glstate->texture.bound[a][j]->texture) {
-                    if(glstate->texture.active!=a)
-                        gl4es_glActiveTexture(GL_TEXTURE0+a);
+                    if (glstate->texture.active != a)
+                        gl4es_glActiveTexture(GL_TEXTURE0 + a);
                     gl4es_glBindTexture(to_target(j), cur->texture[a][j]);
                 }
         }
-        if (glstate->texture.active!= old_tex) gl4es_glActiveTexture(GL_TEXTURE0+old_tex);
+        if (glstate->texture.active != old_tex) gl4es_glActiveTexture(GL_TEXTURE0 + old_tex);
     }
-    
-	if (cur->mask & GL_PIXEL_MODE_BIT) {
-		GLenum pixel_name[] = {GL_RED_BIAS, GL_RED_SCALE, GL_GREEN_BIAS, GL_GREEN_SCALE, GL_BLUE_BIAS, GL_BLUE_SCALE, GL_ALPHA_BIAS, GL_ALPHA_SCALE};
-		int i;
-		for (i=0; i<8; i++) 
-			gl4es_glPixelTransferf(pixel_name[i], cur->pixel_scale_bias[i]);
+
+    if (cur->mask & GL_PIXEL_MODE_BIT) {
+        GLenum pixel_name[] = {GL_RED_BIAS, GL_RED_SCALE, GL_GREEN_BIAS, GL_GREEN_SCALE,
+                               GL_BLUE_BIAS, GL_BLUE_SCALE, GL_ALPHA_BIAS, GL_ALPHA_SCALE};
+        int i;
+        for (i = 0; i < 8; i++)
+            gl4es_glPixelTransferf(pixel_name[i], cur->pixel_scale_bias[i]);
         //TODO: GL_DEPTH_BIAS & GL_DEPTH_SCALE (probably difficult)
         //TODO: GL_INDEX_OFFEST & GL_INDEX_SHIFT
         //TODO: GL_MAP_COLOR & GL_MAP_STENCIL (probably difficult too)
-		gl4es_glPixelZoom(cur->pixel_zoomx, cur->pixel_zoomy);
-	}
+        gl4es_glPixelZoom(cur->pixel_zoomx, cur->pixel_zoomy);
+    }
 
-	if (cur->mask & GL_TRANSFORM_BIT) {
-		if (!(cur->mask & GL_ENABLE_BIT)) {
-			int i;
-			for (i = 0; i < hardext.maxplanes; i++) {
-				enable_disable(GL_CLIP_PLANE0 + i, *(cur->clip_planes_enabled + i));
-			}
-		}
-		gl4es_glMatrixMode(cur->matrix_mode);
-		enable_disable(GL_NORMALIZE, cur->normalize_flag);		
-		enable_disable(GL_RESCALE_NORMAL, cur->rescale_normal_flag);		
-	}
+    if (cur->mask & GL_TRANSFORM_BIT) {
+        if (!(cur->mask & GL_ENABLE_BIT)) {
+            int i;
+            for (i = 0; i < hardext.maxplanes; i++) {
+                enable_disable(GL_CLIP_PLANE0 + i, *(cur->clip_planes_enabled + i));
+            }
+        }
+        gl4es_glMatrixMode(cur->matrix_mode);
+        enable_disable(GL_NORMALIZE, cur->normalize_flag);
+        enable_disable(GL_RESCALE_NORMAL, cur->rescale_normal_flag);
+    }
 
     if (cur->mask & GL_VIEWPORT_BIT) {
-		gl4es_glViewport(cur->viewport_size[0], cur->viewport_size[1], cur->viewport_size[2], cur->viewport_size[3]);
-		gl4es_glDepthRangef(cur->depth_range[0], cur->depth_range[1]);
-	}
-	
+        gl4es_glViewport(cur->viewport_size[0], cur->viewport_size[1], cur->viewport_size[2],
+                         cur->viewport_size[3]);
+        gl4es_glDepthRangef(cur->depth_range[0], cur->depth_range[1]);
+    }
+
     maybe_free(cur->clip_planes_enabled);
     maybe_free(cur->clip_planes);
     maybe_free(cur->lights_enabled);
@@ -621,17 +635,17 @@ DBG(printf("glPopAttrib()\n");)
 void gl4es_glPopClientAttrib() {
     DBG(printf("glPopClientAttrib()\n");)
     noerrorShim();
-	//LOAD_GLES(glVertexPointer);
-	//LOAD_GLES(glColorPointer);
-	//LOAD_GLES(glNormalPointer);
-	//LOAD_GLES(glTexCoordPointer);
+    //LOAD_GLES(glVertexPointer);
+    //LOAD_GLES(glColorPointer);
+    //LOAD_GLES(glNormalPointer);
+    //LOAD_GLES(glTexCoordPointer);
 
     if (glstate->clientStack == NULL || glstate->clientStack->len == 0) {
         errorShim(GL_STACK_UNDERFLOW);
         return;
     }
 
-    glclientstack_t *cur = glstate->clientStack + glstate->clientStack->len-1;
+    glclientstack_t *cur = glstate->clientStack + glstate->clientStack->len - 1;
     if (cur->mask & GL_CLIENT_PIXEL_STORE_BIT) {
         gl4es_glPixelStorei(GL_PACK_ALIGNMENT, cur->pack_align);
         gl4es_glPixelStorei(GL_UNPACK_ALIGNMENT, cur->unpack_align);
@@ -645,7 +659,8 @@ void gl4es_glPopClientAttrib() {
 
     if (cur->mask & GL_CLIENT_VERTEX_ARRAY_BIT) {
         memcpy(glstate->vao->vertexattrib, cur->vertexattrib, sizeof(glstate->vao->vertexattrib));
-		if (glstate->texture.client != cur->client) gl4es_glClientActiveTexture(GL_TEXTURE0+cur->client);
+        if (glstate->texture.client != cur->client)
+            gl4es_glClientActiveTexture(GL_TEXTURE0 + cur->client);
     }
 
     glstate->clientStack->len--;
@@ -659,6 +674,9 @@ void gl4es_glPopClientAttrib() {
 
 //Direct wrapper
 void glPushClientAttrib(GLbitfield mask) AliasExport("gl4es_glPushClientAttrib");
+
 void glPopClientAttrib() AliasExport("gl4es_glPopClientAttrib");
+
 void glPushAttrib(GLbitfield mask) AliasExport("gl4es_glPushAttrib");
+
 void glPopAttrib() AliasExport("gl4es_glPopAttrib");

@@ -112,44 +112,44 @@
 #define FPE_TG_NONE            5  // dummy, to help fpe
 
 typedef struct fpe_texgen_s {
-  unsigned int texgen_s:1;              // texgen S enabled on 1 bit
-  unsigned int texgen_s_mode:3;         // texgen S on 3 bits
-  unsigned int texgen_t:1;              // texgen T enabled on 1 bit
-  unsigned int texgen_t_mode:3;         // texgen T on 3 bits
-  unsigned int texgen_r:1;              // texgen R enabled on 1 bit
-  unsigned int texgen_r_mode:3;         // texgen R on 3 bits
-  unsigned int texgen_q:1;              // texgen Q enabled on 1 bit
-  unsigned int texgen_q_mode:3;         // texgen Q on 3 bits
+    unsigned int texgen_s: 1;              // texgen S enabled on 1 bit
+    unsigned int texgen_s_mode: 3;         // texgen S on 3 bits
+    unsigned int texgen_t: 1;              // texgen T enabled on 1 bit
+    unsigned int texgen_t_mode: 3;         // texgen T on 3 bits
+    unsigned int texgen_r: 1;              // texgen R enabled on 1 bit
+    unsigned int texgen_r_mode: 3;         // texgen R on 3 bits
+    unsigned int texgen_q: 1;              // texgen Q enabled on 1 bit
+    unsigned int texgen_q_mode: 3;         // texgen Q on 3 bits
 } fpe_texgen_t;
 
 typedef struct fpe_texture_s {
-  unsigned int texmat:1;                // flags if texture matrix is not identity
-  unsigned int textype:3;               // textures type stored on 3 bits
-  unsigned int texadjust:1;             // flags if texture need adjustement
-  unsigned int texformat:3;             // textures (simplified) internal format on 3 bits
+    unsigned int texmat: 1;                // flags if texture matrix is not identity
+    unsigned int textype: 3;               // textures type stored on 3 bits
+    unsigned int texadjust: 1;             // flags if texture need adjustement
+    unsigned int texformat: 3;             // textures (simplified) internal format on 3 bits
 } fpe_texture_t;
 
 typedef struct fpe_texenv_s {
-  unsigned int texenv:4;                // texenv flag
-  unsigned int texoprgb0:2;             // texenv src op (OPERATION_n_RGB is 2 bits)
-  unsigned int texoprgb1:2;             // texenv src op (OPERATION_n_RGB is 2 bits)
-  unsigned int texoprgb2:2;             // texenv src op (OPERATION_n_RGB is 2 bits)
-  unsigned int texoprgb3:2;             // texenv src op (OPERATION_n_RGB is 2 bits)
-  unsigned int texopalpha0:1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
-  unsigned int texopalpha1:1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
-  unsigned int texopalpha2:1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
-  unsigned int texopalpha3:1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
-  unsigned int texsrcrgb0:5;            // texenv src rgb n
-  unsigned int texsrcrgb1:5;            // texenv src rgb n
-  unsigned int texsrcrgb2:5;            // texenv src rgb n
-  unsigned int texsrcrgb3:5;            // texenv src rgb n
-  unsigned int texsrcalpha0:5;          // texenv src alpha n
-  unsigned int texsrcalpha1:5;          // texenv src alpha n
-  unsigned int texsrcalpha2:5;          // texenv src alpha n
-  unsigned int texsrcalpha3:5;          // texenv src alpha n
-  unsigned int texrgbscale:1;           // flag if RGB_SCALE for texture is != 1.0
-  unsigned int texalphascale:1;         // flag if ALPHA_SCALE for texture is != 1.0
-  unsigned int dummy:6;                 // align sturture to 64bits...
+    unsigned int texenv: 4;                // texenv flag
+    unsigned int texoprgb0: 2;             // texenv src op (OPERATION_n_RGB is 2 bits)
+    unsigned int texoprgb1: 2;             // texenv src op (OPERATION_n_RGB is 2 bits)
+    unsigned int texoprgb2: 2;             // texenv src op (OPERATION_n_RGB is 2 bits)
+    unsigned int texoprgb3: 2;             // texenv src op (OPERATION_n_RGB is 2 bits)
+    unsigned int texopalpha0: 1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
+    unsigned int texopalpha1: 1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
+    unsigned int texopalpha2: 1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
+    unsigned int texopalpha3: 1;           // texenv src op (OPERATION_n_ALPHA is 1 bits)
+    unsigned int texsrcrgb0: 5;            // texenv src rgb n
+    unsigned int texsrcrgb1: 5;            // texenv src rgb n
+    unsigned int texsrcrgb2: 5;            // texenv src rgb n
+    unsigned int texsrcrgb3: 5;            // texenv src rgb n
+    unsigned int texsrcalpha0: 5;          // texenv src alpha n
+    unsigned int texsrcalpha1: 5;          // texenv src alpha n
+    unsigned int texsrcalpha2: 5;          // texenv src alpha n
+    unsigned int texsrcalpha3: 5;          // texenv src alpha n
+    unsigned int texrgbscale: 1;           // flag if RGB_SCALE for texture is != 1.0
+    unsigned int texalphascale: 1;         // flag if ALPHA_SCALE for texture is != 1.0
+    unsigned int dummy: 6;                 // align sturture to 64bits...
 } fpe_texenv_t;
 
 typedef struct fpe_state_s {
@@ -160,93 +160,127 @@ typedef struct fpe_state_s {
     uint8_t light;                       // 8 lights packed
     uint8_t light_cutoff180;             // 8 lights cutoff!=180 flags
     uint8_t light_direction;             // 8 lights position[3].w==0 flags
-    unsigned int plane:6;                // 6 planes packed
-    unsigned int fogmode:2;              // fog mode
-    unsigned int fogdist:2;              // fog distance mode
-    unsigned int fogsource:1;            // fog source
-    unsigned int fog:1;                  // Fog enabled or not
-    unsigned int colorsum:1;             // secondary color enabled
-    unsigned int lighting:1;             // global lighting enabled
-    unsigned int normalize:1;            // normalization
-    unsigned int rescaling:1;            // rescale normal
-    unsigned int alphafunc:3;            // alpha functions
-    unsigned int alphatest:1;            // alpha test
-    unsigned int twosided:1;             // lightmodel: two sided
-    unsigned int color_material:1;       // color material enabled
-    unsigned int cm_front_mode:3;        // front color material mode
-    unsigned int cm_back_mode:3;         // back color material mode
-    unsigned int cm_front_nullexp:1;     // front material shininess is 0
-    unsigned int cm_back_nullexp:1;      // back material shininess is 0
-    unsigned int light_separate:1;       // light separate specular color
-    unsigned int light_localviewer:1;    // light local viewer
-    unsigned int point:1;                // point rendering
-    unsigned int pointsprite:1;          // point sprite rendering
-    unsigned int pointsprite_coord:1;    // point sprite coord replace
-    unsigned int pointsprite_upper:1;    // if coord is upper left and not lower left
-    unsigned int vertex_prg_enable:1;    // if vertex program is enabled
-    unsigned int fragment_prg_enable:1;  // if fragment program is enabled
-    uint16_t     vertex_prg_id;          // Id of vertex program currently binded (0 most of the time), 16bits is more than enough...
-    uint16_t     fragment_prg_id;        // Id of fragment program currently binded (0 most of the time)
+    unsigned int plane: 6;                // 6 planes packed
+    unsigned int fogmode: 2;              // fog mode
+    unsigned int fogdist: 2;              // fog distance mode
+    unsigned int fogsource: 1;            // fog source
+    unsigned int fog: 1;                  // Fog enabled or not
+    unsigned int colorsum: 1;             // secondary color enabled
+    unsigned int lighting: 1;             // global lighting enabled
+    unsigned int normalize: 1;            // normalization
+    unsigned int rescaling: 1;            // rescale normal
+    unsigned int alphafunc: 3;            // alpha functions
+    unsigned int alphatest: 1;            // alpha test
+    unsigned int twosided: 1;             // lightmodel: two sided
+    unsigned int color_material: 1;       // color material enabled
+    unsigned int cm_front_mode: 3;        // front color material mode
+    unsigned int cm_back_mode: 3;         // back color material mode
+    unsigned int cm_front_nullexp: 1;     // front material shininess is 0
+    unsigned int cm_back_nullexp: 1;      // back material shininess is 0
+    unsigned int light_separate: 1;       // light separate specular color
+    unsigned int light_localviewer: 1;    // light local viewer
+    unsigned int point: 1;                // point rendering
+    unsigned int pointsprite: 1;          // point sprite rendering
+    unsigned int pointsprite_coord: 1;    // point sprite coord replace
+    unsigned int pointsprite_upper: 1;    // if coord is upper left and not lower left
+    unsigned int vertex_prg_enable: 1;    // if vertex program is enabled
+    unsigned int fragment_prg_enable: 1;  // if fragment program is enabled
+    uint16_t vertex_prg_id;          // Id of vertex program currently binded (0 most of the time), 16bits is more than enough...
+    uint16_t fragment_prg_id;        // Id of fragment program currently binded (0 most of the time)
 }__attribute__((packed)) fpe_state_t;
 
 typedef struct fpe_fpe_s {
-  GLuint  frag, vert, prog;   // shader info
-  fpe_state_t state;          // state relevent to the current fpe program
-  program_t *glprogram;
+    GLuint frag, vert, prog;   // shader info
+    fpe_state_t state;          // state relevent to the current fpe program
+    program_t *glprogram;
 } fpe_fpe_t;
 
 typedef struct kh_fpecachelist_s kh_fpecachelist_t;
 #define fpe_cache_t kh_fpecachelist_t
 
 typedef struct scratch_s {
-    void*       scratch[16];
-    int         size;
+    void *scratch[16];
+    int size;
 } scratch_t;
-void free_scratch(scratch_t* scratch);
+
+void free_scratch(scratch_t *scratch);
 
 
 fpe_fpe_t *fpe_GetCache();
-void fpe_disposeCache(fpe_cache_t* cache, int freeprog);
+
+void fpe_disposeCache(fpe_cache_t *cache, int freeprog);
 
 void fpe_glEnableClientState(GLenum cap);
+
 void fpe_glDisableClientState(GLenum cap);
+
 void fpe_glMultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q);
+
 void fpe_glSecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
+
 void fpe_glVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
+
 void fpe_glColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
+
 void fpe_glNormalPointer(GLenum type, GLsizei stride, const GLvoid *pointer);
+
 void fpe_glTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer);
-void fpe_glTexCoordPointerTMU(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer, int TMU);
+
+void
+fpe_glTexCoordPointerTMU(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer, int TMU);
+
 void fpe_glFogCoordPointer(GLenum type, GLsizei stride, const GLvoid *pointer);
+
 void fpe_glEnable(GLenum cap);
+
 void fpe_glDisable(GLenum cap);
+
 void fpe_glDrawArrays(GLenum mode, GLint first, GLsizei count);
+
 void fpe_glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+
 void fpe_glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+
 void fpe_glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei primcount);
-void fpe_glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount);
+
+void fpe_glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices,
+                                 GLsizei primcount);
+
 void fpe_glColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
+
 void fpe_glNormal3f(GLfloat nx, GLfloat ny, GLfloat nz);
+
 void fpe_glClientActiveTexture(GLenum texture);
-void fpe_glFogfv(GLenum pname, const GLfloat* params);
+
+void fpe_glFogfv(GLenum pname, const GLfloat *params);
+
 void fpe_glAlphaFunc(GLenum func, GLclampf ref);
 
 void fpe_glMatrixMode(GLenum mode);
 
 void fpe_glLightModelf(GLenum pname, GLfloat param);
-void fpe_glLightModelfv(GLenum pname, const GLfloat* params);
-void fpe_glLightfv(GLenum light, GLenum pname, const GLfloat* params);
+
+void fpe_glLightModelfv(GLenum pname, const GLfloat *params);
+
+void fpe_glLightfv(GLenum light, GLenum pname, const GLfloat *params);
+
 void fpe_glMaterialfv(GLenum face, GLenum pname, const GLfloat *params);
+
 void fpe_glMaterialf(GLenum face, GLenum pname, const GLfloat param);
 
-void fpe_glPointParameterfv(GLenum pname, const GLfloat * params);
+void fpe_glPointParameterfv(GLenum pname, const GLfloat *params);
+
 void fpe_glPointSize(GLfloat size);
 
 void builtin_Init(program_t *glprogram);
-int builtin_CheckUniform(program_t *glprogram, char* name, GLint id, int size);
-int builtin_CheckVertexAttrib(program_t *glprogram, char* name, GLint id);
 
-void realize_glenv(int ispoint, int first, int count, GLenum type, const void* indices, scratch_t* scratch);
+int builtin_CheckUniform(program_t *glprogram, char *name, GLint id, int size);
+
+int builtin_CheckVertexAttrib(program_t *glprogram, char *name, GLint id);
+
+void realize_glenv(int ispoint, int first, int count, GLenum type, const void *indices,
+                   scratch_t *scratch);
+
 void realize_blitenv(int alpha);
 
 #endif // _GL4ES_FPE_H_

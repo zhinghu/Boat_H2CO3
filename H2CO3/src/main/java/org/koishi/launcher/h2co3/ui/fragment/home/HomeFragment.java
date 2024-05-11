@@ -51,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.koishi.launcher.h2co3.R;
-import org.koishi.launcher.h2co3.adapter.HomeAdapterListUser;
+    import org.koishi.launcher.h2co3.adapter.HomeListUserAdapter;
 import org.koishi.launcher.h2co3.application.H2CO3Application;
 import org.koishi.launcher.h2co3.core.H2CO3Auth;
 import org.koishi.launcher.h2co3.core.H2CO3Loader;
@@ -102,9 +102,9 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     public AppCompatImageView homeUserIcon;
     public RecyclerView recyclerView;
     public String message;
-    H2CO3Button homeGamePlayButton;
-    View view;
-    private HomeAdapterListUser adapterUser;
+    private H2CO3Button homeGamePlayButton;
+    private View view;
+    private HomeListUserAdapter adapterUser;
     private CircularRevealFrameLayout loginNameLayout;
     private TextInputEditText loginName, loginPassword;
     private ConstraintLayout loginApi;
@@ -520,7 +520,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     public void reLoadUser() throws JSONException, IOException {
         userList.clear();
         userList = H2CO3Auth.getUserList(new JSONObject(H2CO3Auth.getUserJson()));
-        adapterUser = new HomeAdapterListUser(this, userList);
+        adapterUser = new HomeListUserAdapter(this, userList);
         recyclerView.setAdapter(adapterUser);
     }
 

@@ -28,7 +28,7 @@
 
 #include "../gl4es.h"
 
-void _math_init_eval( void );
+void _math_init_eval(void);
 
 
 /*
@@ -58,7 +58,7 @@ void _math_init_eval( void );
 
 void
 _math_horner_bezier_curve(const GLfloat *cp, GLfloat *out, GLfloat t,
-			  GLuint dim, GLuint order);
+                          GLuint dim, GLuint order);
 
 
 /*
@@ -77,7 +77,7 @@ _math_horner_bezier_curve(const GLfloat *cp, GLfloat *out, GLfloat t,
 
 void
 _math_horner_bezier_surf(GLfloat *cn, GLfloat *out, GLfloat u, GLfloat v,
-			 GLuint dim, GLuint uorder, GLuint vorder);
+                         GLuint dim, GLuint uorder, GLuint vorder);
 
 
 /*
@@ -96,8 +96,8 @@ _math_horner_bezier_surf(GLfloat *cn, GLfloat *out, GLfloat u, GLfloat v,
 
 void
 _math_de_casteljau_surf(GLfloat *cn, GLfloat *out, GLfloat *du, GLfloat *dv,
-			GLfloat u, GLfloat v, GLuint dim,
-			GLuint uorder, GLuint vorder);
+                        GLfloat u, GLfloat v, GLuint dim,
+                        GLuint uorder, GLuint vorder);
 
 
 #endif

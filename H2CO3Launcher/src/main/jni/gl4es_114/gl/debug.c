@@ -11,15 +11,14 @@
 #define p(a) \
     case a: return #a
 
-const char* PrintEnum(GLenum what) {
+const char *PrintEnum(GLenum what) {
     static char fallback[64];
-    switch(what)
-    {
+    switch (what) {
         // error
         p(GL_INVALID_ENUM);
         p(GL_INVALID_VALUE);
         p(GL_INVALID_OPERATION);
-        // target
+            // target
         p(GL_TEXTURE_1D);
         p(GL_TEXTURE_2D);
         p(GL_TEXTURE_3D);
@@ -38,7 +37,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y);
         p(GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
         p(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
-        // format
+            // format
         p(GL_COLOR_INDEX);
         p(GL_RED);
         p(GL_R);
@@ -90,7 +89,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_INTENSITY16F);
         p(GL_INTENSITY32F);
         p(GL_DEPTH_STENCIL);
-        // type
+            // type
         p(GL_BYTE);
         p(GL_UNSIGNED_BYTE);
         p(GL_UNSIGNED_BYTE_2_3_3_REV);
@@ -108,7 +107,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_FLOAT);
         p(GL_DOUBLE);
         p(GL_UNSIGNED_INT_24_8);
-        // texture infos
+            // texture infos
         p(GL_TEXTURE_WIDTH);
         p(GL_TEXTURE_HEIGHT);
         p(GL_TEXTURE_COMPRESSED);
@@ -116,11 +115,11 @@ const char* PrintEnum(GLenum what) {
         p(GL_TEXTURE_INTERNAL_FORMAT);
         p(GL_MAX_TEXTURE_SIZE);
         p(GL_MAX_TEXTURE_COORDS);
-        // texture pack/unpack
+            // texture pack/unpack
         p(GL_UNPACK_ALIGNMENT);
         p(GL_PACK_ALIGNMENT);
         p(GL_UNPACK_ROW_LENGTH);
-        // framebuffer
+            // framebuffer
         p(GL_COLOR_ATTACHMENT0);
         p(GL_COLOR_ATTACHMENT1);
         p(GL_COLOR_ATTACHMENT2);
@@ -134,7 +133,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_MAX_DRAW_BUFFERS_ARB);
         p(GL_DRAW_FRAMEBUFFER_BINDING);
         p(GL_READ_FRAMEBUFFER_BINDING);
-        // VBO
+            // VBO
         p(GL_STATIC_DRAW);
         p(GL_STREAM_DRAW);
         p(GL_READ_WRITE);
@@ -143,7 +142,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_PIXEL_PACK_BUFFER);
         p(GL_PIXEL_UNPACK_BUFFER);
         p(GL_WRITE_ONLY);
-        // Texture
+            // Texture
         p(GL_TEXTURE0);
         p(GL_TEXTURE1);
         p(GL_TEXTURE2);
@@ -176,7 +175,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_REPEAT);
         p(GL_MIRRORED_REPEAT_OES);
         p(GL_GENERATE_MIPMAP);
-        // mode
+            // mode
         p(GL_POINTS);
         p(GL_LINES);
         p(GL_LINE_LOOP);
@@ -187,7 +186,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_QUADS);
         p(GL_QUAD_STRIP);
         p(GL_POLYGON);
-        // texgen
+            // texgen
         p(GL_S);
         p(GL_T);
         p(GL_Q);
@@ -201,16 +200,16 @@ const char* PrintEnum(GLenum what) {
         p(GL_TEXTURE_GEN_T);
         p(GL_TEXTURE_GEN_R);
         p(GL_TEXTURE_GEN_Q);
-        // matrix mode
+            // matrix mode
         p(GL_PROJECTION);
         p(GL_MODELVIEW);
         p(GL_TEXTURE);
-        // blend
+            // blend
         p(GL_SRC_ALPHA);
         p(GL_DST_ALPHA);
         p(GL_ONE_MINUS_SRC_ALPHA);
         p(GL_ONE_MINUS_DST_ALPHA);
-        // lights
+            // lights
         p(GL_LIGHT0);
         p(GL_LIGHT1);
         p(GL_LIGHT2);
@@ -229,7 +228,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_CONSTANT_ATTENUATION);
         p(GL_LINEAR_ATTENUATION);
         p(GL_QUADRATIC_ATTENUATION);
-        // Misc enabled
+            // Misc enabled
         p(GL_LIGHTING);
         p(GL_NORMALIZE);
         p(GL_CULL_FACE);
@@ -243,7 +242,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_LOGIC_OP_MODE);
         p(GL_SCISSOR_TEST);
         p(GL_STENCIL_TEST);
-        // uniform type
+            // uniform type
         p(GL_FLOAT_VEC2);
         p(GL_FLOAT_VEC3);
         p(GL_FLOAT_VEC4);
@@ -259,7 +258,7 @@ const char* PrintEnum(GLenum what) {
         p(GL_FLOAT_MAT4);
         p(GL_SAMPLER_2D);
         p(GL_SAMPLER_CUBE);
-        // Shaders
+            // Shaders
         p(GL_FRAGMENT_SHADER);
         p(GL_VERTEX_SHADER);
         p(GL_MAX_VERTEX_ATTRIBS);
@@ -285,14 +284,14 @@ const char* PrintEnum(GLenum what) {
         p(GL_NUM_PROGRAM_BINARY_FORMATS);
         p(GL_PROGRAM_BINARY_FORMATS);
         p(GL_INFO_LOG_LENGTH);
-        // Client State
+            // Client State
         p(GL_VERTEX_ARRAY);
         p(GL_COLOR_ARRAY);
         p(GL_NORMAL_ARRAY);
         p(GL_TEXTURE_COORD_ARRAY);
         p(GL_SECONDARY_COLOR_ARRAY);
         p(GL_FOG_COORD_ARRAY);
-        // TexEnv
+            // TexEnv
         p(GL_POINT_SPRITE);
         p(GL_COORD_REPLACE);
         p(GL_TEXTURE_FILTER_CONTROL);
@@ -331,9 +330,9 @@ const char* PrintEnum(GLenum what) {
         p(GL_RGB_SCALE);
         p(GL_ALPHA_SCALE);
         p(GL_TEXTURE_ENV_COLOR);
-        // misc
+            // misc
         p(GL_NUM_EXTENSIONS);
-        // ARB_program
+            // ARB_program
         p(GL_VERTEX_PROGRAM_ARB);
         p(GL_FRAGMENT_PROGRAM_ARB);
         p(GL_PROGRAM_FORMAT_ASCII_ARB);
@@ -381,17 +380,16 @@ const char* PrintEnum(GLenum what) {
     return fallback;
 }
 
-const char* PrintEGLError(int onlyerror) {
+const char *PrintEGLError(int onlyerror) {
 #ifdef NOEGL
     return "";
 #else
     LOAD_EGL(eglGetError);
     static char fallback[64];
     GLenum what = egl_eglGetError();
-    if(onlyerror && what==EGL_SUCCESS)
+    if (onlyerror && what == EGL_SUCCESS)
         return NULL;
-    switch(what)
-    {
+    switch (what) {
         p(EGL_SUCCESS);
         p(EGL_NOT_INITIALIZED);
         p(EGL_BAD_ACCESS);
@@ -416,10 +414,10 @@ const char* PrintEGLError(int onlyerror) {
 
 void CheckGLError(int fwd) {
     LOAD_GLES(glGetError);
-    GLenum err=gles_glGetError();
-    if(err!=GL_NO_ERROR) {
+    GLenum err = gles_glGetError();
+    if (err != GL_NO_ERROR) {
         printf("LIBGL: glGetError(): %s\n", PrintEnum(err));
-        if(fwd)
+        if (fwd)
             errorShim(err);
     }
 }

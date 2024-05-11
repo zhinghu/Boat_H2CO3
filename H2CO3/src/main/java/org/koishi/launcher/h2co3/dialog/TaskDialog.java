@@ -64,7 +64,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickListener {
-    private H2CO3TextView speedView;
+    private final H2CO3TextView speedView;
     private final Consumer<FileDownloadTask.SpeedEvent> speedEventHandler;
 
     private TaskExecutor executor;
@@ -72,7 +72,7 @@ public class TaskDialog extends H2CO3CustomViewDialog implements View.OnClickLis
     private final RecyclerView LeftTaskListView, rightTaskListView;
     private RightTaskListPane rightTaskListPane;
     private LeftTaskListPane leftTaskListPane;
-    private H2CO3Button cancelButton;
+    private final H2CO3Button cancelButton;
     public AlertDialog alertDialog;
 
     @SuppressLint({"DefaultLocale", "SetTextI18n"})

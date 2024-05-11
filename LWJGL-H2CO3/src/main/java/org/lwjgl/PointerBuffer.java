@@ -139,7 +139,7 @@ public class PointerBuffer extends CustomBuffer<PointerBuffer> implements Compar
             return true;
         }
 
-        protected PointerBuffer newInstance(final ByteBuffer source) {
+        private PointerBuffer newInstance(final ByteBuffer source) {
             return new PointerBufferR(source);
         }
 

@@ -5,7 +5,7 @@
 #include "loader.h"
 
 void gl4es_glDepthFunc(GLenum func) {
-    if(glstate->list.compiling) {
+    if (glstate->list.compiling) {
         PUSH_IF_COMPILING(glDepthFunc);
     }
     noerrorShim();
@@ -19,7 +19,7 @@ void gl4es_glDepthFunc(GLenum func) {
 }
 
 void gl4es_glDepthMask(GLboolean flag) {
-    if(glstate->list.compiling) {
+    if (glstate->list.compiling) {
         PUSH_IF_COMPILING(glDepthMask);
     }
     noerrorShim();
@@ -33,13 +33,13 @@ void gl4es_glDepthMask(GLboolean flag) {
 }
 
 GLfloat clamp(GLfloat a) {
-    return (a<0.f)?0.f:((a>1.f)?1.f:a);
+    return (a < 0.f) ? 0.f : ((a > 1.f) ? 1.f : a);
 }
 
 void gl4es_glDepthRangef(GLclampf near, GLclampf far) {
     near = clamp(near);
     far = clamp(far);
-    if(glstate->list.compiling) {
+    if (glstate->list.compiling) {
         PUSH_IF_COMPILING(glDepthRangef);
     }
     noerrorShim();
@@ -55,7 +55,7 @@ void gl4es_glDepthRangef(GLclampf near, GLclampf far) {
 
 void gl4es_glClearDepthf(GLclampf depth) {
     depth = clamp(depth);
-    if(glstate->list.compiling) {
+    if (glstate->list.compiling) {
         PUSH_IF_COMPILING(glClearDepthf);
     }
     noerrorShim();
@@ -66,6 +66,8 @@ void gl4es_glClearDepthf(GLclampf depth) {
 }
 
 void glDepthFunc(GLenum func) AliasExport("gl4es_glDepthFunc");
+
 void glDepthMask(GLboolean flag) AliasExport("gl4es_glDepthMask");
+
 void glDepthRangef(GLclampf nearVal, GLclampf farVal) AliasExport("gl4es_glDepthRangef");
 

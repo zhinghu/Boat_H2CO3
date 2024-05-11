@@ -284,7 +284,7 @@ public class Mouse {
     public static void create() throws LWJGLException {
         if (!Display.isCreated()) throw new IllegalStateException("Display must be created.");
 
-        create((InputImplementation) GLFWInputImplementation.singleton);
+        create(GLFWInputImplementation.singleton);
     }
 
     /**

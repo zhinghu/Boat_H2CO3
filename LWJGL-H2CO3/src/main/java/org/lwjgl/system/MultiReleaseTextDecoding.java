@@ -12,6 +12,7 @@ import static org.lwjgl.system.MemoryUtil.UNSAFE;
 import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * String decoding utilities.
@@ -33,7 +34,7 @@ final class MultiReleaseTextDecoding {
             // The implementation below does no codepoint validation.
             byte[] bytes = length <= ARRAY_TLC_SIZE ? ARRAY_TLC_BYTE.get() : new byte[length];
             memByteBuffer(source, length).get(bytes, 0, length);
-            return new String(bytes, 0, length, "UTF-8");
+            return new String(bytes, 0, length, StandardCharsets.UTF_8);
         }
 
         char[] string = length <= ARRAY_TLC_SIZE ? ARRAY_TLC_CHAR.get() : new char[length];

@@ -33,11 +33,9 @@ static int h2co3LauncherFd[2];
 static pthread_t logger;
 
 void correctUtfBytes(char *bytes) {
-    char three = 0;
     char *currentByte = bytes;
     while (*currentByte != '\0') {
         unsigned char utf8 = *(currentByte++);
-        three = 0;
         // Switch on the high four bits.
         switch (utf8 >> 4) {
             case 0x00:
@@ -70,7 +68,6 @@ void correctUtfBytes(char *bytes) {
                     *(currentByte - 1) = '?';
                     break;
                 }
-                three = 1;
                 // Fall through to take care of the final byte.
             case 0x0c:
             case 0x0d:
@@ -78,13 +75,13 @@ void correctUtfBytes(char *bytes) {
                 utf8 = *(currentByte++);
                 if ((utf8 & 0xc0) != 0x80) {
                     --currentByte;
-                    if (three)--currentByte;
                     *(currentByte - 1) = '?';
                 }
                 break;
         }
     }
 }
+
 
 static void *logger_thread() {
     JNIEnv *env;
@@ -102,12 +99,8 @@ static void *logger_thread() {
             close(h2co3LauncherFd[1]);
             (*vm)->DetachCurrentThread(vm);
             return NULL;
-        } else {
+        } else if (_s > 0) {
             buffer[_s] = '\0';
-        }
-        if (buffer[0] == '\0')
-            continue;
-        else {
             correctUtfBytes(buffer);
             if (str != NULL) {
                 (*env)->DeleteLocalRef(env, str);
@@ -116,16 +109,11 @@ static void *logger_thread() {
             (*env)->CallVoidMethod(env, h2co3Launcher->object_H2CO3LauncherBridge, log_method, str);
         }
     }
-    if (str != NULL) {
-        (*env)->DeleteLocalRef(env, str);
-    }
 }
 
 JNIEXPORT jint JNICALL
 Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redirectStdio(
-        JNIEnv *env,
-                                                                                jobject jobject,
-                                                                                jstring path) {
+        JNIEnv *env, jobject jobject, jstring path) {
     setvbuf(stdout, 0, _IOLBF, 0);
     setvbuf(stderr, 0, _IONBF, 0);
 
@@ -134,14 +122,13 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redi
         return 1;
     }
 
-    if (dup2(h2co3LauncherFd[1], STDOUT_FILENO) != STDOUT_FILENO &&
+    if (dup2(h2co3LauncherFd[1], STDOUT_FILENO) != STDOUT_FILENO ||
         dup2(h2co3LauncherFd[1], STDERR_FILENO) != STDERR_FILENO) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "failed to redirect stdio!");
         return 2;
     }
 
-    jclass bridge = (*env)->FindClass(env,
-                                      "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge");
+    jclass bridge = (*env)->FindClass(env, "org/koishi/launcher/h2co3/core/h2co3launcher/utils/H2CO3LauncherBridge");
     log_method = (*env)->GetMethodID(env, bridge, "receiveLog", "(Ljava/lang/String;)V");
     if (!log_method) {
         __android_log_print(ANDROID_LOG_ERROR, "H2CO3", "Failed to find receive method!");
@@ -153,7 +140,7 @@ Java_org_koishi_launcher_h2co3_core_h2co3launcher_utils_H2CO3LauncherBridge_redi
 
     (*env)->GetJavaVM(env, &log_pipe_jvm);
 
-    int result = pthread_create(&logger, 0, logger_thread, 0);
+    int result = pthread_create(&logger, NULL, logger_thread, NULL);
     if (result != 0) {
         return 5;
     }

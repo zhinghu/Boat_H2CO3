@@ -53,7 +53,7 @@ public class CkbManagerDialog implements View.OnClickListener, CompoundButton.On
     private Button buttonDefault;
     private KeyboardFileListener fileListener;
     private ArrayList<String> data;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
 
     public CkbManagerDialog(@NonNull Context context, CkbManager manager) {
         H2CO3Tools.loadPaths(context);

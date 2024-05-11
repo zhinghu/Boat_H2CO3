@@ -23,12 +23,12 @@ typedef struct _glstack_t {
     GLboolean blend;
     GLint blend_src_func;
     GLint blend_dst_func;
-	
+
     GLboolean dither;
 
     // point sprite
     GLboolean pointsprite;
-    GLint     pscoordreplace[MAX_TEX];
+    GLint pscoordreplace[MAX_TEX];
 
     GLboolean color_logic_op;
     GLint logic_op;
@@ -45,10 +45,10 @@ typedef struct _glstack_t {
     // TODO: can only fill this via raster.c
     GLfloat raster_pos[3];
     GLboolean raster_valid;
-	GLfloat pixel_scale_bias[4+4];
-	GLfloat pixel_zoomx;
-	GLfloat pixel_zoomy;
-	
+    GLfloat pixel_scale_bias[4 + 4];
+    GLfloat pixel_zoomx;
+    GLfloat pixel_zoomy;
+
     // GL_DEPTH_BUFFER_BIT
     GLboolean depth_test;
     GLint depth_func;
@@ -60,7 +60,7 @@ typedef struct _glstack_t {
     GLboolean normalize;
     GLboolean polygon_offset_fill;
     GLboolean stencil_test;
-    GLuint    tex_enabled[MAX_TEX];
+    GLuint tex_enabled[MAX_TEX];
     GLboolean texgen_s[MAX_TEX];
     GLboolean texgen_r[MAX_TEX];
     GLboolean texgen_t[MAX_TEX];
@@ -82,7 +82,7 @@ typedef struct _glstack_t {
     GLint line_smooth_hint;
     GLint fog_hint;
     GLint mipmap_hint;
-    GLint gles4_hint[GL4ES_HINT_LAST-GL4ES_HINT_FIRST];
+    GLint gles4_hint[GL4ES_HINT_LAST - GL4ES_HINT_FIRST];
 
     // GL_LIGHTING_BIT
     GLboolean lighting;
@@ -120,9 +120,9 @@ typedef struct _glstack_t {
 
     // GL_STENCIL_BUFFER_BIT
     GLenum stencil_func;
-    GLint  stencil_ref;
+    GLint stencil_ref;
     GLuint stencil_mask;
-    GLint  stencil_clearvalue;
+    GLint stencil_clearvalue;
     GLenum stencil_sfail;
     GLenum stencil_dpfail;
     GLenum stencil_dppass;
@@ -133,14 +133,14 @@ typedef struct _glstack_t {
     GLint active;
 
     // GL_TRANSFORM_BIT
-	// with Clip Planes...
-	GLenum matrix_mode;
-	GLboolean normalize_flag;
-	GLboolean rescale_normal_flag;
+    // with Clip Planes...
+    GLenum matrix_mode;
+    GLboolean normalize_flag;
+    GLboolean rescale_normal_flag;
     // GL_VIEWPORT_BIT
-	GLint	viewport_size[4];
-	GLfloat depth_range[2];
-	
+    GLint viewport_size[4];
+    GLfloat depth_range[2];
+
     // dynamically-sized shenanigans
     GLboolean *clip_planes_enabled;
     GLfloat *clip_planes;
@@ -164,15 +164,18 @@ typedef struct _glclientstack_t {
     GLuint pack_skip_rows;
 
     // GL_CLIENT_VERTEX_ARRAY_BIT
-	GLuint client;
+    GLuint client;
     vertexattrib_t vertexattrib[MAX_VATTRIB];
     unsigned int len;
     unsigned int cap;
 } glclientstack_t;
 
 void gl4es_glPushClientAttrib(GLbitfield mask);
+
 void gl4es_glPopClientAttrib();
+
 void gl4es_glPushAttrib(GLbitfield mask);
+
 void gl4es_glPopAttrib();
 
 #endif // _GL4ES_STACK_H_
