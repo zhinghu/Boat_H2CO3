@@ -24,6 +24,36 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/emessage_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <org.koishi.launcher.h2co3.resources.component.H2CO3TextView
+            android:id="@+id/emessage_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/emessage_refresh_button"
+            style="@style/Theme.H2CO3.IconMaterial.NoBackGround"
+            android:layout_width="@dimen/app_40dp"
+            android:layout_height="@dimen/app_40dp"
+            android:layout_marginEnd="0dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_refresh"
+            />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"

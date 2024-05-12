@@ -18,8 +18,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
     </style>
@@ -30,8 +30,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
         <item name="strokeWidth">0dp</item>
@@ -43,8 +43,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
         <item name="cardElevation">@dimen/elevation_2</item>
@@ -56,8 +56,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
         <item name="strokeWidth">0dp</item>
@@ -70,8 +70,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
         <item name="cardElevation">@dimen/elevation_0</item>
@@ -83,8 +83,8 @@
         <item name="android:focusable">true</item>
         <item name="android:clipChildren">false</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginTop">@dimen/app_10dp</item>
-        <item name="android:layout_marginHorizontal">@dimen/app_15dp</item>
+        <item name="android:layout_marginVertical">@dimen/app_5dp</item>
+        <item name="android:layout_marginHorizontal">@dimen/app_10dp</item>
         <item name="cardCornerRadius">@dimen/card_radius</item>
         <item name="contentPadding">@dimen/app_16dp</item>
     </style>

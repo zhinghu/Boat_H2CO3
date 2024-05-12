@@ -16,6 +16,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,6 +33,7 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import org.koishi.launcher.h2co3.resources.component.H2CO3CardView;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
+import org.koishi.launcher.h2co3.resources.component.H2CO3TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -54,6 +57,9 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     private List<Version> filteredList;
     private LinearProgressIndicator progressIndicator;
     private NavController navController;
+    private LinearLayoutCompat eMessageLayout;
+    private AppCompatImageButton eMessageImageButton;
+    private H2CO3TextView eMessageText;
     private final Handler handler = new Handler();
     private boolean run = false;
     private final Runnable task = new Runnable() {
@@ -73,17 +79,27 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         initListeners();
         versionList = new ArrayList<>();
         filteredList = new ArrayList<>();
-        fetchVersionsFromApi();
         versionAdapter = new VersionAdapter(filteredList);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(versionAdapter);
 
+        eMessageImageButton.setOnClickListener(v -> {
+            eMessageLayout.setVisibility(View.GONE);
+            eMessageImageButton.setVisibility(View.GONE);
+            progressIndicator.setVisibility(View.VISIBLE);
+            fetchVersionsFromApi();
+        });
+
+        fetchVersionsFromApi();
 
         return view;
     }
 
     private void initView(View view) {
+        eMessageLayout = view.findViewById(R.id.emessage_layout);
+        eMessageText = view.findViewById(R.id.emessage_text);
+        eMessageImageButton = view.findViewById(R.id.emessage_refresh_button);
         recyclerView = view.findViewById(R.id.loadingversionFileListView1);
         typeRadioGroup = view.findViewById(R.id.typeRadioGroup);
         progressIndicator = view.findViewById(R.id.progressIndicator);
@@ -115,7 +131,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     }
 
 
-    public void fetchVersions(String apiUrl) {
+    private void fetchVersions(String apiUrl) {
         executor.execute(() -> {
             try {
                 URL url = new URL(apiUrl);
@@ -138,7 +154,9 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                 }
             } catch (Exception e) {
                 uiHandler.post(() -> {
-                    H2CO3Tools.showError(requireContext(), e.getMessage());
+                    eMessageLayout.setVisibility(View.VISIBLE);
+                    eMessageText.setText(e.getMessage());
+                    progressIndicator.hide();
                 });
             }
         });
@@ -164,6 +182,12 @@ public class ChooseVersionFragment extends H2CO3Fragment {
             versionList.add(version);
         }
         return versionList;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(task);
     }
 
     class VersionAdapter extends RecyclerView.Adapter<VersionAdapter.ViewHolder> {
