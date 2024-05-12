@@ -7,8 +7,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/app_3dp">
+    android:layout_height="wrap_content">
 
     <org.koishi.launcher.h2co3.resources.component.H2CO3CardView
         android:id="@+id/login_user_item"
