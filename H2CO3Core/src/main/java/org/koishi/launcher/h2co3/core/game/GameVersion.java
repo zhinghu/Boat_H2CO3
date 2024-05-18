@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -50,17 +49,22 @@ public final class GameVersion {
     private static Optional<String> getVersionFromClassMinecraftServer(InputStream bytecode) throws IOException {
         ConstantPool pool = ConstantPoolScanner.parse(bytecode, ConstantType.STRING);
 
-        List<String> list = StreamSupport.stream(pool.list(StringConstant.class).spliterator(), false)
-                .map(StringConstant::get)
-                .collect(Collectors.toList());
+        List<String> list = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            list = StreamSupport.stream(pool.list(StringConstant.class).spliterator(), false)
+                    .map(StringConstant::get)
+                    .toList();
+        }
 
         int idx = -1;
 
-        for (int i = 0; i < list.size(); ++i)
-            if (list.get(i).startsWith("Can't keep up!")) {
-                idx = i;
-                break;
-            }
+        if (list != null) {
+            for (int i = 0; i < list.size(); ++i)
+                if (list.get(i).startsWith("Can't keep up!")) {
+                    idx = i;
+                    break;
+                }
+        }
 
         for (int i = idx - 1; i >= 0; --i)
             if (list.get(i).matches(".*[0-9].*"))
