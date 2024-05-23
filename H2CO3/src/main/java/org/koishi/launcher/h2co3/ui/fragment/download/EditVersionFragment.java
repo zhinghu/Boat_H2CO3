@@ -83,9 +83,7 @@ public class EditVersionFragment extends H2CO3Fragment {
         group = new InstallerItem.InstallerItemGroup(getContext(), gameVersion);
         installerScrollView.addView(group.getView());
         NavController navController = Navigation.findNavController(requireParentFragment().requireView());
-        backButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_editVersionFragment_to_chooseVersionFragment);
-        });
+        backButton.setOnClickListener(v -> navController.navigate(R.id.action_editVersionFragment_to_chooseVersionFragment));
         for (InstallerItem library : group.getLibraries()) {
             String libraryId = library.getLibraryId();
             System.out.println(libraryId);
@@ -149,12 +147,7 @@ public class EditVersionFragment extends H2CO3Fragment {
             pane = new TaskDialog(requireContext());
             paneAlert = pane.create();
             pane.setAlertDialog(paneAlert);
-            pane.setCancel(new TaskCancellationAction(new Runnable() {
-                @Override
-                public void run() {
-                    paneAlert.dismiss();
-                }
-            }));
+            pane.setCancel(new TaskCancellationAction(() -> paneAlert.dismiss()));
             pane.setTitle("Installing...");
 
             Schedulers.androidUIThread().execute(() -> {

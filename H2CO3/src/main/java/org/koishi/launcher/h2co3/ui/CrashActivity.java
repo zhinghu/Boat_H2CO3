@@ -24,7 +24,6 @@ import cat.ereza.customactivityoncrash.config.CaocConfig;
 public class CrashActivity extends H2CO3Activity {
 
     private TextView crash;
-    private Button restart;
     private CaocConfig config;
 
     @Override
@@ -35,7 +34,7 @@ public class CrashActivity extends H2CO3Activity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(org.koishi.launcher.h2co3.resources.R.string.crash_title));
         crash = findViewById(R.id.crash);
-        restart = findViewById(R.id.restart);
+        Button restart = findViewById(R.id.restart);
         restart.setOnClickListener(rv -> restart());
         initData();
     }

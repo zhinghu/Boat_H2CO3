@@ -44,7 +44,7 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         }
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.navigation_download);
-        setNavigationItemChecked(0);
+        setNavigationItemChecked();
         return view;
     }
 
@@ -104,12 +104,12 @@ public class DownloadListFragment extends H2CO3Fragment implements NavigationVie
         initFragment(fragment);
     }
 
-    private void setNavigationItemChecked(int index) {
+    private void setNavigationItemChecked() {
         Menu menu = navigationView.getMenu();
         for (int i = 0; i < menu.size(); i++) {
             menu.getItem(i).setChecked(false);
         }
-        menu.getItem(index).setChecked(true);
+        menu.getItem(0).setChecked(true);
     }
 
 }

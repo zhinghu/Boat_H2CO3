@@ -9,15 +9,13 @@ import org.koishi.launcher.h2co3.R;
 import org.koishi.launcher.h2co3.resources.component.H2CO3Fragment;
 
 public class MinecraftVersionListFragment extends H2CO3Fragment {
-    private View view;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_download_minecraft_list, container, false);
 
-        return view;
+        return inflater.inflate(R.layout.fragment_download_minecraft_list, container, false);
     }
 
 

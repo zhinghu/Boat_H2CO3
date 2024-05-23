@@ -6,6 +6,7 @@
 
 package org.koishi.launcher.h2co3.ui.fragment.download;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -90,9 +91,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
     }
 
     private void initListeners() {
-        typeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            filterVersions(checkedId);
-        });
+        typeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> filterVersions(checkedId));
     }
 
     private void fetchVersionsFromApi() {
@@ -101,12 +100,13 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         fetchVersions(apiUrl);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void filterVersions(int checkedId) {
         filteredList.clear();
         for (Version version : versionList) {
-            if ((checkedId == R.id.rb_release && version.getVersionType().equals("release")) ||
-                    (checkedId == R.id.rb_snapshot && version.getVersionType().equals("snapshot")) ||
-                    (checkedId == R.id.rb_old_beta && (version.getVersionType().equals("old_alpha") || version.getVersionType().equals("old_beta")))) {
+            if ((checkedId == R.id.rb_release && version.versionType().equals("release")) ||
+                    (checkedId == R.id.rb_snapshot && version.versionType().equals("snapshot")) ||
+                    (checkedId == R.id.rb_old_beta && (version.versionType().equals("old_alpha") || version.versionType().equals("old_beta")))) {
                 filteredList.add(version);
             }
         }
@@ -137,9 +137,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                     });
                 }
             } catch (Exception e) {
-                uiHandler.post(() -> {
-                    H2CO3Tools.showError(requireContext(), e.getMessage());
-                });
+                uiHandler.post(() -> H2CO3Tools.showError(requireContext(), e.getMessage()));
             }
         });
 
@@ -184,8 +182,8 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         @Override
         public void onBindViewHolder(@NonNull VersionAdapter.ViewHolder holder, int position) {
             Version version = versionList.get(position);
-            holder.versionNameTextView.setText(version.getVersionName());
-            holder.versionTypeTextView.setText(version.getVersionType());
+            holder.versionNameTextView.setText(version.versionName());
+            holder.versionTypeTextView.setText(version.versionType());
         }
 
         @Override
@@ -219,7 +217,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
                     Version version = versionList.get(position);
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("versionName", version.getVersionName());
+                    bundle.putString("versionName", version.versionName());
 
                     navController.navigate(R.id.action_chooseVersionFragment_to_editVersionFragment, bundle);
                 }
@@ -229,34 +227,7 @@ public class ChooseVersionFragment extends H2CO3Fragment {
         }
     }
 
-    public class Version {
-        private final String versionName;
-        private final String versionType;
-        private final String versionUrl;
-        private final String versionSha1;
-
-
-        public Version(String versionName, String versionType, String versionUrl, String versionSha1) {
-            this.versionName = versionName;
-            this.versionType = versionType;
-            this.versionUrl = versionUrl;
-            this.versionSha1 = versionSha1;
-        }
-
-        public String getVersionName() {
-            return versionName;
-        }
-
-        public String getVersionType() {
-            return versionType;
-        }
-
-        public String getVersionUrl() {
-            return versionUrl;
-        }
-
-        public String getVersionSha1() {
-            return versionSha1;
-        }
+    public record Version(String versionName, String versionType, String versionUrl,
+                          String versionSha1) {
     }
 }
