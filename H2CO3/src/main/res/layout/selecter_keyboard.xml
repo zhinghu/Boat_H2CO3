@@ -307,7 +307,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Ins"
+            android:text="In"
             custom:button_name="INSERT" />
 
         <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
@@ -315,7 +315,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Hom"
+            android:text="HM"
             custom:button_name="HOME" />
 
         <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
@@ -323,7 +323,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Pau"
+            android:text="PU"
             custom:button_name="PGUP" />
 
         <View
@@ -336,7 +336,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Num"
+            android:text="NL"
             custom:button_name="NUMLOCK" />
 
         <org.koishi.launcher.h2co3.control.ckb.support.QwertButton
