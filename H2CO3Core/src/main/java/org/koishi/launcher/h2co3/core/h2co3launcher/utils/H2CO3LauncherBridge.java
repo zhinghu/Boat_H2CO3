@@ -40,6 +40,7 @@ import org.koishi.launcher.h2co3.core.H2CO3Tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -92,7 +93,6 @@ public class H2CO3LauncherBridge implements Serializable {
     private String logPath;
     private H2CO3LauncherBridgeCallBack callback;
     private Surface surface;
-    private Handler handler;
     private Thread thread;
     private ExecutorService mExecutor;
     private SurfaceTexture surfaceTexture;
@@ -129,7 +129,7 @@ public class H2CO3LauncherBridge implements Serializable {
     }
 
     public void execute(Surface surface, H2CO3LauncherBridgeCallBack callback) throws IOException {
-        this.handler = new Handler();
+        Handler handler = new Handler();
         this.callback = callback;
         this.surface = surface;
         setH2CO3LauncherBridge(this);
@@ -293,7 +293,7 @@ public class H2CO3LauncherBridge implements Serializable {
         if (!clipboard.hasPrimaryClip()) {
             return null;
         }
-        ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+        ClipData.Item item = Objects.requireNonNull(clipboard.getPrimaryClip()).getItemAt(0);
         return item.getText().toString();
     }
 

@@ -111,13 +111,11 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
     private TextInputLayout loginPasswordLayout;
     private H2CO3Button login, homeUserListButton;
     private LinearProgressIndicator loadingNoticeProgress;
-    private H2CO3CustomViewDialog loginDialog;
     private List<UserBean> userList = new ArrayList<>();
     private Spinner serverSpinner;
     private H2CO3Button register;
     private Servers servers;
     private String currentBaseUrl;
-    private String currentRegisterUrl;
     private H2CO3CardView homeUserListLayout;
     private ArrayAdapter<String> serverSpinnerAdapter;
     private MaterialAlertDialogBuilder alertDialogBuilder;
@@ -261,7 +259,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
         reLoadUser();
 
-        View contentView1 = LayoutInflater.from(requireActivity()).inflate(R.layout.item_user_add, null);
+        @SuppressLint("InflateParams") View contentView1 = LayoutInflater.from(requireActivity()).inflate(R.layout.item_user_add, null);
         H2CO3CardView userAdd = contentView1.findViewById(R.id.login_user_add);
         userAdd.setOnClickListener(v1 -> showLoginDialog());
 
@@ -306,7 +304,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
 
         isLoginDialogShowing = true;
 
-        loginDialog = new H2CO3CustomViewDialog(requireActivity());
+        H2CO3CustomViewDialog loginDialog = new H2CO3CustomViewDialog(requireActivity());
         loginDialog.setCustomView(R.layout.custom_dialog_login);
         loginDialog.setTitle(getString(org.koishi.launcher.h2co3.resources.R.string.title_activity_login));
 
@@ -385,7 +383,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
         if (loginName == null || tab == null) {
             return;
         }
-        String text = loginName.getText().toString();
+        String text = Objects.requireNonNull(loginName.getText()).toString();
         int selectedTabPosition = tab.getSelectedTabPosition();
 
         switch (selectedTabPosition) {
@@ -471,7 +469,7 @@ public class HomeFragment extends H2CO3Fragment implements View.OnClickListener 
                 H2CO3Tools.write(serversFile.getAbsolutePath(), GLOBAL_GSON.toJson(servers, Servers.class));
                 refreshServer();
                 currentBaseUrl = server.getBaseUrl();
-                currentRegisterUrl = server.getRegister();
+                String currentRegisterUrl = server.getRegister();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -63,7 +63,6 @@ public class DirectoryFragment extends H2CO3Fragment {
     private final String h2co3Directory = MINECRAFT_DIR;
     private VersionRecyclerAdapter verAdapter;
     private MaterialAlertDialogBuilder dialogBuilder;
-    private FloatingActionButton newDirButton, newVerButton;
     private DirectoryAdapter dirAdapter;
     private String H2CO3Dir;
     private JSONObject dirsJsonObj;
@@ -104,9 +103,9 @@ public class DirectoryFragment extends H2CO3Fragment {
 
         H2CO3Tools.loadPaths(requireContext());
 
-        newDirButton = root.findViewById(R.id.ver_new_dir);
+        FloatingActionButton newDirButton = root.findViewById(R.id.ver_new_dir);
         newDirButton.setOnClickListener(v -> showDirDialog());
-        newVerButton = root.findViewById(R.id.ver_new_ver);
+        FloatingActionButton newVerButton = root.findViewById(R.id.ver_new_ver);
         dirRecyclerView = root.findViewById(R.id.mRecyclerView);
         verRecyclerView = root.findViewById(R.id.mVerRecyclerView);
         initViews();
@@ -451,7 +450,7 @@ public class DirectoryFragment extends H2CO3Fragment {
             }
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder {
+        static class MyViewHolder extends RecyclerView.ViewHolder {
             private final TextView textview;
             private final MaterialButton btn;
             private final ImageView ic;

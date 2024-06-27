@@ -66,12 +66,11 @@ public class CustomizeKeyboardEditorActivity extends H2CO3Activity implements Vi
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        View decorView = getWindow().getDecorView();
         if (hasFocus) {
-            View decorView = getWindow().getDecorView();
             decorView.setOnSystemUiVisibilityChangeListener(this);
             hideSystemUI(decorView);
         } else {
-            View decorView = getWindow().getDecorView();
             decorView.setOnSystemUiVisibilityChangeListener(null);
             if (systemUiTimerTask != null) systemUiTimerTask.cancel();
         }

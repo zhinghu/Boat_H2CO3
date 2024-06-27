@@ -52,7 +52,6 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     private static final int CURSOR_SIZE = 16;
     private static final int[] GRABBED_POINTER = new int[]{0, 0};
     public static WeakReference<H2CO3LauncherBridge.LogReceiver> logReceiver;
-    private final int scaleFactor = 1;
     private boolean grabbed = false;
     private ImageView cursorIcon;
     private int screenWidth;
@@ -163,9 +162,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
 
             @Override
             public void onCursorModeChange(int mode) {
-                runOnUiThread(() -> {
-                    setGrabCursor(mode == H2CO3LauncherBridge.CursorEnabled);
-                });
+                runOnUiThread(() -> setGrabCursor(mode == H2CO3LauncherBridge.CursorEnabled));
             }
 
             @Override
@@ -228,6 +225,7 @@ public class H2CO3LauncherClientActivity extends H2CO3LauncherActivity implement
     }
 
     private void configureSurfaceTexture(SurfaceTexture surface, int width, int height) {
+        int scaleFactor = 1;
         surface.setDefaultBufferSize(width * scaleFactor, height * scaleFactor);
         MCOptionUtils.saveOptions(H2CO3GameHelper.getGameDirectory());
         MCOptionUtils.setOption("overrideWidth", String.valueOf(width * scaleFactor));

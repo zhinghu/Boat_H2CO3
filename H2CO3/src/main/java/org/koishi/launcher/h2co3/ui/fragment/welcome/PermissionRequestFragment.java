@@ -31,8 +31,6 @@ import java.util.List;
 public class PermissionRequestFragment extends H2CO3Fragment {
 
     NavController navController;
-    private RecyclerView recyclerView;
-    private PermissionRequestCardAdapter permissionRequestCardAdapter;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
     private boolean java11 = false;
@@ -109,9 +107,9 @@ public class PermissionRequestFragment extends H2CO3Fragment {
     }
 
     private void setupRecyclerView() {
-        recyclerView = requireView().findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = requireView().findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-        permissionRequestCardAdapter = new PermissionRequestCardAdapter(requireContext(), getPermissionRequestCards());
+        PermissionRequestCardAdapter permissionRequestCardAdapter = new PermissionRequestCardAdapter(requireContext(), getPermissionRequestCards());
         recyclerView.setAdapter(permissionRequestCardAdapter);
     }
 

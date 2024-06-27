@@ -33,8 +33,6 @@ public class WelcomeFragment extends Fragment {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private H2CO3TextView title, description;
-    private LinearProgressIndicator progressIndicator;
-    private FloatingActionButton nextButton;
     private NavController navController;
     private ConstraintLayout bottomLayout;
     private boolean h2co3Launcher = false;
@@ -64,8 +62,8 @@ public class WelcomeFragment extends Fragment {
     private void initViews(@NonNull View view) {
         title = view.findViewById(R.id.title);
         description = view.findViewById(R.id.description);
-        progressIndicator = view.findViewById(R.id.linearProgressIndicator);
-        nextButton = view.findViewById(R.id.nextButton);
+        LinearProgressIndicator progressIndicator = view.findViewById(R.id.linearProgressIndicator);
+        FloatingActionButton nextButton = view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(v -> navController.navigate(R.id.action_welcomeFragment_to_eulaFragment));
         bottomLayout = view.findViewById(R.id.bottom_layout);
     }

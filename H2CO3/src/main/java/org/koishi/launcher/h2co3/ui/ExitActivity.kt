@@ -17,8 +17,8 @@ class ExitActivity : H2CO3Activity() {
 
         val exitDialog = H2CO3MessageDialog(this)
             .setMessage("Minecraft exited with code:$code")
-            .setPositiveButton("Exit") { dialog: DialogInterface?, which: Int -> finish() }
-            .setOnDismissListener { dialog: DialogInterface? ->
+            .setPositiveButton("Exit") { _: DialogInterface?, _: Int -> finish() }
+            .setOnDismissListener { _: DialogInterface? ->
                 finish()
                 startActivity(Intent(this, H2CO3MainActivity::class.java))
             } as H2CO3MessageDialog

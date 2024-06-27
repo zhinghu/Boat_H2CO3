@@ -31,11 +31,9 @@ import java.util.Locale;
 public class InstallFragment extends H2CO3Fragment implements View.OnClickListener {
 
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private View view;
     private ProgressBar h2co3LauncherProgress, java8Progress, java11Progress, java17Progress, java21Progress;
     private AppCompatImageView h2co3LauncherIcon, java8Icon, java11Icon, java17Icon, java21Icon;
     private FloatingActionButton nextButton;
-    private NavController navController;
     private boolean h2co3Launcher = false;
     private boolean java8 = false;
     private boolean java11 = false;
@@ -45,8 +43,8 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
     private boolean hasEnteredLauncher = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_welcome_install, container, false);
-        navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+        View view = inflater.inflate(R.layout.fragment_welcome_install, container, false);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
         h2co3LauncherProgress = findViewById(view, R.id.h2co3Launcher_task_progress);
         h2co3LauncherIcon = findViewById(view, R.id.h2co3Launcher_task_icon);
         java8Progress = findViewById(view, R.id.java8_task_progress);
@@ -126,9 +124,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                     h2co3LauncherIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.ic_done);
                 });
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    h2co3LauncherIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon);
-                });
+                requireActivity().runOnUiThread(() -> h2co3LauncherIcon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -141,9 +137,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                     java8Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.ic_done);
                 });
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    java8Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon);
-                });
+                requireActivity().runOnUiThread(() -> java8Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -156,9 +150,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                     java11Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.ic_done);
                 });
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    java11Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon);
-                });
+                requireActivity().runOnUiThread(() -> java11Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -171,9 +163,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                     java17Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.ic_done);
                 });
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    java17Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon);
-                });
+                requireActivity().runOnUiThread(() -> java17Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -186,9 +176,7 @@ public class InstallFragment extends H2CO3Fragment implements View.OnClickListen
                     java21Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.ic_done);
                 });
             } else {
-                requireActivity().runOnUiThread(() -> {
-                    java21Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon);
-                });
+                requireActivity().runOnUiThread(() -> java21Icon.setImageResource(org.koishi.launcher.h2co3.resources.R.drawable.xicon));
             }
         } catch (IOException e) {
             e.printStackTrace();
