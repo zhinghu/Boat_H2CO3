@@ -60,6 +60,8 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
     }
 
     private void initUI() {
+        toolbar = findViewById(R.id.toolbar);
+        navigationView = findViewById(R.id.nav);
         if (homeFragment == null) {
             homeFragment = new HomeFragment();
         }
@@ -72,8 +74,6 @@ public class H2CO3MainActivity extends H2CO3Activity implements View.OnClickList
         if (downloadFragment == null) {
             downloadFragment = new DownloadListFragment();
         }
-        toolbar = findViewById(R.id.toolbar);
-        navigationView = findViewById(R.id.nav);
     }
 
     private void initFragment(H2CO3Fragment fragment) {
